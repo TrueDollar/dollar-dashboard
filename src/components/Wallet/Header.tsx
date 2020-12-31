@@ -6,9 +6,9 @@ import TextBlock from "../common/TextBlock";
 import {ownership} from "../../utils/number";
 
 type AccountPageHeaderProps = {
-  accountESDBalance: BigNumber,
-  accountESDSBalance: BigNumber,
-  totalESDSSupply: BigNumber,
+  accountTSDBalance: BigNumber,
+  accountTSDSBalance: BigNumber,
+  totalTSDSSupply: BigNumber,
   accountStagedBalance: BigNumber,
   accountBondedBalance: BigNumber,
   accountStatus: number,
@@ -17,28 +17,28 @@ type AccountPageHeaderProps = {
 
 const STATUS_MAP = ["Unlocked", "Locked", "Locked"];
 
-function status(accountStatus, unlocked) {
-  return STATUS_MAP[accountStatus] + (accountStatus === 0 ? "" : " until " + unlocked)
+function status(accountStatus) {
+  return STATUS_MAP[accountStatus]
 }
 
 const AccountPageHeader = ({
-  accountESDBalance, accountESDSBalance, totalESDSSupply, accountStagedBalance, accountBondedBalance, accountStatus, unlocked
+  accountTSDBalance, accountTSDSBalance, totalTSDSSupply, accountStagedBalance, accountBondedBalance, accountStatus, unlocked
 }: AccountPageHeaderProps) => (
   <div style={{ padding: '2%', display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
     <div style={{ flexBasis: '20%' }}>
-      <BalanceBlock asset="Balance" balance={accountESDBalance} suffix={" ESD"}/>
+      <BalanceBlock asset="Balance" balance={accountTSDBalance} suffix={" TSD"}/>
     </div>
     <div style={{ flexBasis: '20%' }}>
-      <BalanceBlock asset="Staged" balance={accountStagedBalance}  suffix={" ESD"}/>
+      <BalanceBlock asset="Staged" balance={accountStagedBalance}  suffix={" TSD"}/>
     </div>
     <div style={{ flexBasis: '20%' }}>
-      <BalanceBlock asset="Bonded" balance={accountBondedBalance} suffix={" ESD"} />
+      <BalanceBlock asset="Bonded" balance={accountBondedBalance} suffix={" TSD"} />
     </div>
     <div style={{ flexBasis: '20%' }}>
-      <BalanceBlock asset="DAO Ownership" balance={ownership(accountESDSBalance, totalESDSSupply)}  suffix={"%"}/>
+      <BalanceBlock asset="DAO Ownership" balance={ownership(accountTSDSBalance, totalTSDSSupply)}  suffix={"%"}/>
     </div>
     <div style={{ flexBasis: '20%' }}>
-      <TextBlock label="Status" text={status(accountStatus, unlocked)}/>
+      <TextBlock label="Status" text={status(accountStatus)}/>
     </div>
   </div>
 );

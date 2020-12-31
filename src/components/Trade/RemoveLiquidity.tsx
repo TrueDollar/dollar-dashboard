@@ -8,12 +8,12 @@ import { removeLiquidity } from '../../utils/web3';
 import { BalanceBlock, MaxButton, PriceSection } from '../common/index';
 import { toBaseUnitBN } from '../../utils/number';
 import {decreaseWithSlippage} from "../../utils/calculation";
-import {ESD, UNI, USDC} from "../../constants/tokens";
+import {TSD, UNI, USDC} from "../../constants/tokens";
 import BigNumberInput from "../common/BigNumberInput";
 
 type RemoveLiquidityProps = {
   userBalanceUNI: BigNumber,
-  pairBalanceESD: BigNumber,
+  pairBalanceTSD: BigNumber,
   pairBalanceUSDC: BigNumber,
   pairTotalSupplyUNI: BigNumber,
 }
@@ -21,7 +21,7 @@ type RemoveLiquidityProps = {
 
 function RemoveLiquidity({
   userBalanceUNI,
-  pairBalanceESD,
+  pairBalanceTSD,
   pairBalanceUSDC,
   pairTotalSupplyUNI,
 }: RemoveLiquidityProps) {
@@ -29,10 +29,10 @@ function RemoveLiquidity({
 
   const poolPortion = withdrawAmountUNI.div(pairTotalSupplyUNI);
   const estimatedUSDCReceived = pairBalanceUSDC.times(poolPortion);
-  const estimatedESDReceived = pairBalanceESD.times(poolPortion);
+  const estimatedTSDReceived = pairBalanceTSD.times(poolPortion);
 
   const minUSDCReceived = decreaseWithSlippage(estimatedUSDCReceived);
-  const minESDReceived = decreaseWithSlippage(estimatedESDReceived);
+  const minTSDReceived = decreaseWithSlippage(estimatedTSDReceived);
 
   const onChangeWithdrawAmountUNI = (amountUNI) => {
     if (!amountUNI) {
@@ -66,7 +66,7 @@ function RemoveLiquidity({
             <div style={{ width: '35%', marginRight: '5%' }}>
               <>
                 <PriceSection label="You get " amt={estimatedUSDCReceived} symbol=" USDC" />
-                <PriceSection label="+ " amt={estimatedESDReceived} symbol=" ESD" />
+                <PriceSection label="+ " amt={estimatedTSDReceived} symbol=" TSD" />
               </>
             </div>
             <div style={{ width: '30%' }}>
@@ -77,7 +77,7 @@ function RemoveLiquidity({
                 onClick={() => {
                   removeLiquidity(
                     toBaseUnitBN(withdrawAmountUNI, UNI.decimals),
-                    toBaseUnitBN(minESDReceived, ESD.decimals),
+                    toBaseUnitBN(minTSDReceived, TSD.decimals),
                     toBaseUnitBN(minUSDCReceived, USDC.decimals),
                   );
                 }}

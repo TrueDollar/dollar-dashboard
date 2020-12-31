@@ -9,7 +9,7 @@ import {
 import {approve, purchaseCoupons} from '../../utils/web3';
 
 import {isPos, toBaseUnitBN, toTokenUnitsBN} from '../../utils/number';
-import {ESD, ESDS} from "../../constants/tokens";
+import {TSD, TSDS} from "../../constants/tokens";
 import {MAX_UINT256} from "../../constants/values";
 import {getCouponPremium} from "../../utils/infura";
 import BigNumberInput from "../common/BigNumberInput";
@@ -32,9 +32,9 @@ function PurchaseCoupons({
       setPremium(new BigNumber(0));
       return;
     }
-    const purchaseAmountBase = toBaseUnitBN(purchaseAmount, ESD.decimals);
-    const premium = await getCouponPremium(ESDS.addr, purchaseAmountBase)
-    const premiumFormatted = toTokenUnitsBN(premium, ESD.decimals);
+    const purchaseAmountBase = toBaseUnitBN(purchaseAmount, TSD.decimals);
+    const premium = await getCouponPremium(TSDS.addr, purchaseAmountBase)
+    const premiumFormatted = toTokenUnitsBN(premium, TSD.decimals);
     setPremium(premiumFormatted);
   };
 
@@ -44,7 +44,7 @@ function PurchaseCoupons({
         <div style={{display: 'flex', flexWrap: 'wrap'}}>
           {/* User balance */}
           <div style={{flexBasis: '30%'}}>
-            <BalanceBlock asset={`Balance`} balance={balance} suffix={" ESD"}/>
+            <BalanceBlock asset={`Balance`} balance={balance} suffix={" TSD"}/>
           </div>
           <div style={{flexBasis: '38%'}}/>
           {/* Purchase coupons */}
@@ -53,7 +53,7 @@ function PurchaseCoupons({
               <div style={{width: '60%', minWidth: '6em'}}>
                 <>
                   <BigNumberInput
-                    adornment="ESD"
+                    adornment="TSD"
                     value={purchaseAmount}
                     setter={(value) => {
                       setPurchaseAmount(value);
@@ -76,8 +76,8 @@ function PurchaseCoupons({
                   label="Burn"
                   onClick={() => {
                     purchaseCoupons(
-                      ESDS.addr,
-                      toBaseUnitBN(purchaseAmount, ESD.decimals),
+                      TSDS.addr,
+                      toBaseUnitBN(purchaseAmount, TSD.decimals),
                     );
                   }}
                   disabled={user === '' || debt.isZero() || balance.isZero() || !isPos(purchaseAmount)}
@@ -101,7 +101,7 @@ function PurchaseCoupons({
               icon={<IconCirclePlus/>}
               label="Approve"
               onClick={() => {
-                approve(ESD.addr, ESDS.addr);
+                approve(TSD.addr, TSDS.addr);
               }}
               disabled={user === ''}
             />

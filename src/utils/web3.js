@@ -5,7 +5,7 @@ import BigNumber from 'bignumber.js';
 import { notify } from './txNotifier.ts';
 import { UniswapV2Router02 } from '../constants/contracts';
 
-import { ESD, USDC } from '../constants/tokens';
+import { TSD, USDC } from '../constants/tokens';
 
 const uniswapRouterAbi = require('../constants/abi/UniswapV2Router02.json');
 const testnetUSDCAbi = require('../constants/abi/TestnetUSDC.json');
@@ -81,7 +81,7 @@ export const mintTestnetUSDC = async (amount) => {
  * Uniswap Protocol
  */
 
-export const buyESD = async (buyAmount, maxInputAmount) => {
+export const buyTSD = async (buyAmount, maxInputAmount) => {
   const account = await checkConnectedAndGetAddress();
   const router = new window.web3.eth.Contract(uniswapRouterAbi, UniswapV2Router02);
   const deadline = Math.ceil(Date.now() / 1000) + DEADLINE_FROM_NOW;
@@ -89,7 +89,7 @@ export const buyESD = async (buyAmount, maxInputAmount) => {
   await router.methods.swapTokensForExactTokens(
     buyAmount,
     maxInputAmount,
-    [USDC.addr, ESD.addr],
+    [USDC.addr, TSD.addr],
     account,
     deadline,
   )
@@ -99,7 +99,7 @@ export const buyESD = async (buyAmount, maxInputAmount) => {
     });
 };
 
-export const sellESD = async (sellAmount, minOutputAmount) => {
+export const sellTSD = async (sellAmount, minOutputAmount) => {
   const account = await checkConnectedAndGetAddress();
   const router = new window.web3.eth.Contract(uniswapRouterAbi, UniswapV2Router02);
   const deadline = Math.ceil(Date.now() / 1000) + DEADLINE_FROM_NOW;
@@ -107,7 +107,7 @@ export const sellESD = async (sellAmount, minOutputAmount) => {
   await router.methods.swapExactTokensForTokens(
     sellAmount,
     minOutputAmount,
-    [ESD.addr, USDC.addr],
+    [TSD.addr, USDC.addr],
     account,
     deadline,
   )
@@ -117,12 +117,12 @@ export const sellESD = async (sellAmount, minOutputAmount) => {
     });
 };
 
-export const addLiquidity = async (amountESD, amountUSDC, slippage) => {
+export const addLiquidity = async (amountTSD, amountUSDC, slippage) => {
   const account = await checkConnectedAndGetAddress();
   const router = new window.web3.eth.Contract(uniswapRouterAbi, UniswapV2Router02);
   const deadline = Math.ceil(Date.now() / 1000) + DEADLINE_FROM_NOW;
   const slippageBN = new BigNumber(slippage);
-  const minAmountESD = new BigNumber(amountESD)
+  const minAmountTSD = new BigNumber(amountTSD)
     .multipliedBy(new BigNumber(1).minus(slippageBN))
     .integerValue(BigNumber.ROUND_FLOOR);
   const minAmountUSDC = new BigNumber(amountUSDC)
@@ -130,11 +130,11 @@ export const addLiquidity = async (amountESD, amountUSDC, slippage) => {
     .integerValue(BigNumber.ROUND_FLOOR);
 
   await router.methods.addLiquidity(
-    ESD.addr,
+    TSD.addr,
     USDC.addr,
-    new BigNumber(amountESD).toFixed(),
+    new BigNumber(amountTSD).toFixed(),
     new BigNumber(amountUSDC).toFixed(),
-    minAmountESD,
+    minAmountTSD,
     minAmountUSDC,
     account,
     deadline,
@@ -145,16 +145,16 @@ export const addLiquidity = async (amountESD, amountUSDC, slippage) => {
     });
 };
 
-export const removeLiquidity = async (liquidityAmount, minAmountESD, minAmountUSDC) => {
+export const removeLiquidity = async (liquidityAmount, minAmountTSD, minAmountUSDC) => {
   const account = await checkConnectedAndGetAddress();
   const router = new window.web3.eth.Contract(uniswapRouterAbi, UniswapV2Router02);
   const deadline = Math.ceil(Date.now() / 1000) + DEADLINE_FROM_NOW;
 
   await router.methods.removeLiquidity(
-    ESD.addr,
+    TSD.addr,
     USDC.addr,
     new BigNumber(liquidityAmount).toFixed(),
-    new BigNumber(minAmountESD).toFixed(),
+    new BigNumber(minAmountTSD).toFixed(),
     new BigNumber(minAmountUSDC).toFixed(),
     account,
     deadline,

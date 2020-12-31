@@ -4,6 +4,8 @@ import { useHistory } from 'react-router-dom';
 import { LinkBase, useTheme } from '@aragon/ui';
 import ConnectButton from './ConnectButton';
 
+import './style.css'
+
 type NavbarProps = {
   hasWeb3: boolean,
   user: string,
@@ -24,7 +26,7 @@ function NavBar({
     })
   }, [hasWeb3, user, history]);
 
-  const logoUrl = `./logo/logo_${currentTheme._name === 'light' ? 'black' : 'white'}.svg`
+  const logoUrl = `./logo/logo-${currentTheme._name === 'light' ? 'black' : 'white'}.png`
 
   return (
     <>
@@ -32,28 +34,39 @@ function NavBar({
         borderTop: '1px solid ' + currentTheme.border,
         backgroundColor: 'none',
         textAlign: 'center',
-        height: '128px',
         width: '100%',
         fontSize: '14px'
       }}>
         <div style={{maxWidth: '1100px', marginLeft: 'auto', marginRight: 'auto'}}>
-          <div style={{ display: 'flex', paddingTop: '24px'}}>
-            <div style={{ width: '20%', textAlign: 'left'}}>
+          <div className="container">
+            <div>
               <LinkBase onClick={() => history.push('/')} style={{marginRight: '16px', height: '40px'}}>
-                <img src={logoUrl} height="40px" alt="Empty Set Dollar"/>
+                <img src={logoUrl} height="40px" alt="True Seigniorage Dollar"/>
               </LinkBase>
             </div>
-            <div style={{ width: '60%', textAlign: 'center' }}>
+            <div className="menu">
               <LinkButton title="DAO" onClick={() => history.push('/dao/')} isSelected={page.includes('/dao')}/>
               <LinkButton title="Liquidity" onClick={() => history.push('/pool/')} isSelected={page.includes('/pool')}/>
               <LinkButton title="Regulation" onClick={() => history.push('/regulation/')} isSelected={page.includes('/regulation')}/>
               <LinkButton title="Governance" onClick={() => history.push('/governance/')} isSelected={page.includes('/governance')}/>
               <LinkButton title="Trade" onClick={() => history.push('/trade/')} isSelected={page.includes('/trade')}/>
               <LinkButton title="Coupons" onClick={() => history.push('/coupons/')} isSelected={page.includes('/coupons')}/>
+              <LinkButton title="Epoch" onClick={() => history.push('/epoch/')} isSelected={page.includes('/epoch')}/>
+              <LinkButton title="About" onClick={() => history.push('/about/')} isSelected={page.includes('/about')}/>
             </div>
-            <div style={{ width: '20%', textAlign: 'right'}}>
+            <div>
               <ConnectButton hasWeb3={hasWeb3} user={user} setUser={setUser} />
             </div>
+          </div>
+          <div className="menu-mobile">
+            <LinkButton title="DAO" onClick={() => history.push('/dao/')} isSelected={page.includes('/dao')}/>
+            <LinkButton title="Liquidity" onClick={() => history.push('/pool/')} isSelected={page.includes('/pool')}/>
+            <LinkButton title="Regulation" onClick={() => history.push('/regulation/')} isSelected={page.includes('/regulation')}/>
+            <LinkButton title="Governance" onClick={() => history.push('/governance/')} isSelected={page.includes('/governance')}/>
+            <LinkButton title="Trade" onClick={() => history.push('/trade/')} isSelected={page.includes('/trade')}/>
+            <LinkButton title="Coupons" onClick={() => history.push('/coupons/')} isSelected={page.includes('/coupons')}/>
+            <LinkButton title="Epoch" onClick={() => history.push('/epoch/')} isSelected={page.includes('/epoch')}/>
+            <LinkButton title="About" onClick={() => history.push('/about/')} isSelected={page.includes('/about')}/>
           </div>
         </div>
       </div>

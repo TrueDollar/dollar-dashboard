@@ -8,7 +8,7 @@ import {
 } from '../common/index';
 import {approve, providePool} from '../../utils/web3';
 import {isPos, toBaseUnitBN, toTokenUnitsBN} from '../../utils/number';
-import {ESD, USDC} from "../../constants/tokens";
+import {TSD, USDC} from "../../constants/tokens";
 import {MAX_UINT256} from "../../constants/values";
 import BigNumberInput from "../common/BigNumberInput";
 
@@ -16,7 +16,7 @@ type ProvideProps = {
   poolAddress: string,
   user: string,
   rewarded: BigNumber,
-  pairBalanceESD: BigNumber,
+  pairBalanceTSD: BigNumber,
   pairBalanceUSDC: BigNumber,
   userUSDCBalance: BigNumber,
   userUSDCAllowance: BigNumber,
@@ -24,27 +24,27 @@ type ProvideProps = {
 };
 
 function Provide({
-  poolAddress, user, rewarded, pairBalanceESD, pairBalanceUSDC, userUSDCBalance, userUSDCAllowance, status
+  poolAddress, user, rewarded, pairBalanceTSD, pairBalanceUSDC, userUSDCBalance, userUSDCAllowance, status
 }: ProvideProps) {
   const [provideAmount, setProvideAmount] = useState(new BigNumber(0));
   const [usdcAmount, setUsdcAmount] = useState(new BigNumber(0));
 
-  const USDCToESDRatio = pairBalanceUSDC.isZero() ? new BigNumber(1) : pairBalanceUSDC.div(pairBalanceESD);
+  const USDCToTSDRatio = pairBalanceUSDC.isZero() ? new BigNumber(1) : pairBalanceUSDC.div(pairBalanceTSD);
 
-  const onChangeAmountESD = (amountESD) => {
-    if (!amountESD) {
+  const onChangeAmountTSD = (amountTSD) => {
+    if (!amountTSD) {
       setProvideAmount(new BigNumber(0));
       setUsdcAmount(new BigNumber(0));
       return;
     }
 
-    const amountESDBN = new BigNumber(amountESD)
-    setProvideAmount(amountESDBN);
+    const amountTSDBN = new BigNumber(amountTSD)
+    setProvideAmount(amountTSDBN);
 
-    const amountESDBU = toBaseUnitBN(amountESDBN, ESD.decimals);
+    const amountTSDBU = toBaseUnitBN(amountTSDBN, TSD.decimals);
     const newAmountUSDC = toTokenUnitsBN(
-      amountESDBU.multipliedBy(USDCToESDRatio).integerValue(BigNumber.ROUND_FLOOR),
-      ESD.decimals);
+      amountTSDBU.multipliedBy(USDCToTSDRatio).integerValue(BigNumber.ROUND_FLOOR),
+      TSD.decimals);
     setUsdcAmount(newAmountUSDC);
   };
 
@@ -54,7 +54,7 @@ function Provide({
         <div style={{display: 'flex', flexWrap: 'wrap'}}>
           {/* total rewarded */}
           <div style={{flexBasis: '32%'}}>
-            <BalanceBlock asset="Rewarded" balance={rewarded} suffix={"ESD"} />
+            <BalanceBlock asset="Rewarded" balance={rewarded} suffix={"TSD"} />
           </div>
           <div style={{flexBasis: '33%'}}>
             <BalanceBlock asset="USDC Balance" balance={userUSDCBalance} suffix={"USDC"} />
@@ -66,15 +66,15 @@ function Provide({
               <div style={{width: '60%', minWidth: '6em'}}>
                 <>
                   <BigNumberInput
-                    adornment="ESD"
+                    adornment="TSD"
                     value={provideAmount}
-                    setter={onChangeAmountESD}
+                    setter={onChangeAmountTSD}
                     disabled={status === 1}
                   />
                   <PriceSection label="Requires " amt={usdcAmount} symbol=" USDC"/>
                   <MaxButton
                     onClick={() => {
-                      onChangeAmountESD(rewarded);
+                      onChangeAmountTSD(rewarded);
                     }}
                   />
                 </>
@@ -87,7 +87,7 @@ function Provide({
                   onClick={() => {
                     providePool(
                       poolAddress,
-                      toBaseUnitBN(provideAmount, ESD.decimals),
+                      toBaseUnitBN(provideAmount, TSD.decimals),
                       (hash) => setProvideAmount(new BigNumber(0))
                     );
                   }}
@@ -101,7 +101,7 @@ function Provide({
         <div style={{display: 'flex', flexWrap: 'wrap'}}>
           {/* total rewarded */}
           <div style={{flexBasis: '32%'}}>
-            <BalanceBlock asset="Rewarded" balance={rewarded} suffix={"ESD"} />
+            <BalanceBlock asset="Rewarded" balance={rewarded} suffix={"TSD"} />
           </div>
           <div style={{flexBasis: '33%'}}>
             <BalanceBlock asset="USDC Balance" balance={userUSDCBalance} suffix={"USDC"} />

@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import { useWallet } from 'use-wallet';
 
 import {
-  Button, IdentityBadge, IconConnect, Box, IconPower, LinkBase,
+  Button, IdentityBadge, Box, IconPower, LinkBase,
 } from '@aragon/ui';
 
 import { connect } from '../../utils/web3';
 import TotalBalance from "./TotalBalance";
 import ConnectModal from './ConnectModal';
+
+import './style.css';
 
 type connectButtonProps = {
   hasWeb3: boolean,
@@ -58,7 +60,10 @@ function ConnectButton({ hasWeb3, user, setUser }: connectButtonProps) {
   ) : (
     <>
       <ConnectModal visible={isModalOpen} onClose={toggleModal} onConnect={connectWeb3}/>
-      <Button icon={<IconConnect />} label="Connect" onClick={toggleModal} disabled={!hasWeb3}/>
+      <Button icon={ <div className="icon-container">
+        <span className="icon-connect-container"/>
+        <span className="icon-connect"/>
+      </div>} label="Connect Wallet" onClick={toggleModal} disabled={!hasWeb3}/>
     </>
   );
 }

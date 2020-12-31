@@ -6,23 +6,23 @@ import BigNumber from 'bignumber.js';
 import {
   BalanceBlock, MaxButton, PriceSection,
 } from '../common/index';
-import {buyESD, sellESD} from '../../utils/web3';
+import {buyTSD, sellTSD} from '../../utils/web3';
 
 import { getCost, getProceeds } from '../../utils/infura';
 
 
 import {isPos, toBaseUnitBN, toTokenUnitsBN} from '../../utils/number';
-import {ESD, USDC} from "../../constants/tokens";
+import {TSD, USDC} from "../../constants/tokens";
 import {decreaseWithSlippage, increaseWithSlippage} from "../../utils/calculation";
 import BigNumberInput from "../common/BigNumberInput";
 
 type UniswapBuySellProps = {
-  userBalanceESD: BigNumber,
-  pairBalanceESD: BigNumber
+  userBalanceTSD: BigNumber,
+  pairBalanceTSD: BigNumber
 };
 
 function UniswapBuySell({
-  userBalanceESD, pairBalanceESD
+  userBalanceTSD, pairBalanceTSD
 }: UniswapBuySellProps) {
   const [buyAmount, setBuyAmount] = useState(new BigNumber(0));
   const [sellAmount, setSellAmount] = useState(new BigNumber(0));
@@ -35,11 +35,11 @@ function UniswapBuySell({
       setCost(new BigNumber(0));
       return;
     }
-    if (buyAmountBN.gte(pairBalanceESD)) {
+    if (buyAmountBN.gte(pairBalanceTSD)) {
       setCost(new BigNumber(0));
       return;
     }
-    const cost = await getCost(toBaseUnitBN(buyAmountBN, ESD.decimals));
+    const cost = await getCost(toBaseUnitBN(buyAmountBN, TSD.decimals));
     setCost(toTokenUnitsBN(new BigNumber(cost), USDC.decimals));
   };
 
@@ -49,7 +49,7 @@ function UniswapBuySell({
       setProceeds(new BigNumber(0));
       return;
     }
-    const proceeds = await getProceeds(toBaseUnitBN(sellAmountBN, ESD.decimals));
+    const proceeds = await getProceeds(toBaseUnitBN(sellAmountBN, TSD.decimals));
     setProceeds(toTokenUnitsBN(new BigNumber(proceeds), USDC.decimals));
   };
 
@@ -58,7 +58,7 @@ function UniswapBuySell({
       <div style={{ display: 'flex' }}>
         {/* total Issued */}
         <div style={{ width: '30%' }}>
-          <BalanceBlock asset="Døllar Balance" balance={userBalanceESD} suffix={" ESD"}/>
+          <BalanceBlock asset="Døllar Balance" balance={userBalanceTSD} suffix={" TSD"}/>
         </div>
         {/* Buy Token from Uniswap */}
         <div style={{ width: '32%', paddingTop: '2%' }}>
@@ -66,7 +66,7 @@ function UniswapBuySell({
             <div style={{ width: '60%' }}>
               <>
                 <BigNumberInput
-                  adornment="ESD"
+                  adornment="TSD"
                   value={buyAmount}
                   setter={(value) => {
                     setBuyAmount(value);
@@ -81,8 +81,8 @@ function UniswapBuySell({
                 icon={<IconCirclePlus />}
                 label="Buy"
                 onClick={() => {
-                  buyESD(
-                    toBaseUnitBN(buyAmount, ESD.decimals),
+                  buyTSD(
+                    toBaseUnitBN(buyAmount, TSD.decimals),
                     increaseWithSlippage(toBaseUnitBN(cost, USDC.decimals)),
                   );
                 }}
@@ -98,7 +98,7 @@ function UniswapBuySell({
             <div style={{ width: '60%' }}>
               <>
                 <BigNumberInput
-                  adornment="ESD"
+                  adornment="TSD"
                   value={sellAmount}
                   setter={(value) => {
                     setSellAmount(value);
@@ -107,8 +107,8 @@ function UniswapBuySell({
                 />
                 <MaxButton
                   onClick={() => {
-                    setSellAmount(userBalanceESD);
-                    updateProceeds(userBalanceESD);
+                    setSellAmount(userBalanceTSD);
+                    updateProceeds(userBalanceTSD);
                   }}
                 />
                 <PriceSection label="Proceeds: " amt={proceeds} symbol=" USDC"/>
@@ -120,8 +120,8 @@ function UniswapBuySell({
                 icon={<IconCircleMinus />}
                 label="Sell"
                 onClick={() => {
-                  sellESD(
-                    toBaseUnitBN(sellAmount, ESD.decimals),
+                  sellTSD(
+                    toBaseUnitBN(sellAmount, TSD.decimals),
                     decreaseWithSlippage(toBaseUnitBN(proceeds, USDC.decimals)),
                   );
                 }}

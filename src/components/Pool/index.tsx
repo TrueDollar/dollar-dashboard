@@ -11,7 +11,7 @@ import {
   getTokenBalance,
   getPoolFluidUntil
 } from '../../utils/infura';
-import {ESD, UNI, USDC} from "../../constants/tokens";
+import {TSD, UNI, USDC} from "../../constants/tokens";
 import {POOL_EXIT_LOCKUP_EPOCHS} from "../../constants/values";
 import { toTokenUnitsBN } from '../../utils/number';
 import { Header } from '@aragon/ui';
@@ -36,7 +36,7 @@ function Pool({ user }: {user: string}) {
 
   const [poolAddress, setPoolAddress] = useState("");
   const [poolTotalBonded, setPoolTotalBonded] = useState(new BigNumber(0));
-  const [pairBalanceESD, setPairBalanceESD] = useState(new BigNumber(0));
+  const [pairBalanceTSD, setPairBalanceTSD] = useState(new BigNumber(0));
   const [pairBalanceUSDC, setPairBalanceUSDC] = useState(new BigNumber(0));
   const [userUNIBalance, setUserUNIBalance] = useState(new BigNumber(0));
   const [userUNIAllowance, setUserUNIAllowance] = useState(new BigNumber(0));
@@ -60,7 +60,7 @@ function Pool({ user }: {user: string}) {
     if (user === '') {
       setPoolAddress("");
       setPoolTotalBonded(new BigNumber(0));
-      setPairBalanceESD(new BigNumber(0));
+      setPairBalanceTSD(new BigNumber(0));
       setPairBalanceUSDC(new BigNumber(0));
       setUserUNIBalance(new BigNumber(0));
       setUserUNIAllowance(new BigNumber(0));
@@ -86,13 +86,13 @@ function Pool({ user }: {user: string}) {
       const legacyPoolAddress = getLegacyPoolAddress(poolAddressStr);
 
       const [
-        poolTotalBondedStr, pairBalanceESDStr, pairBalanceUSDCStr, balance, usdcBalance,
+        poolTotalBondedStr, pairBalanceTSDStr, pairBalanceUSDCStr, balance, usdcBalance,
         allowance, usdcAllowance, stagedBalance, bondedBalance,
         rewardedBalance, claimableBalance, status, fluidUntilStr,
         legacyStagedBalance, legacyBondedBalance, legacyRewardedBalance, legacyClaimableBalance, legacyStatus
       ] = await Promise.all([
         getPoolTotalBonded(poolAddressStr),
-        getTokenBalance(ESD.addr, UNI.addr),
+        getTokenBalance(TSD.addr, UNI.addr),
         getTokenBalance(USDC.addr, UNI.addr),
         getTokenBalance(UNI.addr, user),
         getTokenBalance(USDC.addr, user),
@@ -114,27 +114,27 @@ function Pool({ user }: {user: string}) {
         getPoolStatusOf(legacyPoolAddress, user)
       ]);
 
-      const poolTotalBonded = toTokenUnitsBN(poolTotalBondedStr, ESD.decimals);
-      const pairESDBalance = toTokenUnitsBN(pairBalanceESDStr, ESD.decimals);
+      const poolTotalBonded = toTokenUnitsBN(poolTotalBondedStr, TSD.decimals);
+      const pairTSDBalance = toTokenUnitsBN(pairBalanceTSDStr, TSD.decimals);
       const pairUSDCBalance = toTokenUnitsBN(pairBalanceUSDCStr, USDC.decimals);
       const userUNIBalance = toTokenUnitsBN(balance, UNI.decimals);
       const userUSDCBalance = toTokenUnitsBN(usdcBalance, USDC.decimals);
       const userStagedBalance = toTokenUnitsBN(stagedBalance, UNI.decimals);
       const userBondedBalance = toTokenUnitsBN(bondedBalance, UNI.decimals);
-      const userRewardedBalance = toTokenUnitsBN(rewardedBalance, ESD.decimals);
-      const userClaimableBalance = toTokenUnitsBN(claimableBalance, ESD.decimals);
+      const userRewardedBalance = toTokenUnitsBN(rewardedBalance, TSD.decimals);
+      const userClaimableBalance = toTokenUnitsBN(claimableBalance, TSD.decimals);
       const userStatus = parseInt(status, 10);
       const fluidUntil = parseInt(fluidUntilStr, 10);
       const legacyUserStagedBalance = toTokenUnitsBN(legacyStagedBalance, UNI.decimals);
       const legacyUserBondedBalance = toTokenUnitsBN(legacyBondedBalance, UNI.decimals);
       const legacyUserRewardedBalance = toTokenUnitsBN(legacyRewardedBalance, UNI.decimals);
-      const legacyUserClaimableBalance = toTokenUnitsBN(legacyClaimableBalance, ESD.decimals);
+      const legacyUserClaimableBalance = toTokenUnitsBN(legacyClaimableBalance, TSD.decimals);
       const legacyUserStatus = parseInt(legacyStatus, 10);
 
       if (!isCancelled) {
         setPoolAddress(poolAddressStr);
         setPoolTotalBonded(new BigNumber(poolTotalBonded));
-        setPairBalanceESD(new BigNumber(pairESDBalance));
+        setPairBalanceTSD(new BigNumber(pairTSDBalance));
         setPairBalanceUSDC(new BigNumber(pairUSDCBalance));
         setUserUNIBalance(new BigNumber(userUNIBalance));
         setUserUNIAllowance(new BigNumber(allowance));
@@ -188,8 +188,8 @@ function Pool({ user }: {user: string}) {
       <PoolPageHeader
         accountUNIBalance={userUNIBalance}
         accountBondedBalance={userBondedBalance}
-        accountRewardedESDBalance={userRewardedBalance}
-        accountClaimableESDBalance={userClaimableBalance}
+        accountRewardedTSDBalance={userRewardedBalance}
+        accountClaimableTSDBalance={userClaimableBalance}
         poolTotalBonded={poolTotalBonded}
         accountPoolStatus={userStatus}
         unlocked={userStatusUnlocked}
@@ -218,16 +218,16 @@ function Pool({ user }: {user: string}) {
         status={userStatus}
       />
 
-      <Provide
-        poolAddress={poolAddress}
-        user={user}
-        rewarded={isRewardedNegative ? new BigNumber(0) : userRewardedBalance}
-        status={userStatus}
-        pairBalanceESD={pairBalanceESD}
-        pairBalanceUSDC={pairBalanceUSDC}
-        userUSDCBalance={userUSDCBalance}
-        userUSDCAllowance={userUSDCAllowance}
-      />
+      {/*<Provide*/}
+      {/*  poolAddress={poolAddress}*/}
+      {/*  user={user}*/}
+      {/*  rewarded={isRewardedNegative ? new BigNumber(0) : userRewardedBalance}*/}
+      {/*  status={userStatus}*/}
+      {/*  pairBalanceTSD={pairBalanceTSD}*/}
+      {/*  pairBalanceUSDC={pairBalanceUSDC}*/}
+      {/*  userUSDCBalance={userUSDCBalance}*/}
+      {/*  userUSDCAllowance={userUSDCAllowance}*/}
+      {/*/>*/}
     </>
   );
 }

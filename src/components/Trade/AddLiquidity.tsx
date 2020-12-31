@@ -5,35 +5,35 @@ import { addLiquidity } from '../../utils/web3';
 
 import { BalanceBlock, MaxButton, PriceSection } from '../common/index';
 import {toBaseUnitBN, toTokenUnitsBN} from '../../utils/number';
-import {ESD, UNI, USDC} from "../../constants/tokens";
+import {TSD, UNI, USDC} from "../../constants/tokens";
 import {SLIPPAGE} from "../../utils/calculation";
 import BigNumberInput from "../common/BigNumberInput";
 
 type AddliquidityProps = {
-  userBalanceESD: BigNumber,
+  userBalanceTSD: BigNumber,
   userBalanceUSDC: BigNumber,
-  pairBalanceESD: BigNumber,
+  pairBalanceTSD: BigNumber,
   pairBalanceUSDC: BigNumber,
   pairTotalSupplyUNI: BigNumber,
 }
 
 function AddLiquidity({
-  userBalanceESD,
+  userBalanceTSD,
   userBalanceUSDC,
-  pairBalanceESD,
+  pairBalanceTSD,
   pairBalanceUSDC,
   pairTotalSupplyUNI,
 }: AddliquidityProps) {
   const [amountUSDC, setAmountUSDC] = useState(new BigNumber(0));
-  const [amountESD, setAmountESD] = useState(new BigNumber(0));
+  const [amountTSD, setAmountTSD] = useState(new BigNumber(0));
   const [amountUNI, setAmountUNI] = useState(new BigNumber(0));
 
-  const USDCToESDRatio = pairBalanceUSDC.isZero() ? new BigNumber(1) : pairBalanceUSDC.div(pairBalanceESD);
-  const ESDToUSDCRatio = pairBalanceESD.isZero() ? new BigNumber(1) : pairBalanceESD.div(pairBalanceUSDC);
+  const USDCToTSDRatio = pairBalanceUSDC.isZero() ? new BigNumber(1) : pairBalanceUSDC.div(pairBalanceTSD);
+  const TSDToUSDCRatio = pairBalanceTSD.isZero() ? new BigNumber(1) : pairBalanceTSD.div(pairBalanceUSDC);
 
   const onChangeAmountUSDC = (amountUSDC) => {
     if (!amountUSDC) {
-      setAmountESD(new BigNumber(0));
+      setAmountTSD(new BigNumber(0));
       setAmountUSDC(new BigNumber(0));
       setAmountUNI(new BigNumber(0));
       return;
@@ -43,34 +43,34 @@ function AddLiquidity({
     setAmountUSDC(amountUSDCBN);
 
     const amountUSDCBU = toBaseUnitBN(amountUSDCBN, USDC.decimals);
-    const newAmountESD = toTokenUnitsBN(
-      amountUSDCBU.multipliedBy(ESDToUSDCRatio).integerValue(BigNumber.ROUND_FLOOR),
+    const newAmountTSD = toTokenUnitsBN(
+      amountUSDCBU.multipliedBy(TSDToUSDCRatio).integerValue(BigNumber.ROUND_FLOOR),
       USDC.decimals);
-    setAmountESD(newAmountESD);
+    setAmountTSD(newAmountTSD);
 
-    const newAmountESDBU = toBaseUnitBN(newAmountESD, ESD.decimals);
+    const newAmountTSDBU = toBaseUnitBN(newAmountTSD, TSD.decimals);
     const pairTotalSupplyBU = toBaseUnitBN(pairTotalSupplyUNI, UNI.decimals);
-    const pairBalanceESDBU = toBaseUnitBN(pairBalanceESD, ESD.decimals);
-    const newAmountUNIBU = pairTotalSupplyBU.multipliedBy(newAmountESDBU).div(pairBalanceESDBU).integerValue(BigNumber.ROUND_FLOOR);
+    const pairBalanceTSDBU = toBaseUnitBN(pairBalanceTSD, TSD.decimals);
+    const newAmountUNIBU = pairTotalSupplyBU.multipliedBy(newAmountTSDBU).div(pairBalanceTSDBU).integerValue(BigNumber.ROUND_FLOOR);
     const newAmountUNI = toTokenUnitsBN(newAmountUNIBU, UNI.decimals);
     setAmountUNI(newAmountUNI)
   };
 
-  const onChangeAmountESD = (amountESD) => {
-    if (!amountESD) {
-      setAmountESD(new BigNumber(0));
+  const onChangeAmountTSD = (amountTSD) => {
+    if (!amountTSD) {
+      setAmountTSD(new BigNumber(0));
       setAmountUSDC(new BigNumber(0));
       setAmountUNI(new BigNumber(0));
       return;
     }
 
-    const amountESDBN = new BigNumber(amountESD)
-    setAmountESD(amountESDBN);
+    const amountTSDBN = new BigNumber(amountTSD)
+    setAmountTSD(amountTSDBN);
 
-    const amountESDBU = toBaseUnitBN(amountESDBN, ESD.decimals);
+    const amountTSDBU = toBaseUnitBN(amountTSDBN, TSD.decimals);
     const newAmountUSDC = toTokenUnitsBN(
-      amountESDBU.multipliedBy(USDCToESDRatio).integerValue(BigNumber.ROUND_FLOOR),
-      ESD.decimals);
+      amountTSDBU.multipliedBy(USDCToTSDRatio).integerValue(BigNumber.ROUND_FLOOR),
+      TSD.decimals);
     setAmountUSDC(newAmountUSDC);
 
     const newAmountUSDCBU = toBaseUnitBN(newAmountUSDC, USDC.decimals);
@@ -94,13 +94,13 @@ function AddLiquidity({
             <div style={{ width: '35%', marginRight: '5%' }}>
               <>
                 <BigNumberInput
-                  adornment="ESD"
-                  value={amountESD}
-                  setter={onChangeAmountESD}
+                  adornment="TSD"
+                  value={amountTSD}
+                  setter={onChangeAmountTSD}
                 />
                 <MaxButton
                   onClick={() => {
-                    onChangeAmountESD(userBalanceESD);
+                    onChangeAmountTSD(userBalanceTSD);
                   }}
                 />
               </>
@@ -119,10 +119,10 @@ function AddLiquidity({
                 icon={<IconCirclePlus />}
                 label="Add Liquidity"
                 onClick={() => {
-                  const amountESDBU = toBaseUnitBN(amountESD, ESD.decimals);
+                  const amountTSDBU = toBaseUnitBN(amountTSD, TSD.decimals);
                   const amountUSDCBU = toBaseUnitBN(amountUSDC, USDC.decimals);
                   addLiquidity(
-                    amountESDBU,
+                    amountTSDBU,
                     amountUSDCBU,
                     SLIPPAGE,
                   );

@@ -9,7 +9,7 @@ import {
   getTokenTotalSupply, getTotalCoupons,
   getTotalDebt, getTotalRedeemable,
 } from '../../utils/infura';
-import {ESD, ESDS} from "../../constants/tokens";
+import {TSD, TSDS} from "../../constants/tokens";
 import CouponMarketHeader from "./Header";
 import {toTokenUnitsBN} from "../../utils/number";
 import BigNumber from "bignumber.js";
@@ -49,11 +49,11 @@ function CouponMarket({ user }: {user: string}) {
 
     async function updateUserInfo() {
       const [balanceStr, allowanceStr] = await Promise.all([
-        getTokenBalance(ESD.addr, user),
-        getTokenAllowance(ESD.addr, user, ESDS.addr),
+        getTokenBalance(TSD.addr, user),
+        getTokenAllowance(TSD.addr, user, TSDS.addr),
       ]);
 
-      const userBalance = toTokenUnitsBN(balanceStr, ESD.decimals);
+      const userBalance = toTokenUnitsBN(balanceStr, TSD.decimals);
 
       if (!isCancelled) {
         setBalance(new BigNumber(userBalance));
@@ -76,16 +76,16 @@ function CouponMarket({ user }: {user: string}) {
 
     async function updateUserInfo() {
       const [supplyStr, debtStr, couponsStr, redeemableStr] = await Promise.all([
-        getTokenTotalSupply(ESD.addr),
-        getTotalDebt(ESDS.addr),
-        getTotalCoupons(ESDS.addr),
-        getTotalRedeemable(ESDS.addr),
+        getTokenTotalSupply(TSD.addr),
+        getTotalDebt(TSDS.addr),
+        getTotalCoupons(TSDS.addr),
+        getTotalRedeemable(TSDS.addr),
       ]);
 
-      const totalSupply = toTokenUnitsBN(supplyStr, ESD.decimals);
-      const totalDebt = toTokenUnitsBN(debtStr, ESD.decimals);
-      const totalCoupons = toTokenUnitsBN(couponsStr, ESD.decimals);
-      const totalRedeemable = toTokenUnitsBN(redeemableStr, ESD.decimals);
+      const totalSupply = toTokenUnitsBN(supplyStr, TSD.decimals);
+      const totalDebt = toTokenUnitsBN(debtStr, TSD.decimals);
+      const totalCoupons = toTokenUnitsBN(couponsStr, TSD.decimals);
+      const totalRedeemable = toTokenUnitsBN(redeemableStr, TSD.decimals);
 
       if (!isCancelled) {
         setSupply(new BigNumber(totalSupply));
@@ -94,8 +94,8 @@ function CouponMarket({ user }: {user: string}) {
         setRedeemable(new BigNumber(totalRedeemable));
 
         if (totalDebt.isGreaterThan(new BigNumber(1))) {
-          const couponPremiumStr = await getCouponPremium(ESDS.addr, ONE_COUPON)
-          setCouponPremium(toTokenUnitsBN(couponPremiumStr, ESD.decimals));
+          const couponPremiumStr = await getCouponPremium(TSDS.addr, ONE_COUPON)
+          setCouponPremium(toTokenUnitsBN(couponPremiumStr, TSD.decimals));
         } else {
           setCouponPremium(new BigNumber(0));
         }

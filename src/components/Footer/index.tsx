@@ -1,6 +1,7 @@
 import React from 'react';
 import { LinkBase, useTheme } from '@aragon/ui';
 import ChangeModeButton from "./SwitchTheme";
+import styled from 'styled-components'
 
 type FooterProps = {
   updateTheme: Function,
@@ -25,26 +26,45 @@ function Footer({updateTheme, theme, hasWeb3}: FooterProps) {
         fontSize: '14px'
       }}>
         <div style={{maxWidth: '1100px', marginLeft: 'auto', marginRight: 'auto'}}>
-          <div style={{ padding: '2%', display: 'flex'}}>
-            <div style={{ width: '50%', textAlign: 'left' }}>
-              <FooterLink icon={<i className="fab fa-github"/>} href={"https://www.github.com/emptysetsquad/dollar"}/>
-              <FooterLink icon={<i className="fab fa-twitter"/>} href={"https://www.twitter.com/emptysetsquad"}/>
-              <FooterLink icon={<i className="fab fa-medium"/>} href={"https://www.medium.com/@emptysetsquad"}/>
-              <FooterLink icon={<i className="fab fa-telegram"/>} href={"https://www.t.me/emptysetdollar"}/>
-              <FooterLink icon={<i className="fab fa-discord"/>} href={"https://discord.gg/vPws9Vp"}/>
+          <Container>
+            <div>
+              <FooterLink icon={<i className="fab fa-github"/>} href={"https://github.com/TrueDollar"}/>
+              <FooterLink icon={<i className="fab fa-twitter"/>} href={"https://twitter.com/TrueSeigniorage"}/>
+              <FooterLink icon={<i className="fab fa-medium"/>} href={"https://trueseigniorage.medium.com/"}/>
+              <FooterLink icon={<i className="fab fa-telegram"/>} href={"https://t.me/TrueSeigniorageDollar"}/>
             </div>
-            <div style={{ width: '45%', textAlign: 'right', height: '18px', marginTop: '15px', marginBottom: '15px'}}>
-              made with <span role="img" aria-labelledby="heartbreak">💔️</span> by the &#123;ess&#125;.
-            </div>
-            <div style={{ width: '5%', textAlign: 'right', marginTop: '4px' }}>
-              <ChangeModeButton hasWeb3={hasWeb3} theme={theme} updateTheme={updateTheme} />
-            </div>
-          </div>
+           <ContainerTeam>
+             <div style={{ marginRight: 5 }}>
+               Made with <span role="img" aria-labelledby="heartbreak">💔️</span> by TSD team!
+             </div>
+             <ChangeModeButton hasWeb3={hasWeb3} theme={theme} updateTheme={updateTheme} />
+           </ContainerTeam>
+          </Container>
         </div>
       </div>
     </>
   );
 }
+
+const Container = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2%;
+
+  @media (max-width: 522px) {
+    display: block;
+  }
+`
+
+const ContainerTeam = styled.div`
+  display: flex;
+  align-items: center;
+
+  @media (max-width: 522px) {
+    justify-content: center;
+  }
+`
 
 type FooterLinkProp = {
   icon: any,
@@ -55,7 +75,7 @@ function FooterLink({
   icon, href,
 }:FooterLinkProp) {
   return (
-    <LinkBase href={href} style={{marginLeft: '8px', marginRight: '8px'}}>
+    <LinkBase href={href} style={{marginLeft: '4px', marginRight: '4px'}}>
       <span style={{ fontSize: 32 }}>{icon}</span>
     </LinkBase>
   );

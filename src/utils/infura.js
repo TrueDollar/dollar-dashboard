@@ -2,7 +2,7 @@ import Web3 from 'web3';
 
 import BigNumber from 'bignumber.js';
 import { UniswapV2Router02 } from '../constants/contracts';
-import { ESD, UNI, USDC } from '../constants/tokens';
+import { TSD, UNI, USDC } from '../constants/tokens';
 import { POOL_EXIT_LOCKUP_EPOCHS } from '../constants/values';
 
 const dollarAbi = require('../constants/abi/Dollar.json');
@@ -91,7 +91,7 @@ export const getStatusOf = async (dao, account) => {
  */
 export const getFluidUntil = async (dao, account) => {
   const daoContract = new web3.eth.Contract(daoAbi, dao);
-  return daoContract.methods.fluidUntil(account).call();
+  return daoContract.methods.statusOf(account).call();
 };
 
 /**
@@ -426,7 +426,7 @@ export const getCost = async (amount) => {
   // eslint-disable-next-line no-unused-vars
   const [inputAmount, _] = await exchange.methods.getAmountsIn(
     new BigNumber(amount).toFixed(),
-    [USDC.addr, ESD.addr],
+    [USDC.addr, TSD.addr],
   ).call();
   return inputAmount;
 };
@@ -436,7 +436,7 @@ export const getProceeds = async (amount) => {
   // eslint-disable-next-line no-unused-vars
   const [_, outputAmount] = await exchange.methods.getAmountsOut(
     new BigNumber(amount).toFixed(),
-    [ESD.addr, USDC.addr],
+    [TSD.addr, USDC.addr],
   ).call();
   return outputAmount;
 };
