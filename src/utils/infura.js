@@ -461,6 +461,11 @@ export const getToken0 = async () => {
   return exchange.methods.token0().call();
 };
 
+export const getTotalSupplyUni = async () => {
+  const tokenContract = new web3.eth.Contract(uniswapPairAbi, UNI.addr);
+  return tokenContract.methods.totalSupply().call();
+};
+
 // Pool
 
 export const getPoolStatusOf = async (pool, account) => {
@@ -523,6 +528,17 @@ export const getPoolBalanceOfClaimable = async (pool, account) => {
 export const getPoolTotalBonded = async (pool) => {
   const poolContract = new web3.eth.Contract(poolAbi, pool);
   return poolContract.methods.totalBonded().call();
+};
+
+/**
+ *
+ * @param {string} pool address
+ * @param {string} account address
+ * @return {Promise<string>}
+ */
+export const getPoolTotalStaged = async (pool) => {
+  const poolContract = new web3.eth.Contract(poolAbi, pool);
+  return poolContract.methods.totalStaged().call();
 };
 
 /**

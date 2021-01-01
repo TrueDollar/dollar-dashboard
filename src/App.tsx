@@ -18,6 +18,8 @@ import Regulation from "./components/Regulation";
 import Pool from "./components/Pool";
 import HomePageNoWeb3 from "./components/HomePageNoWeb3";
 import About from "./components/About";
+import Tool from "./components/Tool";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   const storedTheme = getPreference('theme', 'light');
@@ -70,7 +72,6 @@ function App() {
           {
             hasWeb3 ?
               <Switch>
-                <Route path="/about/"><About/></Route>
                 <Route path="/dao/:override"><Wallet user={user}/></Route>
                 <Route path="/dao/"><Wallet user={user}/></Route>
                 <Route path="/epoch/"><EpochDetail user={user}/></Route>
@@ -82,6 +83,8 @@ function App() {
                 <Route path="/regulation/"><Regulation user={user}/></Route>
                 <Route path="/pool/:override"><Pool user={user}/></Route>
                 <Route path="/pool/"><Pool user={user}/></Route>
+                <Route path="/about/"><About/></Route>
+                <Route path="/tool/"><Tool/></Route>
                 <Route path="/"><HomePage user={user}/></Route>
               </Switch>
               :

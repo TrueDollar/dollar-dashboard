@@ -5,6 +5,7 @@ import { LinkBase, useTheme } from '@aragon/ui';
 import ConnectButton from './ConnectButton';
 
 import './style.css'
+import Menu from "./Menu";
 
 type NavbarProps = {
   hasWeb3: boolean,
@@ -45,47 +46,18 @@ function NavBar({
               </LinkBase>
             </div>
             <div className="menu">
-              <LinkButton title="DAO" onClick={() => history.push('/dao/')} isSelected={page.includes('/dao')}/>
-              <LinkButton title="Liquidity" onClick={() => history.push('/pool/')} isSelected={page.includes('/pool')}/>
-              <LinkButton title="Regulation" onClick={() => history.push('/regulation/')} isSelected={page.includes('/regulation')}/>
-              <LinkButton title="Governance" onClick={() => history.push('/governance/')} isSelected={page.includes('/governance')}/>
-              <LinkButton title="Trade" onClick={() => history.push('/trade/')} isSelected={page.includes('/trade')}/>
-              <LinkButton title="Coupons" onClick={() => history.push('/coupons/')} isSelected={page.includes('/coupons')}/>
-              <LinkButton title="Epoch" onClick={() => history.push('/epoch/')} isSelected={page.includes('/epoch')}/>
-              <LinkButton title="About" onClick={() => history.push('/about/')} isSelected={page.includes('/about')}/>
+              <Menu history={history} page={page}/>
             </div>
             <div>
               <ConnectButton hasWeb3={hasWeb3} user={user} setUser={setUser} />
             </div>
           </div>
           <div className="menu-mobile">
-            <LinkButton title="DAO" onClick={() => history.push('/dao/')} isSelected={page.includes('/dao')}/>
-            <LinkButton title="Liquidity" onClick={() => history.push('/pool/')} isSelected={page.includes('/pool')}/>
-            <LinkButton title="Regulation" onClick={() => history.push('/regulation/')} isSelected={page.includes('/regulation')}/>
-            <LinkButton title="Governance" onClick={() => history.push('/governance/')} isSelected={page.includes('/governance')}/>
-            <LinkButton title="Trade" onClick={() => history.push('/trade/')} isSelected={page.includes('/trade')}/>
-            <LinkButton title="Coupons" onClick={() => history.push('/coupons/')} isSelected={page.includes('/coupons')}/>
-            <LinkButton title="Epoch" onClick={() => history.push('/epoch/')} isSelected={page.includes('/epoch')}/>
-            <LinkButton title="About" onClick={() => history.push('/about/')} isSelected={page.includes('/about')}/>
+            <Menu history={history} page={page}/>
           </div>
         </div>
       </div>
     </>
-  );
-}
-
-
-type linkButtonProps = {
-  title:string,
-  onClick: Function,
-  isSelected?:boolean
-}
-
-function LinkButton({ title, onClick, isSelected = false }:linkButtonProps) {
-  return (
-      <LinkBase onClick={onClick} style={{marginLeft: '8px', marginRight: '8px', height: '40px'}}>
-        <div style={{ padding: '1%', opacity: isSelected ? 1 : 0.5, fontSize: 17 }}>{title}</div>
-      </LinkBase>
   );
 }
 

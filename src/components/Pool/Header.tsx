@@ -17,8 +17,8 @@ type PoolPageHeaderProps = {
 
 const STATUS_MAP = ["Unlocked", "Locked"];
 
-function status(accountStatus, unlocked) {
-  return STATUS_MAP[accountStatus] + (accountStatus === 0 ? "" : " until " + unlocked)
+function status(accountStatus) {
+  return STATUS_MAP[accountStatus]
 }
 
 const PoolPageHeader = ({
@@ -38,7 +38,7 @@ const PoolPageHeader = ({
       <BalanceBlock asset="Pool Ownership" balance={ownership(accountBondedBalance, poolTotalBonded)}  suffix={"%"}/>
     </div>
     <div style={{ flexBasis: '20%' }}>
-      <TextBlock label="Pool Status" text={status(accountPoolStatus, unlocked)}/>
+      <TextBlock label="Pool Status" text={status(accountPoolStatus)}/>
     </div>
   </div>
 );
