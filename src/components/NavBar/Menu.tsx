@@ -45,15 +45,15 @@ const Menu = ({history, page}: MenuProps) => {
           as={CustomToggle}
         >
           <div style={{marginLeft: '8px', marginRight: '8px', height: '40px'}}>
-            <div  style={{padding: '1%', opacity: 0.5, fontSize: 17}}><span className="btn-more">More</span></div>
+            <div  style={{padding: '1%', opacity: page.includes('/about') || page.includes('/tool') ? 1 : 0.5, fontSize: 17}}><span className="btn-more">More</span></div>
           </div>
         </Dropdown.Toggle>
 
         <Dropdown.Menu>
           <Dropdown.Item className="btn-default" onClick={() => history.push('/about/')}>About</Dropdown.Item>
-          <Dropdown.Item className="btn-default" href="http://docs.truedollar.finance/">FAQs</Dropdown.Item>
-          <Dropdown.Item className="btn-default" href="https://trueseigniorage.medium.com/">News</Dropdown.Item>
           <Dropdown.Item className="btn-default" onClick={() => history.push('/tool/')}>Tools</Dropdown.Item>
+          <Dropdown.Item className="btn-default" href="http://docs.truedollar.finance/" target="_blank">FAQs</Dropdown.Item>
+          <Dropdown.Item className="btn-default" href="https://trueseigniorage.medium.com/" target="_blank">News</Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
     </>
