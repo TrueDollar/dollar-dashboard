@@ -4,8 +4,8 @@ import { useHistory } from 'react-router-dom';
 import { LinkBase, useTheme } from '@aragon/ui';
 import ConnectButton from './ConnectButton';
 
-import './style.css'
 import Menu from "./Menu";
+import './style.css'
 
 type NavbarProps = {
   hasWeb3: boolean,

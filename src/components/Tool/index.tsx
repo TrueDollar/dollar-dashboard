@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import NextEpoch from "./NextEpoch";
 import {
   getEpoch,
-  getEpochTime, getPoolTotalBonded, getPoolTotalClaimable, getPoolTotalRewarded, getPoolTotalStaged, getTokenBalance,
+  getPoolTotalBonded, getPoolTotalStaged, getTokenBalance,
   getTokenTotalSupply,
   getTotalBonded, getTotalCoupons, getTotalDebt,
   getTotalRedeemable,
@@ -42,7 +42,7 @@ function Tool() {
   useEffect(() => {
     let isCancelled = false;
 
-    async function updateUserInfo() {
+    async function getTool() {
       const poolAddressStr = await getPoolAddress();
 
       const [
@@ -98,8 +98,8 @@ function Tool() {
       }
     }
 
-    updateUserInfo();
-    const id = setInterval(updateUserInfo, 15000);
+    getTool();
+    const id = setInterval(getTool, 15000);
 
     // eslint-disable-next-line consistent-return
     return () => {
@@ -108,11 +108,15 @@ function Tool() {
     };
   }, []);
 
+  const increaseBy = (totalSupply.toNumber() * 4) / 100;
+  const daoBonding = (((totalSupply.toNumber() * 4) / 100) * 60) / 100;
+  const lpBonding = (((totalSupply.toNumber() * 4) / 100) * 40) / 100;
+
   return <Container>
     <Header>
       Next Epoch:
-      <p>$TSD Supply will increase by {((totalSupply.toNumber() * 4) / 100).toFixed(2)} TSD </p>
-      <p>{((((totalSupply.toNumber() * 4) / 100) * 60)/100).toFixed(2)} TSD for DAO Bonding and  {((((totalSupply.toNumber() * 4) / 100) * 40)/100).toFixed(2)} TSD for LP Bonding</p>
+      <p>$TSD Supply will increase by {increaseBy.toFixed(2)} TSD </p>
+      <p>{daoBonding.toFixed(2)} TSD for DAO Bonding and {lpBonding.toFixed(2)} TSD for LP Bonding</p>
 
     </Header>
     <ContainerItem>
