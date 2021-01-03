@@ -218,16 +218,16 @@ function Pool({ user }: {user: string}) {
         status={userStatus}
       />
 
-      {/*<Provide*/}
-      {/*  poolAddress={poolAddress}*/}
-      {/*  user={user}*/}
-      {/*  rewarded={isRewardedNegative ? new BigNumber(0) : userRewardedBalance}*/}
-      {/*  status={userStatus}*/}
-      {/*  pairBalanceTSD={pairBalanceTSD}*/}
-      {/*  pairBalanceUSDC={pairBalanceUSDC}*/}
-      {/*  userUSDCBalance={userUSDCBalance}*/}
-      {/*  userUSDCAllowance={userUSDCAllowance}*/}
-      {/*/>*/}
+      <Provide
+        poolAddress={poolAddress}
+        user={user}
+        rewarded={isRewardedNegative ? new BigNumber(0) : userRewardedBalance}
+        status={userStatus}
+        pairBalanceTSD={pairBalanceTSD}
+        pairBalanceUSDC={pairBalanceUSDC}
+        userUSDCBalance={userUSDCBalance}
+        userUSDCAllowance={userUSDCAllowance}
+      />
     </>
   );
 }
