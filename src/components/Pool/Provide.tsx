@@ -48,6 +48,11 @@ function Provide({
     setUsdcAmount(newAmountUSDC);
   };
 
+  const handleMaxUSDC = () => {
+    const newAmountTSD = userUSDCBalance.dividedBy(USDCToTSDRatio).integerValue(BigNumber.ROUND_FLOOR);
+    onChangeAmountTSD(newAmountTSD)
+  }
+
   return (
     <Box heading="Provide">
       {userUSDCAllowance.comparedTo(MAX_UINT256.dividedBy(2)) > 0 ?
@@ -72,11 +77,20 @@ function Provide({
                     disabled={status === 1}
                   />
                   <PriceSection label="Requires " amt={usdcAmount} symbol=" USDC"/>
-                  <MaxButton
-                    onClick={() => {
-                      onChangeAmountTSD(rewarded);
-                    }}
-                  />
+                  <div className="d-flex">
+                    <MaxButton
+                      onClick={() => {
+                        onChangeAmountTSD(rewarded);
+                      }}
+                      title="Max TSD"
+                    />
+                    <div className="ml-4">
+                      <MaxButton
+                        onClick={handleMaxUSDC}
+                        title="Max USDC"
+                      />
+                    </div>
+                  </div>
                 </>
               </div>
               <div style={{width: '40%', minWidth: '6em'}}>
