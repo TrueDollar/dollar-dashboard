@@ -49,7 +49,7 @@ function Provide({
   };
 
   const handleMaxUSDC = () => {
-    const newAmountTSD = userUSDCBalance.dividedBy(USDCToTSDRatio).integerValue(BigNumber.ROUND_FLOOR);
+    const newAmountTSD = userUSDCBalance.dividedBy(USDCToTSDRatio);
     onChangeAmountTSD(newAmountTSD)
   }
 
