@@ -1,6 +1,6 @@
-import React, {ReactNode} from 'react';
+import React from 'react';
 import {LinkBase} from '@aragon/ui';
-import {Dropdown, FormControl} from "react-bootstrap";
+import {Dropdown} from "react-bootstrap";
 
 import './style.css'
 
