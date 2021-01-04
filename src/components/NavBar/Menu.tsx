@@ -5,6 +5,7 @@ import './style.css'
 
 type MenuProps = {
   history: any,
+  page: string
 }
 
 // const CustomToggle = React.forwardRef(({ children, onClick }: any, ref: any)=> (
@@ -19,8 +20,7 @@ type MenuProps = {
 //   </span>
 // ));
 
-const Menu = ({history}: MenuProps) => {
-  const page = history.location.pathname;
+const Menu = ({history, page}: MenuProps) => {
   return (
     <>
       <LinkButton title="Dashboard" onClick={() => history.push('/')} isSelected={page === '/'}/>
