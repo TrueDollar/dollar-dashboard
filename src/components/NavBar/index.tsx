@@ -19,14 +19,6 @@ function NavBar({
   const history = useHistory();
   const currentTheme = useTheme();
 
-  const [page, setPage] = useState("");
-
-  useEffect(() => {
-    return history.listen((location) => {
-      setPage(location.pathname)
-    })
-  }, [hasWeb3, user, history]);
-
   const logoUrl = `./logo/logo-${currentTheme._name === 'light' ? 'black' : 'white'}.png`
 
   return (
@@ -46,14 +38,14 @@ function NavBar({
               </LinkBase>
             </div>
             <div className="menu">
-              <Menu history={history} page={page}/>
+              <Menu history={history}/>
             </div>
             <div>
               <ConnectButton hasWeb3={hasWeb3} user={user} setUser={setUser} />
             </div>
           </div>
           <div className="menu-mobile">
-            <Menu history={history} page={page}/>
+            <Menu history={history} />
           </div>
         </div>
       </div>
