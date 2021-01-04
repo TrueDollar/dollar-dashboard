@@ -38,7 +38,6 @@ function Tool() {
 
   const price = pairBalanceUSDC.dividedBy(pairBalanceTSD);
 
-
   useEffect(() => {
     let isCancelled = false;
 

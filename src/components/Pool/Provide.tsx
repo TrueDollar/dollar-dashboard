@@ -3,9 +3,7 @@ import {
   Box, Button, IconArrowUp, IconCirclePlus
 } from '@aragon/ui';
 import BigNumber from 'bignumber.js';
-import {
-  BalanceBlock, MaxButton, PriceSection,
-} from '../common/index';
+import {BalanceBlock, MaxButton, PriceSection} from '../common/index';
 import {approve, providePool} from '../../utils/web3';
 import {isPos, toBaseUnitBN, toTokenUnitsBN} from '../../utils/number';
 import {TSD, USDC} from "../../constants/tokens";
@@ -42,9 +40,7 @@ function Provide({
     setProvideAmount(amountTSDBN);
 
     const amountTSDBU = toBaseUnitBN(amountTSDBN, TSD.decimals);
-    const newAmountUSDC = toTokenUnitsBN(
-      amountTSDBU.multipliedBy(USDCToTSDRatio).integerValue(BigNumber.ROUND_FLOOR),
-      TSD.decimals);
+    const newAmountUSDC = toTokenUnitsBN(amountTSDBU.multipliedBy(USDCToTSDRatio).integerValue(BigNumber.ROUND_FLOOR), TSD.decimals);
     setUsdcAmount(newAmountUSDC);
   };
 

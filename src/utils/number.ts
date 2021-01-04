@@ -67,3 +67,7 @@ export function formatMoney(n) {
         ? Math.abs(Number(n)) / 1.0e+3 + "K"
         : Math.abs(Number(n));
 }
+
+export function formatNumber(value) {
+  return value.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,');
+}
