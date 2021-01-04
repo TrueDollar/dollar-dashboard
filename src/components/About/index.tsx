@@ -4,8 +4,6 @@ import styled from 'styled-components'
 function About() {
   return <div>
     <Title>Introducing True Seigniorage Dollar</Title>
-    <Text>Inspired by the work of Empty Set Dollar and Dynamic Set Dollar projects, we would like to introduce True
-      Seigniorage Dollar Protocol.</Text>
     <Text>True Seigniorage Dollar is a decentralized, oracle data driven stablecoin which uses a supply elasticity
       method around a Time Weighted Average Price (TWAP) oracle for price stability. It’s an algorithmic stablecoin
       which uses TWAP to stabilize the price. Our goal is to maintain the price $TSD = 1 USD in long term.</Text>
