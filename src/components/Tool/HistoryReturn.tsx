@@ -26,7 +26,7 @@ const HistoryReturn = ({totalSupply, totalBonded, TSDLPBonded}: HistoryReturnPro
             </div>
             <div className="text-right">
               <p>{((dao - 1)*100).toFixed(2)}%</p>
-              <p>{(((dao ** 24) - 1)*100).toFixed(2)}%</p>
+              <p>{((dao - 1)*24*100).toFixed(2)}%</p>
             </div>
           </ContainerItem>
         </div>

@@ -9,8 +9,6 @@ import {
   getTokenBalance,
   getTokenTotalSupply,
   getTotalBonded,
-  getTotalCoupons,
-  getTotalDebt,
   getTotalRedeemable,
   getTotalStaged
 } from "../../utils/infura";
@@ -57,7 +55,6 @@ function HomePage({user}: HomePageProps) {
   const [poolLiquidity, setPoolLiquidity] = useState(new BigNumber(0));
   const [poolTotalRewarded, setPoolTotalRewarded] = useState(new BigNumber(0));
   const [poolTotalClaimable, setPoolTotalClaimable] = useState(new BigNumber(0));
-  const [totalCoupons, setTotalCoupons] = useState(new BigNumber(0));
   const [epochTime, setEpochTime] = useState("0-00:00:00");
 
   useEffect(() => {
@@ -68,11 +65,15 @@ function HomePage({user}: HomePageProps) {
       const legacyPoolAddress = getLegacyPoolAddress(poolAddress);
 
       const [
-        pairBalanceTSDStr, pairBalanceUSDCStr,
+        pairBalanceTSDStr,
+        pairBalanceUSDCStr,
         totalSupplyStr,
-        totalBondedStr, totalStagedStr, totalRedeemableStr,
-        poolLiquidityStr, poolTotalRewardedStr, poolTotalClaimableStr,
-        totalCouponsStr,
+        totalBondedStr,
+        totalStagedStr,
+        totalRedeemableStr,
+        poolLiquidityStr,
+        poolTotalRewardedStr,
+        poolTotalClaimableStr,
       ] = await Promise.all([
         getTokenBalance(TSD.addr, UNI.addr),
         getTokenBalance(USDC.addr, UNI.addr),
@@ -90,17 +91,13 @@ function HomePage({user}: HomePageProps) {
         getPoolTotalRewarded(legacyPoolAddress),
         getPoolTotalClaimable(legacyPoolAddress),
 
-        getTotalDebt(TSDS.addr),
-        getTotalCoupons(TSDS.addr),
       ]);
 
       if (!isCancelled) {
-        setEpochTime(epochformatted())
         setPairBalanceTSD(toTokenUnitsBN(pairBalanceTSDStr, TSD.decimals));
         setPairBalanceUSDC(toTokenUnitsBN(pairBalanceUSDCStr, USDC.decimals));
 
         setTotalSupply(toTokenUnitsBN(totalSupplyStr, TSD.decimals));
-
         setTotalBonded(toTokenUnitsBN(totalBondedStr, TSD.decimals));
         setTotalStaged(toTokenUnitsBN(totalStagedStr, TSD.decimals));
         setTotalRedeemable(toTokenUnitsBN(totalRedeemableStr, TSD.decimals));
@@ -109,23 +106,30 @@ function HomePage({user}: HomePageProps) {
         setPoolTotalRewarded(toTokenUnitsBN(poolTotalRewardedStr, TSD.decimals));
         setPoolTotalClaimable(toTokenUnitsBN(poolTotalClaimableStr, TSD.decimals));
 
-        setTotalCoupons(toTokenUnitsBN(totalCouponsStr, TSD.decimals));
+      }
+    }
+
+    async function updateTime() {
+      if (!isCancelled) {
+        setEpochTime(epochformatted())
       }
     }
 
     updateUserInfo();
-    const id = setInterval(updateUserInfo, 1000);
+    const time = setInterval(updateTime, 1000);
+    const user = setInterval(updateUserInfo, 15000);
 
     // eslint-disable-next-line consistent-return
     return () => {
       isCancelled = true;
-      clearInterval(id);
+      clearInterval(time);
+      clearInterval(user);
     };
   }, [user]);
 
   return (
     <>
-      <div style={{padding: '1%', paddingTop: '10%', paddingBottom: '3%', display: 'flex', flexWrap: 'wrap'}}>
+      <Container>
         <div style={{flexBasis: '30%', marginRight: '3%', marginLeft: '2%'}}>
           <Box style={{height: '100%'}}>
             <EpochBlock epoch={epochTime}/>
@@ -133,13 +137,10 @@ function HomePage({user}: HomePageProps) {
         </div>
         <div style={{flexBasis: '30%'}}>
           <Box style={{height: '100%'}}>
-            <TotalSupply
-              totalSupply={totalSupply}
-              totalCoupons={totalCoupons}
-            />
+            <TotalSupply totalSupply={totalSupply}/>
           </Box>
         </div>
-        <ContainerBox style={{flexBasis: '30%', marginLeft: '3%', marginRight: '2%'}}>
+        <ContainerBox>
           <Box style={{height: '100%'}}>
             <MarketCap
               totalSupply={totalSupply}
@@ -148,7 +149,7 @@ function HomePage({user}: HomePageProps) {
             />
           </Box>
         </ContainerBox>
-      </div>
+      </Container>
       <Trade
         pairBalanceTSD={pairBalanceTSD}
         pairBalanceUSDC={pairBalanceUSDC}
@@ -245,12 +246,18 @@ function HomePage({user}: HomePageProps) {
   );
 }
 
-const ContainerBox = styled.div`
-  flex-basis: 30%;
-  margin: 0 2% 0 3%;
+const Container = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  padding: 10% 1% 3% 1%;
   @media (max-width: 522px) {
     display: block;
   }
+`
+
+const ContainerBox = styled.div`
+  flex-basis: 30%;
+  margin: 0 2% 0 3%;
 `
 
 export default HomePage;

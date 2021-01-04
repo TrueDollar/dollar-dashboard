@@ -84,7 +84,6 @@ function Tool() {
         setPairBalanceUSDC(toTokenUnitsBN(pairBalanceUSDCStr, USDC.decimals));
 
         setTotalSupply(toTokenUnitsBN(totalSupplyStr, TSD.decimals));
-        setTotalSupply(toTokenUnitsBN(totalSupplyStr, TSD.decimals));
         setTotalBonded(toTokenUnitsBN(totalBondedStr, TSD.decimals));
         setTotalStaged(toTokenUnitsBN(totalStagedStr, TSD.decimals));
         setTotalRedeemable(toTokenUnitsBN(totalRedeemableStr, TSD.decimals));
@@ -110,6 +109,9 @@ function Tool() {
   const increaseBy = (totalSupply.toNumber() * 4) / 100;
   const daoBonding = (((totalSupply.toNumber() * 4) / 100) * 60) / 100;
   const lpBonding = (((totalSupply.toNumber() * 4) / 100) * 40) / 100;
+
+  console.log('totalCoupons');
+  console.log(totalCoupons);
 
   return <Container>
     <Header>
