@@ -27,7 +27,7 @@
   "scripts": {
     "sync-assets": "copy-aragon-ui-assets ./public",
     "start": "npm run sync-assets && react-scripts start",
-    "build": "npm run sync-assets && react-scripts build",
+    "build": "npm run sync-assets && react-scripts build && rm -rf build-nginx && mv build build-nginx",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
