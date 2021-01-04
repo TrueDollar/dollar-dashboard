@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom';
 import {Box} from '@aragon/ui';
-import EpochBlock from "../common/EpochBlock";
+import styled from 'styled-components'
 import BigNumber from "bignumber.js";
 import {
   getPoolTotalClaimable,
@@ -23,6 +23,7 @@ import Regulation from "./Regulation";
 import TotalSupply from "./TotalSupply";
 import MarketCap from "./MarketCap";
 import Invest from "./Invest";
+import EpochBlock from "../common/EpochBlock";
 
 function epochformatted() {
   const epochStart = 1609473600;
@@ -138,7 +139,7 @@ function HomePage({user}: HomePageProps) {
             />
           </Box>
         </div>
-        <div style={{flexBasis: '30%', marginLeft: '3%', marginRight: '2%'}}>
+        <ContainerBox style={{flexBasis: '30%', marginLeft: '3%', marginRight: '2%'}}>
           <Box style={{height: '100%'}}>
             <MarketCap
               totalSupply={totalSupply}
@@ -146,7 +147,7 @@ function HomePage({user}: HomePageProps) {
               pairBalanceTSD={pairBalanceTSD}
             />
           </Box>
-        </div>
+        </ContainerBox>
       </div>
       <Trade
         pairBalanceTSD={pairBalanceTSD}
@@ -243,5 +244,13 @@ function HomePage({user}: HomePageProps) {
     </>
   );
 }
+
+const ContainerBox = styled.div`
+  flex-basis: 30%;
+  margin: 0 2% 0 3%;
+  @media (max-width: 522px) {
+    display: block;
+  }
+`
 
 export default HomePage;

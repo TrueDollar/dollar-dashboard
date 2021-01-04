@@ -1,7 +1,7 @@
 import React from 'react';
 import BigNumber from "bignumber.js";
 import {Box, Button} from '@aragon/ui';
-import { useHistory } from 'react-router-dom';
+import {useHistory} from 'react-router-dom';
 
 type InvestProps = {
   totalSupply: BigNumber,
@@ -11,11 +11,11 @@ type InvestProps = {
 
 const Invest = ({totalSupply, totalBonded, TSDLPBonded}: InvestProps) => {
   const history = useHistory();
-  const TSDLpBonded = TSDLPBonded.toNumber()*2;
-  const dao = (((((totalSupply.toNumber()*4)/100)*60)/100 + totalBonded.toNumber()) / totalBonded.toNumber());
-  const lpHourly = ((((totalSupply.toNumber()*4)/100)*40)/100 + TSDLpBonded) / TSDLpBonded;
-  const lpDaily = (((((totalSupply.toNumber()*4)/100)*40)/100)*24 + TSDLpBonded) / TSDLpBonded;
-  const lpWeekly = (((((totalSupply.toNumber()*4)/100)*40)/100)*168 + TSDLpBonded) / TSDLpBonded;
+  const TSDLpBonded = TSDLPBonded.toNumber() * 2;
+  const dao = (((((totalSupply.toNumber() * 4) / 100) * 60) / 100 + totalBonded.toNumber()) / totalBonded.toNumber());
+  const lpHourly = ((((totalSupply.toNumber() * 4) / 100) * 40) / 100 + TSDLpBonded) / TSDLpBonded;
+  const lpDaily = (((((totalSupply.toNumber() * 4) / 100) * 40) / 100) * 24 + TSDLpBonded) / TSDLpBonded;
+  const lpWeekly = (((((totalSupply.toNumber() * 4) / 100) * 40) / 100) * 168 + TSDLpBonded) / TSDLpBonded;
 
   return (
     <>
@@ -31,7 +31,7 @@ const Invest = ({totalSupply, totalBonded, TSDLPBonded}: InvestProps) => {
         <div style={{flexBasis: '30%', marginRight: '3%', marginLeft: '2%'}}>
           <Box>
             <div>
-              <div style={{fontSize: 16, padding: 3}}>APY</div>
+              <div style={{fontSize: 16, padding: 3}}>APR</div>
               <div style={{fontSize: 16, padding: 3}}>DAO hourly:
                 <div style={{
                   fontSize: 24,
@@ -40,7 +40,7 @@ const Invest = ({totalSupply, totalBonded, TSDLPBonded}: InvestProps) => {
                   lineHeight: 1.5,
                   fontFamily: 'aragon-ui-monospace, monospace'
                 }}>
-                  {((dao - 1)*100).toFixed(2)}%
+                  {((dao - 1) * 100).toFixed(2)}%
                 </div>
               </div>
               <div style={{fontSize: 16, padding: 3}}>DAO daily:
@@ -51,7 +51,7 @@ const Invest = ({totalSupply, totalBonded, TSDLPBonded}: InvestProps) => {
                   lineHeight: 1.5,
                   fontFamily: 'aragon-ui-monospace, monospace'
                 }}>
-                  {(((dao ** 24) - 1)*100).toFixed(2)}%
+                  {((dao - 1) * 24 * 100).toFixed(2)}%
                 </div>
               </div>
               <div style={{fontSize: 16, padding: 3}}>DAO weekly:
@@ -62,7 +62,7 @@ const Invest = ({totalSupply, totalBonded, TSDLPBonded}: InvestProps) => {
                   lineHeight: 1.5,
                   fontFamily: 'aragon-ui-monospace, monospace'
                 }}>
-                  {(((dao ** 168) - 1)*100).toFixed(2)}%
+                  {((dao - 1) * 168 * 100).toFixed(2)}%
                 </div>
               </div>
             </div>
@@ -77,7 +77,7 @@ const Invest = ({totalSupply, totalBonded, TSDLPBonded}: InvestProps) => {
           <div style={{flexBasis: '30%', marginLeft: '2%'}}>
             <Box>
               <div>
-                <div style={{fontSize: 16, padding: 3}}>APY</div>
+                <div style={{fontSize: 16, padding: 3}}>APR</div>
                 <div style={{fontSize: 16, padding: 3}}>LP hourly:
                   <div style={{
                     fontSize: 24,
@@ -86,7 +86,7 @@ const Invest = ({totalSupply, totalBonded, TSDLPBonded}: InvestProps) => {
                     lineHeight: 1.5,
                     fontFamily: 'aragon-ui-monospace, monospace'
                   }}>
-                    {((lpHourly - 1)*100).toFixed(2)}%
+                    {((lpHourly - 1) * 100).toFixed(2)}%
                   </div>
                 </div>
                 <div style={{fontSize: 16, padding: 3}}>LP daily:
@@ -97,7 +97,7 @@ const Invest = ({totalSupply, totalBonded, TSDLPBonded}: InvestProps) => {
                     lineHeight: 1.5,
                     fontFamily: 'aragon-ui-monospace, monospace'
                   }}>
-                    {((lpDaily - 1)*100).toFixed(2)}%
+                    {((lpDaily - 1) * 100).toFixed(2)}%
                   </div>
                 </div>
                 <div style={{fontSize: 16, padding: 3}}>LP weekly:
@@ -108,7 +108,7 @@ const Invest = ({totalSupply, totalBonded, TSDLPBonded}: InvestProps) => {
                     lineHeight: 1.5,
                     fontFamily: 'aragon-ui-monospace, monospace'
                   }}>
-                    {((lpWeekly - 1)*100).toFixed(2)}%
+                    {((lpWeekly - 1) * 100).toFixed(2)}%
                   </div>
                 </div>
               </div>
@@ -120,7 +120,7 @@ const Invest = ({totalSupply, totalBonded, TSDLPBonded}: InvestProps) => {
             />
           </div>
         </div>
-        </div>
+      </div>
     </>
   );
 };

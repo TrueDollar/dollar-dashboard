@@ -25,7 +25,7 @@ const Trade = ({pairBalanceTSD, pairBalanceUSDC, uniswapPair}: TradeProps) => {
           Trade
         </div>
       </div>
-      <div style={{paddingLeft: '3%', paddingBottom: '3%', display: 'flex', flexWrap: 'wrap'}}>
+      <Container>
         <div style={{flexBasis: '25%'}}>
           <BalanceBlock asset="TSD Price" balance={price} suffix={"USDC"}/>
           <Button
@@ -61,17 +61,15 @@ const Trade = ({pairBalanceTSD, pairBalanceUSDC, uniswapPair}: TradeProps) => {
               }}
             />
         </div>
-      </div>
+      </Container>
     </>
   );
 }
 
 const Container = styled.div`
   display: flex;
-  justify-content: space-between;
   flex-wrap: wrap;
-  paddingBottom: 3%;
-  paddingLeft: 3%;
+  padding: 0 0 3% 3%;
   @media (max-width: 522px) {
     display: block;
   }
