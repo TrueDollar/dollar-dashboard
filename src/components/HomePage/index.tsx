@@ -130,17 +130,17 @@ function HomePage({user}: HomePageProps) {
   return (
     <>
       <Container>
-        <div style={{flexBasis: '30%', marginRight: '3%', marginLeft: '2%'}}>
+        <div style={{flexBasis: '30%', padding: '2%'}}>
           <Box style={{height: '100%'}}>
             <EpochBlock epoch={epochTime}/>
           </Box>
         </div>
-        <div style={{flexBasis: '30%'}}>
+        <div style={{flexBasis: '30%', padding: '2%'}}>
           <Box style={{height: '100%'}}>
             <TotalSupply totalSupply={totalSupply}/>
           </Box>
         </div>
-        <ContainerBox>
+        <div style={{flexBasis: '30%', padding: '2%'}}>
           <Box style={{height: '100%'}}>
             <MarketCap
               totalSupply={totalSupply}
@@ -148,7 +148,7 @@ function HomePage({user}: HomePageProps) {
               pairBalanceTSD={pairBalanceTSD}
             />
           </Box>
-        </ContainerBox>
+        </div>
       </Container>
       <Trade
         pairBalanceTSD={pairBalanceTSD}
