@@ -1,7 +1,8 @@
 import React from 'react';
 import BigNumber from "bignumber.js";
-import {formatNumber} from "../../utils/number";
 import styled from 'styled-components'
+
+import {formatNumber} from "../../utils/number";
 
 type TotalSupplyProps = {
   totalSupply: BigNumber,
