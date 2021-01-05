@@ -30,7 +30,7 @@ const Invest = ({totalSupply, TSDLPBonded}: InvestProps) => {
                 {((lpHourly - 1) * 100).toFixed(2)}%
               </div>
             </div>
-            <div style={{fontSize: 16, padding: 3}}>LP hourly:
+            <div style={{fontSize: 16, padding: 3}}>LP daily:
               <div style={{
                 fontSize: 24,
                 padding: 3,
