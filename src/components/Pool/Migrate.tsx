@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   Box, Button, IconArrowDown, IconCircleMinus,
 } from '@aragon/ui';
@@ -21,8 +21,8 @@ type MigrateProps = {
 };
 
 function Migrate({
-  legacyPoolAddress, staged, claimable, bonded, status, isRewardNegative
-}: MigrateProps) {
+                   legacyPoolAddress, staged, claimable, bonded, status, isRewardNegative
+                 }: MigrateProps) {
   const [unbonded, setUnbonded] = useState(false);
   const [withdrawn, setWithdrawn] = useState(false);
   const [claimed, setClaimed] = useState(false);
@@ -34,18 +34,28 @@ function Migrate({
         <div style={{flexBasis: '32%', paddingTop: '2%'}}>
           <div style={{display: 'flex'}}>
             <div style={{width: '60%'}}>
-              <BalanceBlock asset="Bonded" balance={bonded} suffix={"UNI-V2"} />
-              <OverlayTrigger
-                placement="bottom"
-                overlay={
-                  <Tooltip id="tooltip">
-                    Make sure the value &gt; 0 and your status is Unlocked.
-                  </Tooltip>
-                }
-              >
-                <div style={{display: 'inline-block', cursor: 'not-allowed'}}>
-                  <Button
-                    style={{ pointerEvents: 'none' }}
+              <BalanceBlock asset="Bonded" balance={bonded} suffix={"UNI-V2"}/>
+              {
+                (legacyPoolAddress === '' || !isPos(bonded) || unbonded || isRewardNegative)
+                  ? <OverlayTrigger
+                    placement="bottom"
+                    overlay={
+                      <Tooltip id="tooltip">
+                        Make sure the value &gt; 0 and your status is Unlocked.
+                      </Tooltip>
+                    }
+                  >
+                    <div style={{display: 'inline-block', cursor: 'not-allowed'}}>
+                      <Button
+                        style={{pointerEvents: 'none'}}
+                        wide
+                        icon={<IconCircleMinus/>}
+                        label="Unbond"
+                        disabled={legacyPoolAddress === '' || !isPos(bonded) || unbonded || isRewardNegative}
+                      />
+                    </div>
+                  </OverlayTrigger>
+                  : <Button
                     wide
                     icon={<IconCircleMinus/>}
                     label="Unbond"
@@ -56,10 +66,8 @@ function Migrate({
                         (hash) => setUnbonded(hash.length > 0)
                       );
                     }}
-                    disabled={legacyPoolAddress === '' || !isPos(bonded) || unbonded || isRewardNegative}
                   />
-                </div>
-              </OverlayTrigger>
+              }
             </div>
           </div>
         </div>
@@ -67,18 +75,28 @@ function Migrate({
         <div style={{flexBasis: '32%', paddingTop: '2%'}}>
           <div style={{display: 'flex'}}>
             <div style={{width: '60%'}}>
-              <BalanceBlock asset="Staged" balance={staged} suffix={"UNI-V2"} />
-              <OverlayTrigger
-                placement="bottom"
-                overlay={
-                  <Tooltip id="tooltip">
-                    Make sure the value &gt; 0 and your status is Unlocked.
-                  </Tooltip>
-                }
-              >
-                <div style={{display: 'inline-block', cursor: 'not-allowed'}}>
-                  <Button
-                    style={{ pointerEvents: 'none' }}
+              <BalanceBlock asset="Staged" balance={staged} suffix={"UNI-V2"}/>
+              {
+                (legacyPoolAddress === '' || !isPos(staged) || withdrawn || status !== 0)
+                  ? <OverlayTrigger
+                    placement="bottom"
+                    overlay={
+                      <Tooltip id="tooltip">
+                        Make sure the value &gt; 0 and your status is Unlocked.
+                      </Tooltip>
+                    }
+                  >
+                    <div style={{display: 'inline-block', cursor: 'not-allowed'}}>
+                      <Button
+                        style={{pointerEvents: 'none'}}
+                        wide
+                        icon={<IconCircleMinus/>}
+                        label="Withdraw"
+                        disabled={legacyPoolAddress === '' || !isPos(staged) || withdrawn || status !== 0}
+                      />
+                    </div>
+                  </OverlayTrigger>
+                  : <Button
                     wide
                     icon={<IconCircleMinus/>}
                     label="Withdraw"
@@ -89,10 +107,8 @@ function Migrate({
                         (hash) => setWithdrawn(hash.length > 0)
                       );
                     }}
-                    disabled={legacyPoolAddress === '' || !isPos(staged) || withdrawn || status !== 0}
                   />
-                </div>
-              </OverlayTrigger>
+              }
             </div>
           </div>
         </div>
@@ -100,7 +116,7 @@ function Migrate({
         <div style={{flexBasis: '32%', paddingTop: '2%'}}>
           <div style={{display: 'flex'}}>
             <div style={{width: '60%'}}>
-              <BalanceBlock asset="Claimable" balance={claimable} suffix={"TSD"} />
+              <BalanceBlock asset="Claimable" balance={claimable} suffix={"TSD"}/>
               <Button
                 wide
                 icon={<IconArrowDown/>}

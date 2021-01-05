@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   Box, Button, IconArrowDown
 } from '@aragon/ui';
@@ -20,8 +20,8 @@ type ClaimProps = {
 };
 
 function Claim({
-  poolAddress, claimable, status
-}: ClaimProps) {
+                 poolAddress, claimable, status
+               }: ClaimProps) {
   const [claimAmount, setClaimAmount] = useState(new BigNumber(0));
 
   return (
@@ -29,7 +29,7 @@ function Claim({
       <div style={{display: 'flex', flexWrap: 'wrap'}}>
         {/* total Issued */}
         <div style={{flexBasis: '32%'}}>
-          <BalanceBlock asset="Claimable" balance={claimable} suffix={"TSD"} />
+          <BalanceBlock asset="Claimable" balance={claimable} suffix={"TSD"}/>
         </div>
         {/* Deposit UNI-V2 into Pool */}
         <div style={{flexBasis: '35%'}}/>
@@ -51,17 +51,27 @@ function Claim({
               </>
             </div>
             <div style={{width: '40%', minWidth: '6em'}}>
-              <OverlayTrigger
-                placement="bottom"
-                overlay={
-                  <Tooltip id="tooltip">
-                    Make sure the value &gt; 0 and your status is Unlocked.
-                  </Tooltip>
-                }
-              >
-                <div style={{display: 'inline-block', cursor: 'not-allowed'}}>
-                  <Button
-                    style={{ pointerEvents: 'none' }}
+              {
+                (poolAddress === '' || status !== 0 || !isPos(claimAmount))
+                  ? <OverlayTrigger
+                    placement="bottom"
+                    overlay={
+                      <Tooltip id="tooltip">
+                        Make sure the value &gt; 0 and your status is Unlocked.
+                      </Tooltip>
+                    }
+                  >
+                    <div style={{display: 'inline-block', cursor: 'not-allowed'}}>
+                      <Button
+                        style={{pointerEvents: 'none'}}
+                        wide
+                        icon={<IconArrowDown/>}
+                        label="Claim"
+                        disabled={poolAddress === '' || status !== 0 || !isPos(claimAmount)}
+                      />
+                    </div>
+                  </OverlayTrigger>
+                  : <Button
                     wide
                     icon={<IconArrowDown/>}
                     label="Claim"
@@ -72,16 +82,14 @@ function Claim({
                         (hash) => setClaimAmount(new BigNumber(0))
                       );
                     }}
-                    disabled={poolAddress === '' || status !== 0 || !isPos(claimAmount)}
                   />
-                </div>
-              </OverlayTrigger>
+              }
             </div>
           </div>
         </div>
       </div>
       <div style={{width: '100%', paddingTop: '2%', textAlign: 'center'}}>
-        <span style={{ opacity: 0.5 }}> Claiming claimable TSD requires your status as Unlocked </span>
+        <span style={{opacity: 0.5}}> Claiming claimable TSD requires your status as Unlocked </span>
       </div>
     </Box>
   );

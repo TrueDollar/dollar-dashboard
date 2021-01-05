@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   Box, Button, IconArrowUp, IconCirclePlus
 } from '@aragon/ui';
@@ -23,8 +23,15 @@ type ProvideProps = {
 };
 
 function Provide({
-  poolAddress, user, rewarded, pairBalanceTSD, pairBalanceUSDC, userUSDCBalance, userUSDCAllowance, status
-}: ProvideProps) {
+                   poolAddress,
+                   user,
+                   rewarded,
+                   pairBalanceTSD,
+                   pairBalanceUSDC,
+                   userUSDCBalance,
+                   userUSDCAllowance,
+                   status
+                 }: ProvideProps) {
   const [provideAmount, setProvideAmount] = useState(new BigNumber(0));
   const [usdcAmount, setUsdcAmount] = useState(new BigNumber(0));
 
@@ -56,10 +63,10 @@ function Provide({
         <div style={{display: 'flex', flexWrap: 'wrap'}}>
           {/* total rewarded */}
           <div style={{flexBasis: '32%'}}>
-            <BalanceBlock asset="Rewarded" balance={rewarded} suffix={"TSD"} />
+            <BalanceBlock asset="Rewarded" balance={rewarded} suffix={"TSD"}/>
           </div>
           <div style={{flexBasis: '33%'}}>
-            <BalanceBlock asset="USDC Balance" balance={userUSDCBalance} suffix={"USDC"} />
+            <BalanceBlock asset="USDC Balance" balance={userUSDCBalance} suffix={"USDC"}/>
           </div>
           <div style={{flexBasis: '2%'}}/>
           {/* Provide liquidity using Pool rewards */}
@@ -91,17 +98,27 @@ function Provide({
                 </>
               </div>
               <div style={{width: '40%', minWidth: '6em'}}>
-                <OverlayTrigger
-                  placement="bottom"
-                  overlay={
-                    <Tooltip id="tooltip">
-                      Make sure the value &gt; 0 and your status is Unlocked.
-                    </Tooltip>
-                  }
-                >
-                  <div style={{display: 'inline-block', cursor: 'not-allowed'}}>
-                    <Button
-                      style={{ pointerEvents: 'none' }}
+                {
+                  (poolAddress === '' || status !== 0 || !isPos(provideAmount) || usdcAmount.isGreaterThan(userUSDCBalance))
+                    ? <OverlayTrigger
+                      placement="bottom"
+                      overlay={
+                        <Tooltip id="tooltip">
+                          Make sure the value &gt; 0 and your status is Unlocked.
+                        </Tooltip>
+                      }
+                    >
+                      <div style={{display: 'inline-block', cursor: 'not-allowed'}}>
+                        <Button
+                          style={{pointerEvents: 'none'}}
+                          wide
+                          icon={<IconArrowUp/>}
+                          label="Provide"
+                          disabled={poolAddress === '' || status !== 0 || !isPos(provideAmount) || usdcAmount.isGreaterThan(userUSDCBalance)}
+                        />
+                      </div>
+                    </OverlayTrigger>
+                    : <Button
                       wide
                       icon={<IconArrowUp/>}
                       label="Provide"
@@ -112,10 +129,8 @@ function Provide({
                           (hash) => setProvideAmount(new BigNumber(0))
                         );
                       }}
-                      disabled={poolAddress === '' || status !== 0 || !isPos(provideAmount) || usdcAmount.isGreaterThan(userUSDCBalance)}
                     />
-                  </div>
-                </OverlayTrigger>
+                }
               </div>
             </div>
           </div>
@@ -124,10 +139,10 @@ function Provide({
         <div style={{display: 'flex', flexWrap: 'wrap'}}>
           {/* total rewarded */}
           <div style={{flexBasis: '32%'}}>
-            <BalanceBlock asset="Rewarded" balance={rewarded} suffix={"TSD"} />
+            <BalanceBlock asset="Rewarded" balance={rewarded} suffix={"TSD"}/>
           </div>
           <div style={{flexBasis: '33%'}}>
-            <BalanceBlock asset="USDC Balance" balance={userUSDCBalance} suffix={"USDC"} />
+            <BalanceBlock asset="USDC Balance" balance={userUSDCBalance} suffix={"USDC"}/>
           </div>
           <div style={{flexBasis: '2%'}}/>
           {/* Approve Pool to spend USDC */}
@@ -145,7 +160,7 @@ function Provide({
         </div>
       }
       <div style={{width: '100%', paddingTop: '2%', textAlign: 'center'}}>
-        <span style={{ opacity: 0.5 }}> Zapping requires your Bonded balance &gt; 0 and your status as Unlocked. </span>
+        <span style={{opacity: 0.5}}> Zapping requires your Bonded balance &gt; 0 and your status as Unlocked. </span>
       </div>
     </Box>
   );
