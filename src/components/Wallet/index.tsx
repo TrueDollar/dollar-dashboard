@@ -4,9 +4,9 @@ import { useParams } from 'react-router-dom';
 import BigNumber from 'bignumber.js';
 import {
   getBalanceBonded,
-  getBalanceOfStaged, getFluidUntil, getLockedUntil,
+  getBalanceOfStaged, getFluidUntil,
   getStatusOf, getTokenAllowance,
-  getTokenBalance, getTokenTotalSupply,
+  getTokenBalance, getTokenTotalSupply, getTotalBonded, loadFluidStatusDao,
 } from '../../utils/infura';
 import {TSD, TSDS} from "../../constants/tokens";
 import {DAO_EXIT_LOCKUP_EPOCHS} from "../../constants/values";
@@ -18,6 +18,7 @@ import BondUnbond from "./BondUnbond";
 import IconHeader from "../common/IconHeader";
 import {getPoolAddress} from "../../utils/pool";
 import {DollarPool4} from "../../constants/contracts";
+import Invest from "./Invest";
 
 function Wallet({ user }: {user: string}) {
   const { override } = useParams();
@@ -34,9 +35,32 @@ function Wallet({ user }: {user: string}) {
   const [userStatus, setUserStatus] = useState(0);
   const [userStatusUnlocked, setUserStatusUnlocked] = useState(0);
   const [lockup, setLockup] = useState(0);
+  const [totalSupply, setTotalSupply] = useState(new BigNumber(0));
+  const [totalBonded, setTotalBonded] = useState(new BigNumber(0));
+  const [fluidStatus, setFluidStatus] = useState({
+    lastUnbond: 0, lastBond: 0, fluidEpoch: 0
+  });
 
   //Update User balances
   useEffect(() => {
+    let isCancelledApr = false;
+    async function updateAPR() {
+      const [
+        totalSupplyStr,
+        totalBondedStr,
+      ] = await Promise.all([
+        getTokenTotalSupply(TSD.addr),
+        getTotalBonded(TSDS.addr),
+      ]);
+
+      if (!isCancelledApr) {
+        setTotalSupply(toTokenUnitsBN(totalSupplyStr, TSD.decimals));
+        setTotalBonded(toTokenUnitsBN(totalBondedStr, TSD.decimals));
+      }
+    }
+
+    updateAPR();
+
     if (user === '') {
       setUserTSDBalance(new BigNumber(0));
       setUserTSDAllowance(new BigNumber(0));
@@ -47,14 +71,22 @@ function Wallet({ user }: {user: string}) {
       setUserStatus(0);
       return;
     }
-    let isCancelled = false;
+    let isCancelledUser = false;
 
     async function updateUserInfo() {
       const [
-        tsdBalance, tsdAllowance, tsdsBalance, tsdsSupply, stagedBalance, bondedBalance, status,
+        tsdBalance,
+        tsdAllowance,
+        tsdsBalance,
+        tsdsSupply,
+        stagedBalance,
+        bondedBalance,
+        status,
         poolAddress,
         fluidUntilStr,
-        // lockedUntilStr
+        totalSupplyStr,
+        totalBondedStr,
+        fluidStatusStr
       ] = await Promise.all([
         getTokenBalance(TSD.addr, user),
         getTokenAllowance(TSD.addr, user, TSDS.addr),
@@ -66,7 +98,10 @@ function Wallet({ user }: {user: string}) {
         getPoolAddress(),
 
         getFluidUntil(TSDS.addr, user),
-        // getLockedUntil(TSDS.addr, user),
+
+        getTokenTotalSupply(TSD.addr),
+        getTotalBonded(TSDS.addr),
+        loadFluidStatusDao(TSDS.addr, user),
       ]);
 
       const userTSDBalance = toTokenUnitsBN(tsdBalance, TSD.decimals);
@@ -76,9 +111,8 @@ function Wallet({ user }: {user: string}) {
       const userBondedBalance = toTokenUnitsBN(bondedBalance, TSDS.decimals);
       const userStatus = parseInt(status, 10);
       const fluidUntil = parseInt(fluidUntilStr, 10);
-      // const lockedUntil = parseInt(lockedUntilStr, 10);
 
-      if (!isCancelled) {
+      if (!isCancelledUser) {
         setUserTSDBalance(new BigNumber(userTSDBalance));
         setUserTSDAllowance(new BigNumber(tsdAllowance));
         setUserTSDSBalance(new BigNumber(userTSDSBalance));
@@ -88,15 +122,21 @@ function Wallet({ user }: {user: string}) {
         setUserStatus(userStatus);
         setUserStatusUnlocked(fluidUntil)
         setLockup(poolAddress === DollarPool4 ? DAO_EXIT_LOCKUP_EPOCHS : 1);
+        setTotalSupply(toTokenUnitsBN(totalSupplyStr, TSD.decimals));
+        setTotalBonded(toTokenUnitsBN(totalBondedStr, TSD.decimals));
+        setFluidStatus(fluidStatusStr);
       }
     }
     updateUserInfo();
-    const id = setInterval(updateUserInfo, 15000);
+    const updateUser = setInterval(updateUserInfo, 15000);
+    const apr = setInterval(updateAPR, 15000);
 
     // eslint-disable-next-line consistent-return
     return () => {
-      isCancelled = true;
-      clearInterval(id);
+      isCancelledUser = true;
+      isCancelledApr = true;
+      clearInterval(updateUser);
+      clearInterval(apr);
     };
   }, [user]);
 
@@ -104,7 +144,13 @@ function Wallet({ user }: {user: string}) {
     <>
       <IconHeader icon={<i className="fas fa-dot-circle"/>} text="DAO"/>
 
+      <Invest
+        totalSupply={totalSupply}
+        totalBonded={totalBonded}
+      />
+
       <AccountPageHeader
+        user={user}
         accountTSDBalance={userTSDBalance}
         accountTSDSBalance={userTSDSBalance}
         totalTSDSSupply={totalTSDSSupply}
@@ -112,6 +158,7 @@ function Wallet({ user }: {user: string}) {
         accountBondedBalance={userBondedBalance}
         accountStatus={userStatus}
         unlocked={userStatusUnlocked}
+        fluidEpoch={fluidStatus?.fluidEpoch}
       />
 
       <WithdrawDeposit

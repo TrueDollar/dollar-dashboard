@@ -110,15 +110,11 @@ function Tool() {
   const daoBonding = (((totalSupply.toNumber() * 4) / 100) * 60) / 100;
   const lpBonding = (((totalSupply.toNumber() * 4) / 100) * 40) / 100;
 
-  console.log('totalCoupons');
-  console.log(totalCoupons);
-
   return <Container>
     <Header>
       Next Epoch:
       <p>$TSD Supply will increase by {increaseBy.toFixed(2)} TSD </p>
       <p>{daoBonding.toFixed(2)} TSD for DAO Bonding and {lpBonding.toFixed(2)} TSD for LP Bonding</p>
-
     </Header>
     <ContainerItem>
       <NextEpoch/>
@@ -174,13 +170,10 @@ function Tool() {
 
 const Header = styled.div`
   text-align: center;
-  padding: 2rem;
-  @media (max-width: 522px) {
-    padding: 0;
-  }
 `
 
 const Container = styled.div`
+  padding: 1%;
   max-width: 800px;
   margin: 20px auto 0 auto;
 `

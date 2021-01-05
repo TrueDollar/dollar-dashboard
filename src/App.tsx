@@ -84,7 +84,7 @@ function App() {
                 <Route path="/pool/:override"><Pool user={user}/></Route>
                 <Route path="/pool/"><Pool user={user}/></Route>
                 <Route path="/about/"><About/></Route>
-                <Route path="/tool/"><Tool/></Route>
+                <Route path="/tools/"><Tool/></Route>
                 <Route path="/"><HomePage user={user}/></Route>
               </Switch>
               :

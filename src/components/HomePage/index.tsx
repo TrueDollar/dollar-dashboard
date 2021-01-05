@@ -79,7 +79,6 @@ function HomePage({user}: HomePageProps) {
         getTokenBalance(USDC.addr, UNI.addr),
 
         getTokenTotalSupply(TSD.addr),
-
         getTotalBonded(TSDS.addr),
         getTotalStaged(TSDS.addr),
         getTotalRedeemable(TSDS.addr),

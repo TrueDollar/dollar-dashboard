@@ -4,11 +4,12 @@ import {
 } from '@aragon/ui';
 import BigNumber from 'bignumber.js';
 import {BalanceBlock, MaxButton, PriceSection} from '../common/index';
-import {approve, providePool} from '../../utils/web3';
+import {approve, claimPool, providePool} from '../../utils/web3';
 import {isPos, toBaseUnitBN, toTokenUnitsBN} from '../../utils/number';
 import {TSD, USDC} from "../../constants/tokens";
 import {MAX_UINT256} from "../../constants/values";
 import BigNumberInput from "../common/BigNumberInput";
+import {OverlayTrigger, Tooltip} from "react-bootstrap";
 
 type ProvideProps = {
   poolAddress: string,
@@ -90,19 +91,31 @@ function Provide({
                 </>
               </div>
               <div style={{width: '40%', minWidth: '6em'}}>
-                <Button
-                  wide
-                  icon={<IconArrowUp/>}
-                  label="Provide"
-                  onClick={() => {
-                    providePool(
-                      poolAddress,
-                      toBaseUnitBN(provideAmount, TSD.decimals),
-                      (hash) => setProvideAmount(new BigNumber(0))
-                    );
-                  }}
-                  disabled={poolAddress === '' || status !== 0 || !isPos(provideAmount) || usdcAmount.isGreaterThan(userUSDCBalance)}
-                />
+                <OverlayTrigger
+                  placement="bottom"
+                  overlay={
+                    <Tooltip id="tooltip">
+                      Make sure the value &gt; 0 and your status is Unlocked.
+                    </Tooltip>
+                  }
+                >
+                  <div style={{display: 'inline-block', cursor: 'not-allowed'}}>
+                    <Button
+                      style={{ pointerEvents: 'none' }}
+                      wide
+                      icon={<IconArrowUp/>}
+                      label="Provide"
+                      onClick={() => {
+                        providePool(
+                          poolAddress,
+                          toBaseUnitBN(provideAmount, TSD.decimals),
+                          (hash) => setProvideAmount(new BigNumber(0))
+                        );
+                      }}
+                      disabled={poolAddress === '' || status !== 0 || !isPos(provideAmount) || usdcAmount.isGreaterThan(userUSDCBalance)}
+                    />
+                  </div>
+                </OverlayTrigger>
               </div>
             </div>
           </div>
@@ -132,7 +145,7 @@ function Provide({
         </div>
       }
       <div style={{width: '100%', paddingTop: '2%', textAlign: 'center'}}>
-        <span style={{ opacity: 0.5 }}> Zap your rewards directly to LP by providing more USDC </span>
+        <span style={{ opacity: 0.5 }}> Zapping requires your Bonded balance &gt; 0 and your status as Unlocked. </span>
       </div>
     </Box>
   );

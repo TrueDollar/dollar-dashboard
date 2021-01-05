@@ -46,6 +46,10 @@
     border-left: .3em solid transparent;
 }
 
+button:focus{
+    outline: none !important;
+}
+
 @keyframes ping {
     75% {
         transform: scale(2);

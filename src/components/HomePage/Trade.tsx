@@ -54,7 +54,7 @@ const Trade = ({pairBalanceTSD, pairBalanceUSDC, uniswapPair}: TradeProps) => {
             <AddressBlock label="Uniswap Contract" address={uniswapPair}/>
             <Button
               label="Chart"
-              icon={<i className="fas fa-water"/>}
+              icon={<i className="fas fa-chart-bar"/>}
               onClick={() => window.open(DEXTOOL, "_blank")}
               style={{
                 marginTop: 4.58

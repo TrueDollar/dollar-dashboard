@@ -65,6 +65,27 @@ export const getBalanceBonded = async (dao, account) => {
  *
  * @param {string} dao address
  * @param {string} account address
+ * @return {Promise<{fluidEpoch: number, lastBond: number, lastUnbond: number}>}
+ */
+
+export const loadFluidStatusDao = async (dao, account) => {
+  const daoContract = new web3.eth.Contract(daoAbi, dao);
+  const bondP = await daoContract.getPastEvents('Bond', { filter: { account }, fromBlock: 0 });
+  const unbondP = await daoContract.getPastEvents('Unbond', { filter: { account }, fromBlock: 0 });
+
+  if (bondP.length + unbondP.length > 0) {
+    const lastUnbond = Math.max(...unbondP.map((u) => u.returnValues.start / 1));
+    const lastBond = Math.max(...bondP.map((d) => d.returnValues.start / 1));
+    const fluidEpoch = Math.max(lastUnbond, lastBond);
+
+    return { lastUnbond, lastBond, fluidEpoch };
+  }
+};
+
+/**
+ *
+ * @param {string} dao address
+ * @param {string} account address
  * @return {Promise<string>}
  */
 export const getBalanceOfStaged = async (dao, account) => {
@@ -358,8 +379,8 @@ export const getCouponEpochs = async (dao, account) => {
     fromBlock: 0,
   });
   const [bought, given] = await Promise.all([purchaseP, transferP]);
-  const events = bought.map((e) => ({epoch: e.returnValues.epoch, amount: e.returnValues.couponAmount}))
-    .concat(given.map((e) => ({epoch: e.returnValues.epoch, amount: 0})));
+  const events = bought.map((e) => ({ epoch: e.returnValues.epoch, amount: e.returnValues.couponAmount }))
+    .concat(given.map((e) => ({ epoch: e.returnValues.epoch, amount: 0 })));
 
   const couponEpochs = [
     ...events.reduce(
@@ -466,11 +487,35 @@ export const getTotalSupplyUni = async () => {
   return tokenContract.methods.totalSupply().call();
 };
 
+export const getPrice0CumulativeLast = async () => {
+  const price0 = new web3.eth.Contract(uniswapPairAbi, UNI.addr);
+  return price0.methods.price0CumulativeLast().call();
+};
+
+export const getPrice1CumulativeLast = async () => {
+  const price0 = new web3.eth.Contract(uniswapPairAbi, UNI.addr);
+  return price0.methods.price1CumulativeLast().call();
+};
+
 // Pool
 
 export const getPoolStatusOf = async (pool, account) => {
   const poolContract = new web3.eth.Contract(poolAbi, pool);
   return poolContract.methods.statusOf(account).call();
+};
+
+export const loadFluidStatusPool = async (pool, account) => {
+  const poolContract = new web3.eth.Contract(poolAbi, pool);
+  const bondP = await poolContract.getPastEvents('Bond', { filter: { account }, fromBlock: 0 });
+  const unbondP = await poolContract.getPastEvents('Unbond', { filter: { account }, fromBlock: 0 });
+
+  if (bondP.length + unbondP.length > 0) {
+    const lastUnbond = Math.max(...unbondP.map((u) => u.returnValues.start / 1));
+    const lastBond = Math.max(...bondP.map((d) => d.returnValues.start / 1));
+    const fluidEpoch = Math.max(lastUnbond, lastBond);
+
+    return { lastUnbond, lastBond, fluidEpoch };
+  }
 };
 
 /**
@@ -575,10 +620,8 @@ export const getPoolFluidUntil = async (pool, account) => {
   // no need to look back further than the pool lockup period
   const blockNumber = await web3.eth.getBlockNumber();
   const fromBlock = blockNumber - (POOL_EXIT_LOCKUP_EPOCHS + 1) * 8640;
-  const bondP = poolContract.getPastEvents('Bond', {
-    filter: {account: account}, fromBlock: fromBlock });
-  const unbondP = poolContract.getPastEvents('Unbond', {
-    filter: {account: account}, fromBlock: fromBlock });
+  const bondP = poolContract.getPastEvents('Bond', { filter: { account }, fromBlock });
+  const unbondP = poolContract.getPastEvents('Unbond', { filter: { account }, fromBlock });
 
   const [bond, unbond] = await Promise.all([bondP, unbondP]);
   const events = bond.map((e) => e.returnValues)
@@ -586,11 +629,10 @@ export const getPoolFluidUntil = async (pool, account) => {
 
   const startEpoch = events.reduce(
     (epoch, event) => {
-      if (epoch > event.start)
-        return epoch
-      else
-        return event.start
-    }, 0);
+      if (epoch > event.start) return epoch;
+      return event.start;
+    }, 0,
+  );
 
   // these contract events report the start epoch as one more than the active
   // epoch when the event is emitted, so we subtract 1 here to adjust

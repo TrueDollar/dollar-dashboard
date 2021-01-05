@@ -9,9 +9,9 @@ import {
   getPoolStatusOf, getPoolTotalBonded,
   getTokenAllowance,
   getTokenBalance,
-  getPoolFluidUntil
+  getPoolFluidUntil, getTokenTotalSupply, getTotalBonded, loadFluidStatusDao, loadFluidStatusPool
 } from '../../utils/infura';
-import {TSD, UNI, USDC} from "../../constants/tokens";
+import {TSD, TSDS, UNI, USDC} from "../../constants/tokens";
 import {POOL_EXIT_LOCKUP_EPOCHS} from "../../constants/values";
 import { toTokenUnitsBN } from '../../utils/number';
 import { Header } from '@aragon/ui';
@@ -25,6 +25,8 @@ import IconHeader from "../common/IconHeader";
 import Migrate from "./Migrate";
 import {getLegacyPoolAddress, getPoolAddress} from "../../utils/pool";
 import {DollarPool4} from "../../constants/contracts";
+import Invest from "./Invest";
+import AccountPageHeader from "../Wallet/Header";
 
 
 
@@ -54,9 +56,31 @@ function Pool({ user }: {user: string}) {
   const [legacyUserClaimableBalance, setLegacyUserClaimableBalance] = useState(new BigNumber(0));
   const [legacyUserStatus, setLegacyUserStatus] = useState(0);
   const [lockup, setLockup] = useState(0);
+  const [totalSupply, setTotalSupply] = useState(new BigNumber(0));
+  const [fluidStatus, setFluidStatus] = useState({
+    lastUnbond: undefined, lastBond: undefined, fluidEpoch: undefined
+  });
 
   //Update User balances
   useEffect(() => {
+    let isCancelledApr = false;
+    async function updateAPR() {
+      const [
+        totalSupplyStr,
+        totalBondedStr,
+      ] = await Promise.all([
+        getTokenTotalSupply(TSD.addr),
+        getTokenBalance(TSD.addr, UNI.addr),
+      ]);
+
+      if (!isCancelledApr) {
+        setTotalSupply(toTokenUnitsBN(totalSupplyStr, TSD.decimals));
+        setPairBalanceTSD(toTokenUnitsBN(totalBondedStr, TSD.decimals));
+      }
+    }
+
+    updateAPR();
+
     if (user === '') {
       setPoolAddress("");
       setPoolTotalBonded(new BigNumber(0));
@@ -89,7 +113,7 @@ function Pool({ user }: {user: string}) {
         poolTotalBondedStr, pairBalanceTSDStr, pairBalanceUSDCStr, balance, usdcBalance,
         allowance, usdcAllowance, stagedBalance, bondedBalance,
         rewardedBalance, claimableBalance, status, fluidUntilStr,
-        legacyStagedBalance, legacyBondedBalance, legacyRewardedBalance, legacyClaimableBalance, legacyStatus
+        legacyStagedBalance, legacyBondedBalance, legacyRewardedBalance, legacyClaimableBalance, legacyStatus, fluidStatusStr
       ] = await Promise.all([
         getPoolTotalBonded(poolAddressStr),
         getTokenBalance(TSD.addr, UNI.addr),
@@ -111,7 +135,8 @@ function Pool({ user }: {user: string}) {
         getPoolBalanceOfBonded(legacyPoolAddress, user),
         getPoolBalanceOfRewarded(legacyPoolAddress, user),
         getPoolBalanceOfClaimable(legacyPoolAddress, user),
-        getPoolStatusOf(legacyPoolAddress, user)
+        getPoolStatusOf(legacyPoolAddress, user),
+        loadFluidStatusPool(poolAddressStr, user),
       ]);
 
       const poolTotalBonded = toTokenUnitsBN(poolTotalBondedStr, TSD.decimals);
@@ -152,23 +177,32 @@ function Pool({ user }: {user: string}) {
         setLegacyUserClaimableBalance(new BigNumber(legacyUserClaimableBalance));
         setLegacyUserStatus(legacyUserStatus);
         setLockup(poolAddressStr === DollarPool4 ? POOL_EXIT_LOCKUP_EPOCHS : 1);
+        setFluidStatus(fluidStatusStr);
       }
     }
     updateUserInfo();
     const id = setInterval(updateUserInfo, 15000);
+    const apr = setInterval(updateAPR, 15000);
 
     // eslint-disable-next-line consistent-return
     return () => {
       isCancelled = true;
       clearInterval(id);
+      clearInterval(apr)
     };
   }, [user]);
   // Check for error in .call()
   const isRewardedNegative = legacyUserRewardedBalance.isGreaterThan(new BigNumber("1000000000000000000"));
   const hasLegacyBalance = legacyUserStagedBalance.isGreaterThan(0) || legacyUserClaimableBalance.isGreaterThan(0) || legacyUserBondedBalance.isGreaterThan(0);
+
   return (
     <>
       <IconHeader icon={<i className="fas fa-parachute-box"/>} text="LP Reward Pool"/>
+
+      <Invest
+        totalSupply={totalSupply}
+        TSDLPBonded={pairBalanceTSD}
+      />
 
       {hasLegacyBalance ?
         <>
@@ -186,6 +220,7 @@ function Pool({ user }: {user: string}) {
         : ''}
 
       <PoolPageHeader
+        user={user}
         accountUNIBalance={userUNIBalance}
         accountBondedBalance={userBondedBalance}
         accountRewardedTSDBalance={userRewardedBalance}
@@ -193,6 +228,7 @@ function Pool({ user }: {user: string}) {
         poolTotalBonded={poolTotalBonded}
         accountPoolStatus={userStatus}
         unlocked={userStatusUnlocked}
+        fluidEpoch={fluidStatus?.fluidEpoch}
       />
 
       <WithdrawDeposit

@@ -6,11 +6,12 @@ import BigNumber from 'bignumber.js';
 import {
   BalanceBlock, MaxButton,
 } from '../common/index';
-import {bondPool, unbondPool} from '../../utils/web3';
+import {bondPool, depositPool, unbondPool} from '../../utils/web3';
 import {isPos, toBaseUnitBN} from '../../utils/number';
 import {UNI} from "../../constants/tokens";
 import BigNumberInput from "../common/BigNumberInput";
 import TextBlock from "../common/TextBlock";
+import {OverlayTrigger, Tooltip} from "react-bootstrap";
 
 type BondUnbondProps = {
   poolAddress: string,
@@ -55,19 +56,31 @@ function BondUnbond({
               </>
             </div>
             <div style={{width: '40%', minWidth: '7em'}}>
-              <Button
-                wide
-                icon={status === 0 ? <IconCirclePlus/> : <IconCaution/>}
-                label="Bond"
-                onClick={() => {
-                  bondPool(
-                    poolAddress,
-                    toBaseUnitBN(bondAmount, UNI.decimals),
-                    (hash) => setBondAmount(new BigNumber(0))
-                  );
-                }}
-                disabled={poolAddress === '' || !isPos(bondAmount)}
-              />
+              <OverlayTrigger
+                placement="bottom"
+                overlay={
+                  <Tooltip id="tooltip">
+                    Make sure the value &gt; 0
+                  </Tooltip>
+                }
+              >
+                <div style={{display: 'inline-block', cursor: 'not-allowed'}}>
+                <Button
+                  wide
+                  style={{ pointerEvents: 'none' }}
+                  icon={status === 0 ? <IconCirclePlus/> : <IconCaution/>}
+                  label="Bond"
+                  onClick={() => {
+                    bondPool(
+                      poolAddress,
+                      toBaseUnitBN(bondAmount, UNI.decimals),
+                      (hash) => setBondAmount(new BigNumber(0))
+                    );
+                  }}
+                  disabled={poolAddress === '' || !isPos(bondAmount)}
+                />
+                </div>
+              </OverlayTrigger>
             </div>
           </div>
         </div>
@@ -90,19 +103,31 @@ function BondUnbond({
               </>
             </div>
             <div style={{width: '40%', minWidth: '7em'}}>
-              <Button
-                wide
-                icon={status === 0 ? <IconCircleMinus/> : <IconCaution/>}
-                label="Unbond"
-                onClick={() => {
-                  unbondPool(
-                    poolAddress,
-                    toBaseUnitBN(unbondAmount, UNI.decimals),
-                    (hash) => setUnbondAmount(new BigNumber(0))
-                  );
-                }}
-                disabled={poolAddress === '' || !isPos(unbondAmount)}
-              />
+              <OverlayTrigger
+                placement="bottom"
+                overlay={
+                  <Tooltip id="tooltip">
+                    Make sure the value &gt; 0
+                  </Tooltip>
+                }
+              >
+                <div style={{display: 'inline-block', cursor: 'not-allowed'}}>
+                  <Button
+                    style={{ pointerEvents: 'none' }}
+                    wide
+                    icon={status === 0 ? <IconCircleMinus/> : <IconCaution/>}
+                    label="Unbond"
+                    onClick={() => {
+                      unbondPool(
+                        poolAddress,
+                        toBaseUnitBN(unbondAmount, UNI.decimals),
+                        (hash) => setUnbondAmount(new BigNumber(0))
+                      );
+                    }}
+                    disabled={poolAddress === '' || !isPos(unbondAmount)}
+                  />
+                </div>
+              </OverlayTrigger>
             </div>
           </div>
         </div>

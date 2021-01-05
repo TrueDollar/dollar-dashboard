@@ -6,11 +6,12 @@ import BigNumber from 'bignumber.js';
 import {
   BalanceBlock, MaxButton,
 } from '../common/index';
-import {approve, depositPool, withdrawPool} from '../../utils/web3';
+import {approve, depositPool, providePool, withdrawPool} from '../../utils/web3';
 import {isPos, toBaseUnitBN} from '../../utils/number';
-import {UNI} from "../../constants/tokens";
+import {TSD, UNI} from "../../constants/tokens";
 import {MAX_UINT256} from "../../constants/values";
 import BigNumberInput from "../common/BigNumberInput";
+import {OverlayTrigger, Tooltip} from "react-bootstrap";
 
 type WithdrawDepositProps = {
   poolAddress: string
@@ -54,19 +55,31 @@ function WithdrawDeposit({
                 </>
               </div>
               <div style={{width: '40%', minWidth: '7em'}}>
-                <Button
-                  wide
-                  icon={status === 0 ? <IconCirclePlus/> : <IconLock/>}
-                  label="Deposit"
-                  onClick={() => {
-                    depositPool(
-                      poolAddress,
-                      toBaseUnitBN(depositAmount, UNI.decimals),
-                      (hash) => setDepositAmount(new BigNumber(0))
-                    );
-                  }}
-                  disabled={poolAddress === '' || status !== 0 || !isPos(depositAmount)}
-                />
+                <OverlayTrigger
+                  placement="bottom"
+                  overlay={
+                    <Tooltip id="tooltip">
+                      Make sure the value &gt; 0 and your status is Unlocked.
+                    </Tooltip>
+                  }
+                >
+                  <div style={{display: 'inline-block', cursor: 'not-allowed'}}>
+                    <Button
+                      style={{ pointerEvents: 'none' }}
+                      wide
+                      icon={status === 0 ? <IconCirclePlus/> : <IconLock/>}
+                      label="Deposit"
+                      onClick={() => {
+                        depositPool(
+                          poolAddress,
+                          toBaseUnitBN(depositAmount, UNI.decimals),
+                          (hash) => setDepositAmount(new BigNumber(0))
+                        );
+                      }}
+                      disabled={poolAddress === '' || status !== 0 || !isPos(depositAmount)}
+                    />
+                  </div>
+                </OverlayTrigger>
               </div>
             </div>
           </div>
@@ -90,19 +103,31 @@ function WithdrawDeposit({
                 </>
               </div>
               <div style={{width: '40%', minWidth: '7em'}}>
-                <Button
-                  wide
-                  icon={status === 0 ? <IconCircleMinus/> : <IconLock/>}
-                  label="Withdraw"
-                  onClick={() => {
-                    withdrawPool(
-                      poolAddress,
-                      toBaseUnitBN(withdrawAmount, UNI.decimals),
-                      (hash) => setWithdrawAmount(new BigNumber(0))
-                    );
-                  }}
-                  disabled={poolAddress === '' || status !== 0 || !isPos(withdrawAmount)}
-                />
+                <OverlayTrigger
+                  placement="bottom"
+                  overlay={
+                    <Tooltip id="tooltip">
+                      Make sure the value &gt; 0 and your status is Unlocked.
+                    </Tooltip>
+                  }
+                >
+                  <div style={{display: 'inline-block', cursor: 'not-allowed'}}>
+                    <Button
+                      style={{ pointerEvents: 'none' }}
+                      wide
+                      icon={status === 0 ? <IconCircleMinus/> : <IconLock/>}
+                      label="Withdraw"
+                      onClick={() => {
+                        withdrawPool(
+                          poolAddress,
+                          toBaseUnitBN(withdrawAmount, UNI.decimals),
+                          (hash) => setWithdrawAmount(new BigNumber(0))
+                        );
+                      }}
+                      disabled={poolAddress === '' || status !== 0 || !isPos(withdrawAmount)}
+                    />
+                  </div>
+                </OverlayTrigger>
               </div>
             </div>
           </div>
@@ -128,6 +153,9 @@ function WithdrawDeposit({
           </div>
         </div>
       }
+      <div style={{width: '100%', paddingTop: '2%', textAlign: 'center'}}>
+        <span style={{ opacity: 0.5 }}>Staging requires your status as Unlocked.</span>
+      </div>
     </Box>
   );
 }
