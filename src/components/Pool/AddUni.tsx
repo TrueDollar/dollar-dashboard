@@ -78,7 +78,7 @@ function AddUni({
                 </div>
                 <div style={{width: '40%', minWidth: '6em'}}>
                   {
-                    !isPos(amountUSDC)
+                    (!isPos(amountUSDC) || amountUSDC.isGreaterThan(balanceUSDC))
                       ? <OverlayTrigger
                         placement="bottom"
                         overlay={
@@ -93,7 +93,7 @@ function AddUni({
                             wide
                             icon={<IconArrowUp/>}
                             label="Get UNI-V2"
-                            disabled={!isPos(amountUSDC)}
+                            disabled
                           />
                         </div>
                       </OverlayTrigger>
@@ -135,7 +135,7 @@ function AddUni({
                 </div>
                 <div style={{width: '40%', minWidth: '6em'}}>
                   {
-                    !isPos(amountTSD)
+                   ( !isPos(amountTSD) || amountTSD.isGreaterThan(balanceTSD))
                       ? <OverlayTrigger
                         placement="bottom"
                         overlay={
@@ -150,7 +150,7 @@ function AddUni({
                             wide
                             icon={<IconArrowUp/>}
                             label="Get UNI-V2"
-                            disabled={!isPos(amountTSD)}
+                            disabled
                           />
                         </div>
                       </OverlayTrigger>
