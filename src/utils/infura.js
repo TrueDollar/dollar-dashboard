@@ -34,6 +34,18 @@ export const getTokenBalance = async (token, account) => {
   return tokenContract.methods.balanceOf(account).call();
 };
 
+/**
+ *
+ * @param {string} account address
+ * @return {Promise<string>}
+ */
+export const getBalanceEth = async (account) => {
+  if (account === '') return '0';
+  // const tokenContract = new web3();
+  // console.log(web3.getBalance());
+  // return tokenContract.methods.balanceOf(account).call();
+};
+
 export const getTokenTotalSupply = async (token) => {
   const tokenContract = new web3.eth.Contract(dollarAbi, token);
   return tokenContract.methods.totalSupply().call();
@@ -649,11 +661,11 @@ export const getPoolFluidUntil = async (pool, account) => {
  * @param usdcAmount
  * @return {Promise<string>}
  */
-export const buyUniV2 = async (account, usdcAmount) => {
+export const buyUniV2 = async (account, amount, fromAddress) => {
   const token = '0x0000000000000000000000000000000000000000';
   const zapContract = new web3.eth.Contract(zapAbi, ZAP.addr);
   return zapContract.methods.ZapIn(
-    USDC.addr, UNI.addr, usdcAmount, 0, token, token, token,
+    fromAddress, UNI.addr, amount, 0, token, token, token,
   ).send({
     from: account,
   }).on('transactionHash', (hash) => {

@@ -58,7 +58,9 @@ function Pool({ user }: {user: string}) {
   const [fluidStatus, setFluidStatus] = useState({
     lastUnbond: undefined, lastBond: undefined, fluidEpoch: undefined
   });
-  const [zapAllowance, setZapAllowance] = useState(new BigNumber(0));
+  const [zapUSDCAllowance, setZapUSDCAllowance] = useState(new BigNumber(0));
+  const [zapTSDAllowance, setZapTSDAllowance] = useState(new BigNumber(0));
+  const [userTSDBalance, setUserTSDBalance] = useState(new BigNumber(0));
 
   //Update User balances
   useEffect(() => {
@@ -100,7 +102,9 @@ function Pool({ user }: {user: string}) {
       setLegacyUserRewardedBalance(new BigNumber(0));
       setLegacyUserClaimableBalance(new BigNumber(0));
       setLegacyUserStatus(0);
-      setZapAllowance(new BigNumber(0));
+      setZapUSDCAllowance(new BigNumber(0));
+      setZapTSDAllowance(new BigNumber(0));
+      setUserTSDBalance(new BigNumber(0));
       return;
     }
     let isCancelled = false;
@@ -110,11 +114,28 @@ function Pool({ user }: {user: string}) {
       const legacyPoolAddress = getLegacyPoolAddress(poolAddressStr);
 
       const [
-        poolTotalBondedStr, pairBalanceTSDStr, pairBalanceUSDCStr, balance, usdcBalance,
-        allowance, usdcAllowance, stagedBalance, bondedBalance,
-        rewardedBalance, claimableBalance, status, fluidUntilStr,
-        legacyStagedBalance, legacyBondedBalance, legacyRewardedBalance, legacyClaimableBalance, legacyStatus, fluidStatusStr,
-        zapAllowance
+        poolTotalBondedStr,
+        pairBalanceTSDStr,
+        pairBalanceUSDCStr,
+        balance,
+        usdcBalance,
+        allowance,
+        usdcAllowance,
+        stagedBalance,
+        bondedBalance,
+        rewardedBalance,
+        claimableBalance,
+        status,
+        fluidUntilStr,
+        legacyStagedBalance,
+        legacyBondedBalance,
+        legacyRewardedBalance,
+        legacyClaimableBalance,
+        legacyStatus,
+        fluidStatusStr,
+        zapUSDCAllowance,
+        zapTSDAllowance,
+        userTSDBalanceStr
       ] = await Promise.all([
         getPoolTotalBonded(poolAddressStr),
         getTokenBalance(TSD.addr, UNI.addr),
@@ -139,6 +160,8 @@ function Pool({ user }: {user: string}) {
         getPoolStatusOf(legacyPoolAddress, user),
         loadFluidStatusPool(poolAddressStr, user),
         getTokenAllowance(USDC.addr, user, ZAP.addr),
+        getTokenAllowance(TSD.addr, user, ZAP.addr),
+        getTokenBalance(TSD.addr, user),
       ]);
 
       const poolTotalBonded = toTokenUnitsBN(poolTotalBondedStr, TSD.decimals);
@@ -157,6 +180,7 @@ function Pool({ user }: {user: string}) {
       const legacyUserRewardedBalance = toTokenUnitsBN(legacyRewardedBalance, UNI.decimals);
       const legacyUserClaimableBalance = toTokenUnitsBN(legacyClaimableBalance, TSD.decimals);
       const legacyUserStatus = parseInt(legacyStatus, 10);
+      const userTSDBalance = toTokenUnitsBN(userTSDBalanceStr, TSD.decimals);
 
       if (!isCancelled) {
         setPoolAddress(poolAddressStr);
@@ -180,7 +204,9 @@ function Pool({ user }: {user: string}) {
         setLegacyUserStatus(legacyUserStatus);
         setLockup(poolAddressStr === DollarPool4 ? POOL_EXIT_LOCKUP_EPOCHS : 1);
         setFluidStatus(fluidStatusStr);
-        setZapAllowance(new BigNumber(zapAllowance));
+        setZapUSDCAllowance(new BigNumber(zapUSDCAllowance));
+        setZapTSDAllowance(new BigNumber(zapTSDAllowance));
+        setUserTSDBalance(new BigNumber(userTSDBalance));
       }
     }
     updateUserInfo();
@@ -238,7 +264,9 @@ function Pool({ user }: {user: string}) {
         user={user}
         accountUNIBalance={userUNIBalance}
         balanceUSDC={userUSDCBalance}
-        zapAllowance={zapAllowance}
+        balanceTSD={userTSDBalance}
+        zapUSDCAllowance={zapUSDCAllowance}
+        zapTSDAllowance={zapTSDAllowance}
       />
 
       <WithdrawDeposit

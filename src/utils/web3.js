@@ -66,6 +66,18 @@ export const approve = async (tokenAddr, spender, amt = UINT256_MAX) => {
     });
 };
 
+export const approveTSD = async (tokenAddr, spender, amt = UINT256_MAX) => {
+  const account = await checkConnectedAndGetAddress();
+  const oToken = new window.web3.eth.Contract(daoAbi, tokenAddr);
+  await oToken.methods
+    .approve(spender, amt)
+    .send({ from: account })
+    .on('transactionHash', (hash) => {
+      notify.hash(hash);
+    });
+};
+
+
 export const mintTestnetUSDC = async (amount) => {
   const account = await checkConnectedAndGetAddress();
   const usdc = new window.web3.eth.Contract(testnetUSDCAbi, USDC.addr);
