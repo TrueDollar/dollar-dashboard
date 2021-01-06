@@ -26,7 +26,7 @@ const Trade = ({pairBalanceTSD, pairBalanceUSDC, uniswapPair}: TradeProps) => {
         </div>
       </div>
       <Container>
-        <div style={{flexBasis: '25%'}}>
+        <div>
           <BalanceBlock asset="TSD Price" balance={price} suffix={"USDC"}/>
           <Button
             label="Buy TSD"
@@ -34,7 +34,7 @@ const Trade = ({pairBalanceTSD, pairBalanceUSDC, uniswapPair}: TradeProps) => {
             onClick={() => window.open(UNISWAP_TRADE, "_blank")}
           />
         </div>
-        <div style={{flexBasis: '25%'}}>
+        <div>
           <BalanceBlock asset="TSD Liquidity" balance={pairBalanceTSD} suffix={"TSD"}/>
           <Button
             label="Info"
@@ -42,7 +42,7 @@ const Trade = ({pairBalanceTSD, pairBalanceUSDC, uniswapPair}: TradeProps) => {
             onClick={() => window.open(UNISWAP_INFO, "_blank")}
           />
         </div>
-        <div style={{flexBasis: '25%'}}>
+        <div>
           <BalanceBlock asset="USDC Liquidity" balance={pairBalanceUSDC} suffix={"USDC"}/>
           <Button
             label="Add Liquidity"
@@ -50,16 +50,16 @@ const Trade = ({pairBalanceTSD, pairBalanceUSDC, uniswapPair}: TradeProps) => {
             onClick={() => window.open(UNISWAP_SUPPLY, "_blank")}
           />
         </div>
-        <div style={{flexBasis: '25%'}}>
-            <AddressBlock label="Uniswap Contract" address={uniswapPair}/>
-            <Button
-              label="Chart"
-              icon={<i className="fas fa-chart-bar"/>}
-              onClick={() => window.open(DEXTOOL, "_blank")}
-              style={{
-                marginTop: 4.58
-              }}
-            />
+        <div>
+          <AddressBlock label="Uniswap Contract" address={uniswapPair}/>
+          <Button
+            label="Chart"
+            icon={<i className="fas fa-chart-bar"/>}
+            onClick={() => window.open(DEXTOOL, "_blank")}
+            style={{
+              marginTop: 4.58
+            }}
+          />
         </div>
       </Container>
     </>
@@ -70,6 +70,7 @@ const Container = styled.div`
   display: flex;
   flex-wrap: wrap;
   padding: 0 0 3% 3%;
+  justify-content: space-between;
   @media (max-width: 522px) {
     display: block;
   }

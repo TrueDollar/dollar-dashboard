@@ -32,6 +32,7 @@ function Footer({updateTheme, theme, hasWeb3}: FooterProps) {
               <FooterLink icon={<i className="fab fa-twitter"/>} href={"https://twitter.com/TrueSeigniorage"}/>
               <FooterLink icon={<i className="fab fa-medium"/>} href={"https://trueseigniorage.medium.com/"}/>
               <FooterLink icon={<i className="fab fa-telegram"/>} href={"https://t.me/TrueSeigniorageDollar"}/>
+              <FooterLink icon={<i className="fab fa-discord"/>} href={"https://discord.gg/crRpm474gu"}/>
             </div>
            <ContainerTeam>
              <div style={{ marginRight: 5 }}>

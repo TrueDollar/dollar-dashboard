@@ -132,7 +132,7 @@ function Tool() {
       </div>
     </ContainerItem>
     <ContainerItem>
-      <div style={{width: '48%'}}>
+      <div style={{flexBasis: '48%', maxWidth: 300}}>
         <Title>Token Supply</Title>
         <ContainerFlex>
           <div>
@@ -149,7 +149,7 @@ function Tool() {
           </div>
         </ContainerFlex>
       </div>
-      <div style={{width: '48%'}}>
+      <div style={{flexBasis: '48%', maxWidth: 300}}>
         <TokenDistribution
           totalRedeemable={totalRedeemable}
           totalStaged={totalStaged}
@@ -173,10 +173,11 @@ const Header = styled.div`
 `
 
 const Container = styled.div`
-  padding: 1%;
+  padding: 1% 15px 1% 15px;
   max-width: 800px;
   margin: 20px auto 0 auto;
 `
+
 const ContainerItem = styled.div`
   display: flex;
   justify-content: space-between;

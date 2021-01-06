@@ -8,9 +8,9 @@ import {OverlayTrigger, Tooltip} from "react-bootstrap";
 import {
   BalanceBlock, MaxButton,
 } from '../common/index';
-import {claimPool, unbondPool} from '../../utils/web3';
+import {claimPool} from '../../utils/web3';
 import {isPos, toBaseUnitBN} from '../../utils/number';
-import {TSD, UNI} from "../../constants/tokens";
+import {TSD} from "../../constants/tokens";
 import BigNumberInput from "../common/BigNumberInput";
 
 type ClaimProps = {

@@ -18,7 +18,7 @@ const HistoryReturn = ({totalSupply, totalBonded, TSDLPBonded}: HistoryReturnPro
     <div className="mt-4">
       <Title>Yield</Title>
       <Container>
-        <div style={{ width: '48%' }}>
+        <div style={{flexBasis: '48%', maxWidth: 300}}>
           <ContainerItem>
             <div>
               <p>DAO hourly:</p>
@@ -30,7 +30,7 @@ const HistoryReturn = ({totalSupply, totalBonded, TSDLPBonded}: HistoryReturnPro
             </div>
           </ContainerItem>
         </div>
-        <div style={{ width: '48%' }}>
+        <div style={{flexBasis: '48%', maxWidth: 300}}>
           <ContainerItem>
             <div>
               <p>LP hourly:</p>

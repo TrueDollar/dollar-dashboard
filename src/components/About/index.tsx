@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components'
 
 function About() {
-  return <div style={{padding: '1%'}}>
+  return <Container>
     <Title>Introducing True Seigniorage Dollar</Title>
     <Text>True Seigniorage Dollar is a decentralized, oracle data driven stablecoin which uses a supply elasticity
       method around a Time Weighted Average Price (TWAP) oracle for price stability. It’s an algorithmic stablecoin
@@ -14,24 +14,46 @@ function About() {
     <TextSub>Logo True Seigniorage Dollar</TextSub>
     <div>
       <Text>
-        Token: <a href="https://etherscan.io/token/0x4846239fdf4d4c1aeb26729fa064b0205aca90e1"
-                  target="_blank">https://etherscan.io/token/0x4846239fdf4d4c1aeb26729fa064b0205aca90e1</a>
+        Token: <a
+        href="https://etherscan.io/token/0x4846239fdf4d4c1aeb26729fa064b0205aca90e1"
+        target="_blank"
+        rel="noopener noreferrer"
+      >https://etherscan.io/token/0x4846239fdf4d4c1aeb26729fa064b0205aca90e1</a>
       </Text>
       <Text>
-        Website: <a href="https://truedollar.finance" target="_blank">https://truedollar.finance</a>
+        Website: <a
+        rel="noopener noreferrer"
+        href="https://truedollar.finance"
+        target="_blank"
+      >https://truedollar.finance</a>
       </Text>
       <Text>
-        Twitter: <a href="https://twitter.com/TrueSeigniorage" target="_blank">https://twitter.com/TrueSeigniorage</a>
+        Twitter: <a
+        href="https://twitter.com/TrueSeigniorage"
+        target="_blank"
+        rel="noopener noreferrer"
+      >https://twitter.com/TrueSeigniorage</a>
       </Text>
       <Text>
-        Telegram: <a href="https://t.me/TrueSeigniorageDollar" target="_blank">https://t.me/TrueSeigniorageDollar</a>
+        Telegram: <a
+        href="https://t.me/TrueSeigniorageDollar"
+        target="_blank"
+        rel="noopener noreferrer"
+      >https://t.me/TrueSeigniorageDollar</a>
       </Text>
       <Text>
-        Github: <a href="https://github.com/TrueDollar" target="_blank">https://github.com/TrueDollar</a>
+        Github: <a
+        href="https://github.com/TrueDollar"
+        target="_blank"
+        rel="noopener noreferrer"
+      >https://github.com/TrueDollar</a>
       </Text>
       <Text>
-        Dextools: <a href="https://www.dextools.io/app/uniswap/pair-explorer/0x55b0c2eee5d48af6d2a65507319d20453e9f97b6"
-                     target="_blank">https://www.dextools.io/app/uniswap/pair-explorer/0x55b0c2eee5d48af6d2a65507319d20453e9f97b6</a>
+        Dextools: <a
+        href="https://www.dextools.io/app/uniswap/pair-explorer/0x55b0c2eee5d48af6d2a65507319d20453e9f97b6"
+        target="_blank"
+        rel="noopener noreferrer"
+      >https://www.dextools.io/app/uniswap/pair-explorer/0x55b0c2eee5d48af6d2a65507319d20453e9f97b6</a>
       </Text>
     </div>
     <div>
@@ -42,7 +64,11 @@ function About() {
         <TextBasic>DAO Lockup: 72 Epochs</TextBasic>
         <TextBasic>LP Lockup: 24 Epochs</TextBasic>
         <TextBasic>Source: Uniswap USDC/TSD pair</TextBasic>
-        <TextBasic>Method: <a href="https://uniswap.org/docs/v2/core-concepts/oracles/" target="_blank">Uniswap V2 Time
+        <TextBasic>Method: <a
+          rel="noopener noreferrer"
+          href="https://uniswap.org/docs/v2/core-concepts/oracles/"
+          target="_blank"
+        >Uniswap V2 Time
           Weighted Average Price (TWAP)</a></TextBasic>
         <TextBasic>Oracle Minimum: 10,000 USDC</TextBasic>
         <TextBasic>Period: 1 Epoch (1 Hour)</TextBasic>
@@ -68,8 +94,12 @@ function About() {
         time can lead to unstable value of the tokens. This is our experiment to explorer whether fast epoch time can
         adjust the price better or not. So please DYOR before investing in our project.</Text>
     </div>
-  </div>
+  </Container>
 }
+
+const Container = styled.div`
+  padding: 1% 15px;
+`
 
 const Title = styled.h1`
   margin-top: 10px;

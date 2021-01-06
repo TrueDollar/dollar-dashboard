@@ -6,7 +6,7 @@ import BigNumber from 'bignumber.js';
 import {
   BalanceBlock, MaxButton,
 } from '../common/index';
-import {bond, claimPool, unbondUnderlying} from '../../utils/web3';
+import {bond, unbondUnderlying} from '../../utils/web3';
 import {isPos, toBaseUnitBN} from '../../utils/number';
 import {TSD, TSDS} from "../../constants/tokens";
 import BigNumberInput from "../common/BigNumberInput";

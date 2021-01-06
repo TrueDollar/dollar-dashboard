@@ -1,6 +1,7 @@
 import React from 'react';
 import BigNumber from "bignumber.js";
 import {Box} from '@aragon/ui';
+import styled from 'styled-components'
 
 type InvestProps = {
   totalSupply: BigNumber,
@@ -14,8 +15,8 @@ const Invest = ({totalSupply, TSDLPBonded}: InvestProps) => {
   const lpWeekly = (((((totalSupply.toNumber() * 4) / 100) * 40) / 100) * 168 + TSDLpBonded) / TSDLpBonded;
 
   return (
-    <div style={{padding: '1%', display: 'flex', flexWrap: 'wrap'}}>
-      <div style={{flexBasis: '30%', flexGrow: 1, marginRight: '2%'}}>
+    <Container>
+      <ContainerItem style={{flexBasis: '30%', flexGrow: 1, marginRight: '2%'}}>
         <Box>
           <div>
             <div style={{fontSize: 16, padding: 3}}>APR</div>
@@ -54,8 +55,8 @@ const Invest = ({totalSupply, TSDLPBonded}: InvestProps) => {
             </div>
           </div>
         </Box>
-      </div>
-      <div style={{flexBasis: '68%'}}>
+      </ContainerItem>
+      <ContainerItem style={{flexBasis: '68%'}}>
         <Box className="h-100">
           <h1 style={{fontSize: 30}}><strong>Guide for LP bonding</strong></h1>
 
@@ -69,9 +70,24 @@ const Invest = ({totalSupply, TSDLPBonded}: InvestProps) => {
 
           <p className="mt-2">Step 5: Unbond and wait 24 hours to claim your rewards</p>
         </Box>
-      </div>
-    </div>
+      </ContainerItem>
+    </Container>
   );
 };
+
+const Container = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  padding: 1%;
+  @media (max-width: 568px) {
+    display: block;
+  }
+`
+
+const ContainerItem = styled.div`
+  @media (max-width: 568px) {
+    margin: 2% !important;
+  }
+`
 
 export default Invest;

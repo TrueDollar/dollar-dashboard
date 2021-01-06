@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-
+import { Header } from '@aragon/ui';
 import BigNumber from 'bignumber.js';
+
 import {
   getPoolBalanceOfBonded, getPoolBalanceOfClaimable,
   getPoolBalanceOfRewarded,
@@ -9,12 +10,11 @@ import {
   getPoolStatusOf, getPoolTotalBonded,
   getTokenAllowance,
   getTokenBalance,
-  getPoolFluidUntil, getTokenTotalSupply, getTotalBonded, loadFluidStatusDao, loadFluidStatusPool
+  getPoolFluidUntil, getTokenTotalSupply, loadFluidStatusPool
 } from '../../utils/infura';
-import {TSD, TSDS, UNI, USDC} from "../../constants/tokens";
+import {TSD, UNI, USDC} from "../../constants/tokens";
 import {POOL_EXIT_LOCKUP_EPOCHS} from "../../constants/values";
 import { toTokenUnitsBN } from '../../utils/number';
-import { Header } from '@aragon/ui';
 
 import WithdrawDeposit from "./WithdrawDeposit";
 import BondUnbond from "./BondUnbond";
@@ -26,9 +26,6 @@ import Migrate from "./Migrate";
 import {getLegacyPoolAddress, getPoolAddress} from "../../utils/pool";
 import {DollarPool4} from "../../constants/contracts";
 import Invest from "./Invest";
-import AccountPageHeader from "../Wallet/Header";
-
-
 
 function Pool({ user }: {user: string}) {
   const { override } = useParams();

@@ -1,10 +1,12 @@
 import React, {Fragment} from 'react';
 import BigNumber from 'bignumber.js';
 import {Button} from '@aragon/ui';
+import styled from 'styled-components'
+
 import {BalanceBlock} from '../common/index';
 import TextBlock from "../common/TextBlock";
 import {ownership} from "../../utils/number";
-import {UNISWAP_TRADE} from "../../constants/contracts";
+import {UNISWAP_SUPPLY} from "../../constants/contracts";
 
 type PoolPageHeaderProps = {
   accountUNIBalance: BigNumber,
@@ -35,25 +37,25 @@ const PoolPageHeader = ({
                           fluidEpoch,
                           user
                         }: PoolPageHeaderProps) => (
-  <div style={{padding: '2%', display: 'flex', flexWrap: 'wrap'}}>
-    <div style={{flexBasis: '20%'}}>
+  <Container>
+    <div>
       <BalanceBlock asset="Balance" balance={accountUNIBalance} suffix={" UNI-V2"}/>
       <Button
         label="Get UNI-V2"
         icon={<i className="fas fa-exchange-alt"/>}
-        onClick={() => window.open(UNISWAP_TRADE, "_blank")}
+        onClick={() => window.open(UNISWAP_SUPPLY, "_blank")}
       />
     </div>
-    <div style={{flexBasis: '20%'}}>
+    <div>
       <BalanceBlock asset="Rewarded" balance={accountRewardedTSDBalance} suffix={" TSD"}/>
     </div>
-    <div style={{flexBasis: '20%'}}>
+    <div>
       <BalanceBlock asset="Claimable" balance={accountClaimableTSDBalance} suffix={" TSD"}/>
     </div>
-    <div style={{flexBasis: '20%'}}>
+    <div>
       <BalanceBlock asset="Pool Ownership" balance={ownership(accountBondedBalance, poolTotalBonded)} suffix={"%"}/>
     </div>
-    <div style={{flexBasis: '20%'}}>
+    <div>
       <TextBlock label="Pool Status" text={status(accountPoolStatus)}/>
       {
         user !== '' && (
@@ -72,8 +74,17 @@ const PoolPageHeader = ({
         )
       }
     </div>
-  </div>
+  </Container>
 );
 
+const Container = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  padding: 2%;
+  justify-content: space-between;
+  @media (max-width: 522px) {
+    display: block;
+  }
+`
 
 export default PoolPageHeader;

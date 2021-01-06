@@ -247,16 +247,13 @@ function HomePage({user}: HomePageProps) {
 
 const Container = styled.div`
   display: flex;
-  flex-wrap: wrap;
   padding: 10% 1% 3% 1%;
+  @media (max-width: 768px) {
+    flex-wrap: wrap;
+  }
   @media (max-width: 522px) {
     display: block;
   }
-`
-
-const ContainerBox = styled.div`
-  flex-basis: 30%;
-  margin: 0 2% 0 3%;
 `
 
 export default HomePage;

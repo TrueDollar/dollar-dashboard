@@ -4,7 +4,7 @@ import {
 } from '@aragon/ui';
 import BigNumber from 'bignumber.js';
 import {BalanceBlock, MaxButton, PriceSection} from '../common/index';
-import {approve, claimPool, providePool} from '../../utils/web3';
+import {approve, providePool} from '../../utils/web3';
 import {isPos, toBaseUnitBN, toTokenUnitsBN} from '../../utils/number';
 import {TSD, USDC} from "../../constants/tokens";
 import {MAX_UINT256} from "../../constants/values";
@@ -53,7 +53,7 @@ function Provide({
   };
 
   const handleMaxUSDC = () => {
-    const newAmountTSD = userUSDCBalance.dividedBy(USDCToTSDRatio);
+    const newAmountTSD = userUSDCBalance.dividedBy(USDCToTSDRatio).toFixed(0, 1);
     onChangeAmountTSD(newAmountTSD)
   }
 

@@ -3,15 +3,16 @@ import {
   Box, Button, IconCirclePlus, IconCircleMinus, IconLock
 } from '@aragon/ui';
 import BigNumber from 'bignumber.js';
+import {OverlayTrigger, Tooltip} from "react-bootstrap";
+
 import {
   BalanceBlock, MaxButton,
 } from '../common/index';
-import {approve, depositPool, providePool, withdrawPool} from '../../utils/web3';
+import {approve, depositPool, withdrawPool} from '../../utils/web3';
 import {isPos, toBaseUnitBN} from '../../utils/number';
-import {TSD, UNI} from "../../constants/tokens";
+import {UNI} from "../../constants/tokens";
 import {MAX_UINT256} from "../../constants/values";
 import BigNumberInput from "../common/BigNumberInput";
-import {OverlayTrigger, Tooltip} from "react-bootstrap";
 
 type WithdrawDepositProps = {
   poolAddress: string
