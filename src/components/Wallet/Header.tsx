@@ -2,11 +2,11 @@ import React, {Fragment} from 'react';
 import BigNumber from 'bignumber.js';
 import {Button} from '@aragon/ui';
 import styled from 'styled-components'
+import { useHistory } from 'react-router-dom';
 
 import {BalanceBlock} from '../common/index';
 import TextBlock from "../common/TextBlock";
 import {ownership} from "../../utils/number";
-import {UNISWAP_TRADE} from "../../constants/contracts";
 
 type AccountPageHeaderProps = {
   accountTSDBalance: BigNumber,
@@ -36,46 +36,50 @@ const AccountPageHeader = ({
                              unlocked,
                              fluidEpoch,
                              user
-                           }: AccountPageHeaderProps) => (
-  <Container>
-    <div>
-      <BalanceBlock asset="Balance" balance={accountTSDBalance} suffix={" TSD"}/>
-      <Button
-        label="Buy TSD"
-        icon={<i className="fas fa-exchange-alt"/>}
-        onClick={() => window.open(UNISWAP_TRADE, "_blank")}
-      />
-    </div>
-    <div>
-      <BalanceBlock asset="Staged" balance={accountStagedBalance} suffix={" TSD"}/>
-    </div>
-    <div>
-      <BalanceBlock asset="Bonded" balance={accountBondedBalance} suffix={" TSD"}/>
-    </div>
-    <div>
-      <BalanceBlock asset="DAO Ownership" balance={ownership(accountTSDSBalance, totalTSDSSupply)} suffix={"%"}/>
-    </div>
-    <div>
-      <TextBlock label="Status" text={status(accountStatus)}/>
-      {
-        user !== '' && (
-          <Fragment>
+                           }: AccountPageHeaderProps) => {
+  const history = useHistory();
+
+  return (
+    <Container>
+      <div>
+        <BalanceBlock asset="Balance" balance={accountTSDBalance} suffix={" TSD"}/>
+        <Button
+          label="Buy TSD"
+          icon={<i className="fas fa-exchange-alt"/>}
+          onClick={() => history.push('/buy/')}
+        />
+      </div>
+      <div>
+        <BalanceBlock asset="Staged" balance={accountStagedBalance} suffix={" TSD"}/>
+      </div>
+      <div>
+        <BalanceBlock asset="Bonded" balance={accountBondedBalance} suffix={" TSD"}/>
+      </div>
+      <div>
+        <BalanceBlock asset="DAO Ownership" balance={ownership(accountTSDSBalance, totalTSDSSupply)} suffix={"%"}/>
+      </div>
+      <div>
+        <TextBlock label="Status" text={status(accountStatus)}/>
+        {
+          user !== '' && (
+            <Fragment>
               <p>{
                 isNaN(fluidEpoch)
                   ? 'You did not bonded or unbonded before.'
                   : `You last bonded or unbonded at epoch ${fluidEpoch}.`
               } </p>
-            {
-              accountStatus !== 0 && (
-                <p>Unlocked at epoch {fluidEpoch + 72}.</p>
-              )
-            }
-          </Fragment>
-        )
-      }
-    </div>
-  </Container>
-);
+              {
+                accountStatus !== 0 && (
+                  <p>Unlocked at epoch {fluidEpoch + 72}.</p>
+                )
+              }
+            </Fragment>
+          )
+        }
+      </div>
+    </Container>
+  );
+}
 
 const Container = styled.div`
   display: flex;

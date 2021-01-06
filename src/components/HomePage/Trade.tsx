@@ -2,6 +2,7 @@ import React from 'react';
 import BigNumber from 'bignumber.js';
 import styled from 'styled-components'
 import {Button} from '@aragon/ui';
+import { useHistory } from 'react-router-dom';
 
 import {BalanceBlock, AddressBlock} from '../common/index';
 import {UNISWAP_INFO, UNISWAP_SUPPLY, UNISWAP_TRADE, DEXTOOL} from "../../constants/contracts";
@@ -14,6 +15,7 @@ type TradeProps = {
 
 const Trade = ({pairBalanceTSD, pairBalanceUSDC, uniswapPair}: TradeProps) => {
   const price = pairBalanceUSDC.dividedBy(pairBalanceTSD);
+  const history = useHistory();
 
   return (
     <>
@@ -31,7 +33,7 @@ const Trade = ({pairBalanceTSD, pairBalanceUSDC, uniswapPair}: TradeProps) => {
           <Button
             label="Buy TSD"
             icon={<i className="fas fa-exchange-alt"/>}
-            onClick={() => window.open(UNISWAP_TRADE, "_blank")}
+            onClick={() => history.push('/buy/')}
           />
         </div>
         <div>
