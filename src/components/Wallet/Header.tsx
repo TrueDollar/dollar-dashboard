@@ -2,11 +2,11 @@ import React, {Fragment} from 'react';
 import BigNumber from 'bignumber.js';
 import {Button} from '@aragon/ui';
 import styled from 'styled-components'
-import { useHistory } from 'react-router-dom';
 
 import {BalanceBlock} from '../common/index';
 import TextBlock from "../common/TextBlock";
 import {ownership} from "../../utils/number";
+import {UNISWAP_TRADE} from "../../constants/contracts";
 
 type AccountPageHeaderProps = {
   accountTSDBalance: BigNumber,
@@ -37,7 +37,6 @@ const AccountPageHeader = ({
                              fluidEpoch,
                              user
                            }: AccountPageHeaderProps) => {
-  const history = useHistory();
 
   return (
     <Container>
@@ -46,7 +45,7 @@ const AccountPageHeader = ({
         <Button
           label="Buy TSD"
           icon={<i className="fas fa-exchange-alt"/>}
-          onClick={() => history.push('/buy/')}
+          onClick={() => window.open(UNISWAP_TRADE, "_blank")}
         />
       </div>
       <div>

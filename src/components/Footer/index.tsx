@@ -51,7 +51,7 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 2%;
+  padding: 10px 0;
 
   @media (max-width: 522px) {
     display: block;

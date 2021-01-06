@@ -19,7 +19,6 @@ import Pool from "./components/Pool";
 import HomePageNoWeb3 from "./components/HomePageNoWeb3";
 import About from "./components/About";
 import Tool from "./components/Tool";
-import Buy from "./components/Buy";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
@@ -75,7 +74,6 @@ function App() {
               <Switch>
                 <Route path="/dao/:override"><Wallet user={user}/></Route>
                 <Route path="/dao/"><Wallet user={user}/></Route>
-                <Route path="/buy/"><Buy user={user}/></Route>
                 <Route path="/epoch/"><EpochDetail user={user}/></Route>
                 <Route path="/coupons/:override"><CouponMarket user={user}/></Route>
                 <Route path="/coupons/"><CouponMarket user={user}/></Route>
