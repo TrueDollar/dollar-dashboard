@@ -41,7 +41,7 @@ const PoolPageHeader = ({
     <div>
       <BalanceBlock asset="Balance" balance={accountUNIBalance} suffix={" UNI-V2"}/>
       <Button
-        label="Get UNI-V2"
+        label="Get UNI-V2 Manually"
         icon={<i className="fas fa-exchange-alt"/>}
         onClick={() => window.open(UNISWAP_SUPPLY, "_blank")}
       />

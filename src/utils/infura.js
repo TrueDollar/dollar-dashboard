@@ -2,14 +2,18 @@ import Web3 from 'web3';
 
 import BigNumber from 'bignumber.js';
 import { UniswapV2Router02 } from '../constants/contracts';
-import { TSD, UNI, USDC } from '../constants/tokens';
+import {
+  TSD, UNI, USDC, ZAP,
+} from '../constants/tokens';
 import { POOL_EXIT_LOCKUP_EPOCHS } from '../constants/values';
+import { notify } from './txNotifier';
 
 const dollarAbi = require('../constants/abi/Dollar.json');
 const daoAbi = require('../constants/abi/Implementation.json');
 const poolAbi = require('../constants/abi/Pool.json');
 const uniswapRouterAbi = require('../constants/abi/UniswapV2Router02.json');
 const uniswapPairAbi = require('../constants/abi/UniswapV2Pair.json');
+const zapAbi = require('../constants/abi/Zap.json');
 
 let web3;
 // eslint-disable-next-line no-undef
@@ -637,4 +641,22 @@ export const getPoolFluidUntil = async (pool, account) => {
   // these contract events report the start epoch as one more than the active
   // epoch when the event is emitted, so we subtract 1 here to adjust
   return (parseInt(startEpoch, 10) + POOL_EXIT_LOCKUP_EPOCHS - 1).toString();
+};
+
+/**
+ *
+ * @param {string} account address
+ * @param usdcAmount
+ * @return {Promise<string>}
+ */
+export const buyUniV2 = async (account, usdcAmount) => {
+  const token = '0x0000000000000000000000000000000000000000';
+  const zapContract = new web3.eth.Contract(zapAbi, ZAP.addr);
+  return zapContract.methods.ZapIn(
+    USDC.addr, UNI.addr, usdcAmount, 0, token, token, token,
+  ).send({
+    from: account,
+  }).on('transactionHash', (hash) => {
+    notify.hash(hash);
+  });
 };
