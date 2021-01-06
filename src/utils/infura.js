@@ -658,7 +658,8 @@ export const getPoolFluidUntil = async (pool, account) => {
 /**
  *
  * @param {string} account address
- * @param usdcAmount
+ * @param amount
+ * @param fromAddress
  * @return {Promise<string>}
  */
 export const buyUniV2 = async (account, amount, fromAddress) => {

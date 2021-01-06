@@ -9,7 +9,7 @@ import { BalanceBlock, MaxButton } from '../common/index';
 import {approve, approveTSD} from '../../utils/web3';
 import {buyUniV2} from '../../utils/infura';
 import {isPos, toBaseUnitBN} from '../../utils/number';
-import {ZAP, USDC, TSD} from "../../constants/tokens";
+import {ZAP, USDC, TSD, ESD} from "../../constants/tokens";
 import {MAX_UINT256} from "../../constants/values";
 import BigNumberInput from "../common/BigNumberInput";
 
@@ -18,24 +18,32 @@ type AddUniProps = {
   balanceUSDC: BigNumber,
   zapTSDAllowance: BigNumber,
   zapUSDCAllowance: BigNumber,
+  zapESDAllowance: BigNumber,
   accountUNIBalance: BigNumber,
   balanceTSD: BigNumber,
+  balanceESD: BigNumber,
 };
 
 function AddUni({
-                  user, balanceUSDC, zapTSDAllowance, accountUNIBalance, balanceTSD, zapUSDCAllowance
+                  user, balanceUSDC, zapTSDAllowance, accountUNIBalance, balanceTSD, zapUSDCAllowance, zapESDAllowance, balanceESD
                 }: AddUniProps) {
   const [amountTSD, setAmountTSD] = useState(new BigNumber(0));
   const [amountUSDC, setAmountUSDC] = useState(new BigNumber(0));
+  const [amountESD, setAmountESD] = useState(new BigNumber(0));
 
   const onChangeAmountTSD = (amount) => {
-    const newAmount = new BigNumber(amount.toFixed(2))
-    setAmountTSD(newAmount);
+    // const newAmount = new BigNumber(amount.toFixed(2))
+    setAmountTSD(amount);
   };
 
   const onChangeAmountUSDC = (amount) => {
-    const newAmount = new BigNumber(amount.toFixed(2))
-    setAmountUSDC(newAmount);
+    // const newAmount = new BigNumber(amount.toFixed(2))
+    setAmountUSDC(amount);
+  };
+
+  const onChangeAmountESD = (amount) => {
+    // const newAmount = new BigNumber(amount.toFixed(2))
+    setAmountESD(amount);
   };
 
   return (
@@ -47,6 +55,7 @@ function AddUni({
         <div style={{flexBasis: '33%'}}>
           <BalanceBlock asset="USDC Balance" balance={balanceUSDC} suffix={"USDC"}/>
           <BalanceBlock asset="TSD Balance" balance={balanceTSD} suffix={"TSD"}/>
+          {/*<BalanceBlock asset="ESD Balance" balance={balanceESD} suffix={"ESD"}/>*/}
         </div>
         <div style={{flexBasis: '2%'}}/>
         <div style={{flexBasis: '33%', paddingTop: '2%'}}>
@@ -165,6 +174,64 @@ function AddUni({
                 disabled={user === ''}
               />
           }
+          {/*{*/}
+          {/*  zapESDAllowance.comparedTo(MAX_UINT256.dividedBy(2)) > 0*/}
+          {/*    ? <div style={{display: 'flex'}}>*/}
+          {/*      <div style={{width: '60%', minWidth: '6em'}}>*/}
+          {/*        <BigNumberInput*/}
+          {/*          adornment="ESD"*/}
+          {/*          value={amountESD}*/}
+          {/*          setter={onChangeAmountESD}*/}
+          {/*        />*/}
+          {/*        /!*<PriceSection label="Requires " amt={usdcAmount} symbol=" USDC"/>*!/*/}
+          {/*        <MaxButton*/}
+          {/*          onClick={() => {*/}
+          {/*            onChangeAmountTSD(balanceESD);*/}
+          {/*          }}*/}
+          {/*          title="Max"*/}
+          {/*        />*/}
+          {/*      </div>*/}
+          {/*      <div style={{width: '40%', minWidth: '6em'}}>*/}
+          {/*        {*/}
+          {/*          !isPos(amountESD)*/}
+          {/*            ? <OverlayTrigger*/}
+          {/*              placement="bottom"*/}
+          {/*              overlay={*/}
+          {/*                <Tooltip id="tooltip">*/}
+          {/*                  Make sure the value &gt; 0*/}
+          {/*                </Tooltip>*/}
+          {/*              }*/}
+          {/*            >*/}
+          {/*              <div style={{display: 'inline-block', cursor: 'not-allowed'}}>*/}
+          {/*                <Button*/}
+          {/*                  style={{pointerEvents: 'none'}}*/}
+          {/*                  wide*/}
+          {/*                  icon={<IconArrowUp/>}*/}
+          {/*                  label="Get UNI-V2"*/}
+          {/*                  disabled={!isPos(amountESD)}*/}
+          {/*                />*/}
+          {/*              </div>*/}
+          {/*            </OverlayTrigger>*/}
+          {/*            : <Button*/}
+          {/*              wide*/}
+          {/*              icon={<IconArrowUp/>}*/}
+          {/*              label="Get UNI-V2"*/}
+          {/*              onClick={() => buyUniV2(user, toBaseUnitBN(amountESD, ESD.decimals), ESD.addr)}*/}
+          {/*            />*/}
+          {/*        }*/}
+          {/*      </div>*/}
+          {/*    </div>*/}
+          {/*    : <Button*/}
+          {/*      className="mt-2"*/}
+          {/*      wide*/}
+          {/*      icon={<IconCirclePlus/>}*/}
+          {/*      label="Approve ESD"*/}
+          {/*      onClick={() => {*/}
+          {/*        approveTSD(ESD.addr, ZAP.addr);*/}
+          {/*      }}*/}
+          {/*      disabled={user === ''}*/}
+          {/*    />*/}
+          {/*}*/}
         </div>
       </div>
       <div style={{width: '100%', paddingTop: '2%', textAlign: 'center'}}>

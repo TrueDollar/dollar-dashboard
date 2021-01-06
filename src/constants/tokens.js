@@ -22,6 +22,12 @@ export const TSDS = {
   symbol: 'TSDS',
 };
 
+export const ESD = {
+  addr: '0x36F3FD68E7325a35EB768F1AedaAe9EA0689d723',
+  decimals: 18,
+  symbol: 'ESD',
+};
+
 export const ZAP = {
   addr: '0xD3cF4e98e1e432B3d6Ae42AE406A78F2AC8293D0',
 };
