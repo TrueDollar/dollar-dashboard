@@ -39,7 +39,7 @@ function AddUni({
   };
 
   return (
-    <Box heading="Get UNI-V2 with your USDC">
+    <Box heading="Get UNI-V2 with your USDC or TSD">
       <div style={{display: 'flex', flexWrap: 'wrap'}}>
         <div style={{flexBasis: '32%'}}>
           <BalanceBlock asset="Balance" balance={accountUNIBalance} suffix={"UNI-V2"}/>
@@ -100,7 +100,7 @@ function AddUni({
               : <Button
                 wide
                 icon={<IconCirclePlus/>}
-                label="Approve"
+                label="Approve USDC"
                 onClick={() => {
                   approve(USDC.addr, ZAP.addr);
                 }}
@@ -158,7 +158,7 @@ function AddUni({
                 className="mt-2"
                 wide
                 icon={<IconCirclePlus/>}
-                label="Approve"
+                label="Approve TSD"
                 onClick={() => {
                   approveTSD(TSD.addr, ZAP.addr);
                 }}
@@ -168,7 +168,7 @@ function AddUni({
         </div>
       </div>
       <div style={{width: '100%', paddingTop: '2%', textAlign: 'center'}}>
-        <span style={{opacity: 0.5}}>Save some gas by Zapping your USDC directly to UNI-V2 of USDC-TSD pair with 1-click.</span>
+        <span style={{opacity: 0.5}}>Save some gas by Zapping your USDC or TSD directly to UNI-V2 of USDC-TSD pair with 1-click.</span>
       </div>
     </Box>
   );
