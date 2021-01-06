@@ -31,11 +31,13 @@ function AddUni({
   const [amountUSDC, setAmountUSDC] = useState(new BigNumber(0));
 
   const onChangeAmountTSD = (amount) => {
-    setAmountTSD(amount);
+    const newAmount = new BigNumber(amount.toFixed(2))
+    setAmountTSD(newAmount);
   };
 
   const onChangeAmountUSDC = (amount) => {
-    setAmountUSDC(amount);
+    const newAmount = new BigNumber(amount.toFixed(2))
+    setAmountUSDC(newAmount);
   };
 
   return (
