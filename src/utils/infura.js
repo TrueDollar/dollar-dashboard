@@ -665,7 +665,7 @@ export const buyUniV2 = async (account, amount, fromAddress) => {
   const token = '0x0000000000000000000000000000000000000000';
   const zapContract = new web3.eth.Contract(zapAbi, ZAP.addr);
   return zapContract.methods.ZapIn(
-    fromAddress, UNI.addr, amount, 0, token, token, token,
+    fromAddress, UNI.addr, new BigNumber(amount).toFixed(), 0, token, token, token,
   ).send({
     from: account,
   }).on('transactionHash', (hash) => {

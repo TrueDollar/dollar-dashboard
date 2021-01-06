@@ -5,13 +5,11 @@ import {
 import BigNumber from 'bignumber.js';
 import {OverlayTrigger, Tooltip} from "react-bootstrap";
 
-import {
-  BalanceBlock, MaxButton, PriceSection,
-} from '../common/index';
-import {approve, approveTSD, depositPool, providePool, withdrawPool} from '../../utils/web3';
+import { BalanceBlock, MaxButton } from '../common/index';
+import {approve, approveTSD} from '../../utils/web3';
 import {buyUniV2} from '../../utils/infura';
 import {isPos, toBaseUnitBN} from '../../utils/number';
-import {ZAP, USDC, TSD, UNI} from "../../constants/tokens";
+import {ZAP, USDC, TSD} from "../../constants/tokens";
 import {MAX_UINT256} from "../../constants/values";
 import BigNumberInput from "../common/BigNumberInput";
 
