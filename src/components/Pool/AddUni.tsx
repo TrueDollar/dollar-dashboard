@@ -6,7 +6,7 @@ import BigNumber from 'bignumber.js';
 import {OverlayTrigger, Tooltip} from "react-bootstrap";
 
 import { BalanceBlock, MaxButton } from '../common/index';
-import {approve, approveTSD} from '../../utils/web3';
+import {approve, approveTSD, approveESD} from '../../utils/web3';
 import {buyUniV2} from '../../utils/infura';
 import {isPos, toBaseUnitBN} from '../../utils/number';
 import {ZAP, USDC, TSD, ESD} from "../../constants/tokens";
@@ -186,7 +186,7 @@ function AddUni({
           {/*        /!*<PriceSection label="Requires " amt={usdcAmount} symbol=" USDC"/>*!/*/}
           {/*        <MaxButton*/}
           {/*          onClick={() => {*/}
-          {/*            onChangeAmountTSD(balanceESD);*/}
+          {/*            onChangeAmountESD(balanceESD);*/}
           {/*          }}*/}
           {/*          title="Max"*/}
           {/*        />*/}
@@ -227,7 +227,7 @@ function AddUni({
           {/*      icon={<IconCirclePlus/>}*/}
           {/*      label="Approve ESD"*/}
           {/*      onClick={() => {*/}
-          {/*        approveTSD(ESD.addr, ZAP.addr);*/}
+          {/*        approveESD(ESD.addr, ZAP.addr);*/}
           {/*      }}*/}
           {/*      disabled={user === ''}*/}
           {/*    />*/}

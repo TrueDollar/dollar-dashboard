@@ -21,15 +21,6 @@ npm install
 npm start
 ```
 
-## contracts
-### mainnet
-- `0x2AE21632cBcC5A2835238258B8bfb627beD139Fd` **DAO**
-- `0xA5BE4aE152D77682B466A9F00b0Cb0dD1432820B` **Implementation**
-- `0x4846239FDF4D4C1AEB26729fa064B0205acA90e1` **TSD**
-- `0x465a427A3470363539C38D4af316b4A4196caEC4` **Oracle**
-- `0x55b0C2EeE5d48Af6d2a65507319d20453E9f97b6` **UniswapV2 USDC:TSD Pair**
-- `0x68caaD331bA8250Aef88228F87846652822AE4b5` **LP Incentivation Pool**
-
 ## disclaimer
 this project is an experiment, and its contracts are unaudited - we've put a significant amount of work into testing, as well as generally de-risking the design of its core mechanism, however participants should take great caution as bugs resulting in loss of funds are always a possibility.
 

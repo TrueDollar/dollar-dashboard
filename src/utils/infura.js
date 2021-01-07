@@ -94,7 +94,7 @@ export const loadFluidStatusDao = async (dao, account) => {
     const lastBond = Math.max(...bondP.map((d) => d.returnValues.start / 1));
     const fluidEpoch = Math.max(lastUnbond, lastBond);
 
-    return { lastUnbond, lastBond, fluidEpoch };
+    return { lastUnbond, lastBond, fluidEpoch: fluidEpoch - 1 };
   }
 };
 
@@ -530,7 +530,7 @@ export const loadFluidStatusPool = async (pool, account) => {
     const lastBond = Math.max(...bondP.map((d) => d.returnValues.start / 1));
     const fluidEpoch = Math.max(lastUnbond, lastBond);
 
-    return { lastUnbond, lastBond, fluidEpoch };
+    return { lastUnbond, lastBond, fluidEpoch: fluidEpoch - 1 };
   }
 };
 

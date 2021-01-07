@@ -1,11 +1,11 @@
 export const UNI = {
-  addr: '0x55b0c2eee5d48af6d2a65507319d20453e9f97b6',
+  addr: '0x55b0C2EeE5d48Af6d2a65507319d20453E9f97b6',
   decimals: 18,
   symbol: 'UNI',
 };
 
 export const USDC = {
-  addr: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+  addr: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
   decimals: 6,
   symbol: 'USDC',
 };

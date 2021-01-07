@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { useWallet } from 'use-wallet';
+import React, {useEffect, useState} from 'react';
+import {useWallet} from 'use-wallet';
 
 import {
   Button, IdentityBadge, Box, IconPower, LinkBase,
 } from '@aragon/ui';
 
-import { connect } from '../../utils/web3';
+import {connect} from '../../utils/web3';
 import TotalBalance from "./TotalBalance";
 import ConnectModal from './ConnectModal';
 
@@ -17,20 +17,30 @@ type connectButtonProps = {
   setUser: Function
 }
 
-function ConnectButton({ hasWeb3, user, setUser }: connectButtonProps) {
-  const { status, reset } = useWallet();
+function ConnectButton({hasWeb3, user, setUser}: connectButtonProps) {
+  const {account, status, reset, ethereum} = useWallet();
 
   const [isModalOpen, setModalOpen] = useState(false);
 
   const connectWeb3 = async (wallet) => {
-    connect(wallet.ethereum);
+    await connect(wallet.ethereum);
     setUser(wallet.account);
+    setModalOpen(false)
   };
 
   const disconnectWeb3 = async () => {
     setUser('');
     reset();
   };
+
+  useEffect(() => {
+    if (account) {
+      connectWeb3({
+        ethereum,
+        account
+      });
+    }
+  }, [account]);
 
   const toggleModal = () => setModalOpen(!isModalOpen);
 
@@ -42,16 +52,16 @@ function ConnectButton({ hasWeb3, user, setUser }: connectButtonProps) {
           <div style={{display: 'flex'}}>
             <div>
               <LinkBase onClick={disconnectWeb3} style={{marginRight: '8px', height: '24px'}}>
-                <IconPower />
+                <IconPower/>
               </LinkBase>
             </div>
             <div style={{flex: '1', textAlign: 'right'}}>
-              <IdentityBadge entity={user} />
+              <IdentityBadge entity={user}/>
             </div>
           </div>
           <div style={{display: 'flex'}}>
             <div style={{flex: '1', textAlign: 'right'}}>
-              <TotalBalance user={user} />
+              <TotalBalance user={user}/>
             </div>
           </div>
         </Box>
@@ -60,7 +70,7 @@ function ConnectButton({ hasWeb3, user, setUser }: connectButtonProps) {
   ) : (
     <>
       <ConnectModal visible={isModalOpen} onClose={toggleModal} onConnect={connectWeb3}/>
-      <Button icon={ <div className="icon-container">
+      <Button icon={<div className="icon-container">
         <span className="icon-connect-container"/>
         <span className="icon-connect"/>
       </div>} label="Connect Wallet" onClick={toggleModal} disabled={!hasWeb3}/>

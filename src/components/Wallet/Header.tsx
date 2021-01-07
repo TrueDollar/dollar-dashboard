@@ -16,7 +16,7 @@ type AccountPageHeaderProps = {
   accountBondedBalance: BigNumber,
   accountStatus: number,
   unlocked: number,
-  fluidEpoch: number,
+  fluidEpoch: any,
   user: string
 };
 

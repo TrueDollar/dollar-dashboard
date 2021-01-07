@@ -5,11 +5,12 @@ import BigNumber from 'bignumber.js';
 import { notify } from './txNotifier.ts';
 import { UniswapV2Router02 } from '../constants/contracts';
 
-import { TSD, USDC } from '../constants/tokens';
+import { TSD, USDC, ESD } from '../constants/tokens';
 
 const uniswapRouterAbi = require('../constants/abi/UniswapV2Router02.json');
 const testnetUSDCAbi = require('../constants/abi/TestnetUSDC.json');
 const daoAbi = require('../constants/abi/Implementation.json');
+const daoESDAbi = require('../constants/abi/ImplementationESD.json');
 const poolAbi = require('../constants/abi/Pool.json');
 
 const DEADLINE_FROM_NOW = 60 * 15;
@@ -77,6 +78,16 @@ export const approveTSD = async (tokenAddr, spender, amt = UINT256_MAX) => {
     });
 };
 
+export const approveESD = async (tokenAddr, spender, amt = UINT256_MAX) => {
+  const account = await checkConnectedAndGetAddress();
+  const oToken = new window.web3.eth.Contract(daoESDAbi, tokenAddr);
+  await oToken.methods
+    .approve(spender, amt)
+    .send({ from: account })
+    .on('transactionHash', (hash) => {
+      notify.hash(hash);
+    });
+};
 
 export const mintTestnetUSDC = async (amount) => {
   const account = await checkConnectedAndGetAddress();
@@ -101,7 +112,7 @@ export const buyTSD = async (buyAmount, maxInputAmount) => {
   await router.methods.swapTokensForExactTokens(
     buyAmount,
     maxInputAmount,
-    [USDC.addr, TSD.addr],
+    [ESD.addr, TSD.addr],
     account,
     deadline,
   )

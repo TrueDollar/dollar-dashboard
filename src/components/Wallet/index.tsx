@@ -38,7 +38,7 @@ function Wallet({ user }: {user: string}) {
   const [totalSupply, setTotalSupply] = useState(new BigNumber(0));
   const [totalBonded, setTotalBonded] = useState(new BigNumber(0));
   const [fluidStatus, setFluidStatus] = useState({
-    lastUnbond: 0, lastBond: 0, fluidEpoch: 0
+    lastUnbond: undefined, lastBond: undefined, fluidEpoch: undefined
   });
 
   //Update User balances
