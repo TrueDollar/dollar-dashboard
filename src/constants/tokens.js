@@ -28,6 +28,12 @@ export const ESD = {
   symbol: 'ESD',
 };
 
+export const DSD = {
+  addr: '0xbd2f0cd039e0bfcf88901c98c0bfac5ab27566e3',
+  decimals: 18,
+  symbol: 'DSD',
+};
+
 export const ZAP = {
   addr: '0xD3cF4e98e1e432B3d6Ae42AE406A78F2AC8293D0',
 };

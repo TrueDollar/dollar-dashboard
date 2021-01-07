@@ -3,6 +3,7 @@ import Web3 from 'web3';
 import BigNumber from 'bignumber.js';
 import { UniswapV2Router02 } from '../constants/contracts';
 import {
+  ESD,
   TSD, UNI, USDC, ZAP,
 } from '../constants/tokens';
 import { POOL_EXIT_LOCKUP_EPOCHS } from '../constants/values';
@@ -665,8 +666,48 @@ export const getPoolFluidUntil = async (pool, account) => {
 export const buyUniV2 = async (account, amount, fromAddress) => {
   const token = '0x0000000000000000000000000000000000000000';
   const zapContract = new web3.eth.Contract(zapAbi, ZAP.addr);
+
   return zapContract.methods.ZapIn(
-    fromAddress, UNI.addr, new BigNumber(amount).toFixed(), 0, token, token, token,
+    fromAddress, UNI.addr, new BigNumber(amount).toFixed(), 0, token, token,
+    token,
+  ).send({
+    from: account,
+  }).on('transactionHash', (hash) => {
+    notify.hash(hash);
+  });
+};
+
+export const buyUniV2FromProxy = async (account, amount, fromAddress) => {
+  const zapContract = new web3.eth.Contract(zapAbi, ZAP.addr);
+  const swapdata = web3.eth.abi.encodeFunctionCall(
+    {
+      name: 'sellToUniswap',
+      type: 'function',
+      inputs: [
+        {
+          type: 'address[]',
+          name: 'tokens',
+        },
+        {
+          type: 'uint256',
+          name: 'sellAmount',
+        },
+        {
+          type: 'uint256',
+          name: 'minBuyAmount',
+        },
+        {
+          type: 'bool',
+          name: 'isSushi',
+        },
+      ],
+    }, [
+      [fromAddress, USDC.addr], new BigNumber(amount).toFixed(), 0, false,
+    ],
+  );
+
+  return zapContract.methods.ZapIn(
+    fromAddress, UNI.addr, new BigNumber(amount).toFixed(), 0, '0xDef1C0ded9bec7F1a1670819833240f027b25EfF', '0xDef1C0ded9bec7F1a1670819833240f027b25EfF', swapdata,
   ).send({
     from: account,
   }).on('transactionHash', (hash) => {
