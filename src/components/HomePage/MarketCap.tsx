@@ -15,9 +15,14 @@ const MarketCap = ({totalSupply, pairBalanceUSDC, pairBalanceTSD}: MarketCapProp
 
   return (
     <div>
-      <div style={{fontSize: 16, padding: 3}}>Market Cap <Icon src="./images/coingecko.ico"
-                                                               onClick={()=> window.open('https://www.coingecko.com/en/coins/true-seigniorage-dollar', '_blank')}
-      /></div>
+      <div style={{fontSize: 16, padding: 3}}>Market Cap
+        <Icon src="./images/coingecko.ico"
+              onClick={() => window.open('https://www.coingecko.com/en/coins/true-seigniorage-dollar', '_blank')}
+        />
+        <Icon src="./images/coinmarketcap.png"
+              onClick={() => window.open('https://coinmarketcap.com/currencies/true-seigniorage-dollar/', '_blank')}
+        />
+      </div>
       <div style={{
         fontSize: 24,
         padding: 3,
@@ -31,6 +36,7 @@ const MarketCap = ({totalSupply, pairBalanceUSDC, pairBalanceTSD}: MarketCapProp
 };
 
 const Icon = styled.img`
+  margin: 0 5px;
   border: 1px solid #ffffff;
   border-radius: 10px;
   background-color: #ffffff;

@@ -19,6 +19,8 @@ import Pool from "./components/Pool";
 import HomePageNoWeb3 from "./components/HomePageNoWeb3";
 import About from "./components/About";
 import Tool from "./components/Tool";
+// import GetUni from "./components/GetUni";
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
@@ -74,7 +76,7 @@ function App() {
               <Switch>
                 <Route path="/dao/:override"><Wallet user={user}/></Route>
                 <Route path="/dao/"><Wallet user={user}/></Route>
-                {/*<Route path="/get-uni/"><Wallet user={user}/></Route>*/}
+                {/*<Route path="/get-uni/"><GetUni user={user}/></Route>*/}
                 <Route path="/epoch/"><EpochDetail user={user}/></Route>
                 <Route path="/coupons/:override"><CouponMarket user={user}/></Route>
                 <Route path="/coupons/"><CouponMarket user={user}/></Route>
@@ -101,6 +103,5 @@ function App() {
     </Router>
   );
 }
-
 
 export default App;

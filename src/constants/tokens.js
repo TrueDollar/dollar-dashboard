@@ -54,3 +54,7 @@ export const DAI = {
 export const ZAP = {
   addr: '0xD3cF4e98e1e432B3d6Ae42AE406A78F2AC8293D0',
 };
+
+export const ZAP_PIPE = {
+  addr: '0xBdcd4Dcc79bA2C4088323ca94F443a05A23cA372',
+};

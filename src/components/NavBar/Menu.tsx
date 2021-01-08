@@ -26,6 +26,7 @@ const Menu = ({history, page}: MenuProps) => {
       <LinkButton title="Dashboard" onClick={() => history.push('/')} isSelected={page === '/'}/>
       <LinkButton title="DAO" onClick={() => history.push('/dao/')} isSelected={page.includes('/dao')}/>
       <LinkButton title="Liquidity" onClick={() => history.push('/pool/')} isSelected={page.includes('/pool')}/>
+      {/*<LinkButton title="GetUNI-V2" onClick={() => history.push('/get-uni/')} isSelected={page.includes('/get-uni')}/>*/}
       <LinkButton title="Tools" onClick={() => history.push('/tools/')} isSelected={page.includes('/tools')}/>
       <LinkButton title="About" onClick={() => history.push('/about/')} isSelected={page.includes('/about')}/>
       <LinkButton title="FAQs" onClick={() => window.open('https://docs.truedollar.finance/', "_blank")}/>

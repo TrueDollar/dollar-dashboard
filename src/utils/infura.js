@@ -3,8 +3,8 @@ import Web3 from 'web3';
 import BigNumber from 'bignumber.js';
 import { UniswapV2Router02 } from '../constants/contracts';
 import {
-  ESD, DAI,
-  TSD, UNI, UNI_DSD_USDC, USDC, ZAP,
+  DAI,
+  TSD, UNI, ZAP_PIPE, USDC, ZAP,
 } from '../constants/tokens';
 import { POOL_EXIT_LOCKUP_EPOCHS } from '../constants/values';
 import { notify } from './txNotifier';
@@ -717,11 +717,11 @@ export const buyUniV2FromProxy = async (account, amount, fromAddress, isZai = fa
   });
 };
 
-export const migrateUniV2 = async (account, amount) => {
-  const zapContract = new web3.eth.Contract(zapPipeAbi, ZAP.addr);
+export const migrateUniV2 = async (account, amount, addressUni) => {
+  const zapContract = new web3.eth.Contract(zapPipeAbi, ZAP_PIPE.addr);
 
   return zapContract.methods.PipeUniV2(
-    account, UNI.addr, new BigNumber(amount).toFixed(), UNI_DSD_USDC.addr, 0,
+    account, addressUni, new BigNumber(amount).toFixed(), UNI.addr, 0,
   ).send({
     from: account,
   }).on('transactionHash', (hash) => {

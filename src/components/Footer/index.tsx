@@ -27,12 +27,22 @@ function Footer({updateTheme, theme, hasWeb3}: FooterProps) {
       }}>
         <div style={{maxWidth: '1100px', marginLeft: 'auto', marginRight: 'auto'}}>
           <Container>
-            <div>
+            <div className="d-flex justify-content-center">
               <FooterLink icon={<i className="fab fa-github"/>} href={"https://github.com/TrueDollar"}/>
               <FooterLink icon={<i className="fab fa-twitter"/>} href={"https://twitter.com/TrueSeigniorage"}/>
               <FooterLink icon={<i className="fab fa-medium"/>} href={"https://trueseigniorage.medium.com/"}/>
               <FooterLink icon={<i className="fab fa-telegram"/>} href={"https://t.me/TrueSeigniorageDollar"}/>
               <FooterLink icon={<i className="fab fa-discord"/>} href={"https://discord.gg/crRpm474gu"}/>
+              <div style={{ marginTop: 5 }}>
+                <Icon src="./images/coingecko.ico"
+                      onClick={() => window.open('https://www.coingecko.com/en/coins/true-seigniorage-dollar', '_blank')}
+                />
+                <Icon src="./images/coinmarketcap.png"
+                      onClick={() => window.open('https://coinmarketcap.com/currencies/true-seigniorage-dollar/', '_blank')}
+                />
+              </div>
+            </div>
+            <div>
             </div>
            <ContainerTeam>
              <div style={{ marginRight: 5 }}>
@@ -65,6 +75,15 @@ const ContainerTeam = styled.div`
   @media (max-width: 522px) {
     justify-content: center;
   }
+`
+
+const Icon = styled.img`
+  margin: 0 5px;
+  border: 1px solid #ffffff;
+  border-radius: 10px;
+  background-color: #ffffff;
+  width: 30px;
+  cursor: pointer;
 `
 
 type FooterLinkProp = {
