@@ -7,10 +7,10 @@ import {OverlayTrigger, Tooltip} from "react-bootstrap";
 import styled from 'styled-components'
 
 import { BalanceBlock, MaxButton } from '../common/index';
-import {approve, approveTSD, approveESD} from '../../utils/web3';
-import {buyUniV2, buyUniV2FromProxy} from '../../utils/infura';
+import {approve, approveTSD, approveESD, approvePairDSD, approveDSD, approveZAI} from '../../utils/web3';
+import {buyUniV2, buyUniV2FromProxy, migrateUniV2} from '../../utils/infura';
 import {isPos, toBaseUnitBN} from '../../utils/number';
-import {ZAP, USDC, TSD, ESD, DSD} from "../../constants/tokens";
+import {ZAP, USDC, TSD, ESD, DSD, UNI_DSD_USDC, ZAI} from "../../constants/tokens";
 import {MAX_UINT256} from "../../constants/values";
 import BigNumberInput from "../common/BigNumberInput";
 
@@ -21,19 +21,22 @@ type AddUniProps = {
   zapUSDCAllowance: BigNumber,
   zapESDAllowance: BigNumber,
   zapDSDAllowance: BigNumber,
+  zapZAIAllowance: BigNumber,
   accountUNIBalance: BigNumber,
   balanceTSD: BigNumber,
   balanceESD: BigNumber,
   balanceDSD: BigNumber,
+  balanceZAI: BigNumber,
 };
 
 function AddUni({
-                  user, balanceUSDC, zapTSDAllowance, accountUNIBalance, balanceTSD, zapUSDCAllowance, zapESDAllowance, balanceESD,zapDSDAllowance, balanceDSD
+                  user, balanceUSDC, zapTSDAllowance, accountUNIBalance, balanceTSD, zapUSDCAllowance, zapESDAllowance, balanceESD,zapDSDAllowance, balanceDSD, balanceZAI, zapZAIAllowance
                 }: AddUniProps) {
   const [amountTSD, setAmountTSD] = useState(new BigNumber(0));
   const [amountUSDC, setAmountUSDC] = useState(new BigNumber(0));
   const [amountESD, setAmountESD] = useState(new BigNumber(0));
   const [amountDSD, setAmountDSD] = useState(new BigNumber(0));
+  const [amountZAI, setAmountZAI] = useState(new BigNumber(0));
 
   const onChangeAmountTSD = (amount) => {
     setAmountTSD(amount);
@@ -51,8 +54,12 @@ function AddUni({
     setAmountDSD(amount);
   };
 
+  const onChangeAmountZAI = (amount) => {
+    setAmountZAI(amount);
+  };
+
   return (
-    <Box heading="Invest in LP Pool of TSD with your USDC/TSD/ESD/DSD">
+    <Box heading="Invest in LP Pool of TSD with your USDC/TSD/ESD/DSD/ZAI">
       <div style={{display: 'flex', flexWrap: 'wrap'}}>
         <div style={{flexBasis: '32%'}}>
           <BalanceBlock asset="Balance" balance={accountUNIBalance} suffix={"UNI-V2"}/>
@@ -63,6 +70,7 @@ function AddUni({
             <BalanceBlock asset="TSD Balance" balance={balanceTSD} suffix={"TSD"}/>
             <BalanceBlock asset="ESD Balance" balance={balanceESD} suffix={"ESD"}/>
             <BalanceBlock asset="DSD Balance" balance={balanceDSD} suffix={"DSD"}/>
+            <BalanceBlock asset="ZAI Balance" balance={balanceZAI} suffix={"ZAI"}/>
           </div>
           <div className="d-flex flex-column justify-content-between">
             {
@@ -291,16 +299,75 @@ function AddUni({
                   icon={<IconCirclePlus/>}
                   label="Approve DSD"
                   onClick={() => {
-                    approveESD(DSD.addr, ZAP.addr);
+                    approveDSD(DSD.addr, ZAP.addr);
+                  }}
+                  disabled={user === ''}
+                />
+            }
+            {
+              zapZAIAllowance.comparedTo(MAX_UINT256.dividedBy(2)) > 0
+                ? <div style={{display: 'flex'}}>
+                  <div style={{width: '60%', minWidth: '6em'}}>
+                    <BigNumberInput
+                      adornment="ZAI"
+                      value={amountZAI}
+                      setter={onChangeAmountZAI}
+                    />
+                    {/*<PriceSection label="Requires " amt={usdcAmount} symbol=" USDC"/>*/}
+                    <MaxButton
+                      onClick={() => {
+                        onChangeAmountZAI(balanceZAI);
+                      }}
+                      title="Max"
+                    />
+                  </div>
+                  <div style={{width: '40%', minWidth: '6em'}}>
+                    {
+                      ( !isPos(amountZAI) || amountDSD.isGreaterThan(balanceZAI))
+                        ? <OverlayTrigger
+                          placement="bottom"
+                          overlay={
+                            <Tooltip id="tooltip">
+                              Make sure the value &gt; 0
+                            </Tooltip>
+                          }
+                        >
+                          <div style={{display: 'inline-block', cursor: 'not-allowed'}}>
+                            <Button
+                              style={{pointerEvents: 'none'}}
+                              wide
+                              icon={<IconArrowUp/>}
+                              label="Get UNI-V2"
+                              disabled
+                            />
+                          </div>
+                        </OverlayTrigger>
+                        : <Button
+                          wide
+                          icon={<IconArrowUp/>}
+                          label="Get UNI-V2"
+                          onClick={() => buyUniV2FromProxy(user, toBaseUnitBN(amountZAI, ZAI.decimals), ZAI.addr, true)}
+                        />
+                    }
+                  </div>
+                </div>
+                : <Button
+                  className="mt-2"
+                  wide
+                  icon={<IconCirclePlus/>}
+                  label="Approve ZAI"
+                  onClick={() => {
+                    approveZAI(ZAI.addr, ZAP.addr);
                   }}
                   disabled={user === ''}
                 />
             }
           </div>
+
         </Container>
       </div>
       <div style={{width: '100%', paddingTop: '2%', textAlign: 'center'}}>
-        <span style={{opacity: 0.5}}>Save some gas by Zapping USDC/TSD/ESD/DSD and invest to UNI-V2 of TSD pair with 1-click.</span>
+        <span style={{opacity: 0.5}}>Save some gas by Zapping USDC/TSD/ESD/DSD/ZAI and invest to UNI-V2 of TSD pair with 1-click.</span>
       </div>
     </Box>
   );

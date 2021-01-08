@@ -12,6 +12,8 @@ const testnetUSDCAbi = require('../constants/abi/TestnetUSDC.json');
 const daoAbi = require('../constants/abi/Implementation.json');
 const daoESDAbi = require('../constants/abi/ImplementationESD.json');
 const daoDSDAbi = require('../constants/abi/ImplementationDSD.json');
+const daoZAIAbi = require('../constants/abi/ImplementationZai.json');
+const uniswapv2DSDAbi = require('../constants/abi/UniswapV2PairUSDC-TSD.json');
 const poolAbi = require('../constants/abi/Pool.json');
 
 const DEADLINE_FROM_NOW = 60 * 15;
@@ -93,6 +95,28 @@ export const approveESD = async (tokenAddr, spender, amt = UINT256_MAX) => {
 export const approveDSD = async (tokenAddr, spender, amt = UINT256_MAX) => {
   const account = await checkConnectedAndGetAddress();
   const oToken = new window.web3.eth.Contract(daoDSDAbi, tokenAddr);
+  await oToken.methods
+    .approve(spender, amt)
+    .send({ from: account })
+    .on('transactionHash', (hash) => {
+      notify.hash(hash);
+    });
+};
+
+export const approveZAI = async (tokenAddr, spender, amt = UINT256_MAX) => {
+  const account = await checkConnectedAndGetAddress();
+  const oToken = new window.web3.eth.Contract(daoZAIAbi, tokenAddr);
+  await oToken.methods
+    .approve(spender, amt)
+    .send({ from: account })
+    .on('transactionHash', (hash) => {
+      notify.hash(hash);
+    });
+};
+
+export const approvePairDSD = async (tokenAddr, spender, amt = UINT256_MAX) => {
+  const account = await checkConnectedAndGetAddress();
+  const oToken = new window.web3.eth.Contract(uniswapv2DSDAbi, tokenAddr);
   await oToken.methods
     .approve(spender, amt)
     .send({ from: account })

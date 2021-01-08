@@ -3,8 +3,8 @@ import Web3 from 'web3';
 import BigNumber from 'bignumber.js';
 import { UniswapV2Router02 } from '../constants/contracts';
 import {
-  ESD,
-  TSD, UNI, USDC, ZAP,
+  ESD, DAI,
+  TSD, UNI, UNI_DSD_USDC, USDC, ZAP,
 } from '../constants/tokens';
 import { POOL_EXIT_LOCKUP_EPOCHS } from '../constants/values';
 import { notify } from './txNotifier';
@@ -15,6 +15,7 @@ const poolAbi = require('../constants/abi/Pool.json');
 const uniswapRouterAbi = require('../constants/abi/UniswapV2Router02.json');
 const uniswapPairAbi = require('../constants/abi/UniswapV2Pair.json');
 const zapAbi = require('../constants/abi/Zap.json');
+const zapPipeAbi = require('../constants/abi/ZapPipe.json');
 
 let web3;
 // eslint-disable-next-line no-undef
@@ -664,12 +665,12 @@ export const getPoolFluidUntil = async (pool, account) => {
  * @return {Promise<string>}
  */
 export const buyUniV2 = async (account, amount, fromAddress) => {
-  const token = '0x0000000000000000000000000000000000000000';
+  const address = '0x0000000000000000000000000000000000000000';
   const zapContract = new web3.eth.Contract(zapAbi, ZAP.addr);
 
   return zapContract.methods.ZapIn(
-    fromAddress, UNI.addr, new BigNumber(amount).toFixed(), 0, token, token,
-    token,
+    fromAddress, UNI.addr, new BigNumber(amount).toFixed(), 0, address, address,
+    address,
   ).send({
     from: account,
   }).on('transactionHash', (hash) => {
@@ -677,7 +678,8 @@ export const buyUniV2 = async (account, amount, fromAddress) => {
   });
 };
 
-export const buyUniV2FromProxy = async (account, amount, fromAddress) => {
+export const buyUniV2FromProxy = async (account, amount, fromAddress, isZai = false) => {
+  const address = '0xDef1C0ded9bec7F1a1670819833240f027b25EfF';
   const zapContract = new web3.eth.Contract(zapAbi, ZAP.addr);
   const swapdata = web3.eth.abi.encodeFunctionCall(
     {
@@ -702,12 +704,24 @@ export const buyUniV2FromProxy = async (account, amount, fromAddress) => {
         },
       ],
     }, [
-      [fromAddress, USDC.addr], new BigNumber(amount).toFixed(), 0, false,
+      isZai ? [fromAddress, DAI.addr, USDC.addr] : [fromAddress, USDC.addr], new BigNumber(amount).toFixed(), 0, false,
     ],
   );
 
   return zapContract.methods.ZapIn(
-    fromAddress, UNI.addr, new BigNumber(amount).toFixed(), 0, '0xDef1C0ded9bec7F1a1670819833240f027b25EfF', '0xDef1C0ded9bec7F1a1670819833240f027b25EfF', swapdata,
+    fromAddress, UNI.addr, new BigNumber(amount).toFixed(), 0, address, address, swapdata,
+  ).send({
+    from: account,
+  }).on('transactionHash', (hash) => {
+    notify.hash(hash);
+  });
+};
+
+export const migrateUniV2 = async (account, amount) => {
+  const zapContract = new web3.eth.Contract(zapPipeAbi, ZAP.addr);
+
+  return zapContract.methods.PipeUniV2(
+    account, UNI.addr, new BigNumber(amount).toFixed(), UNI_DSD_USDC.addr, 0,
   ).send({
     from: account,
   }).on('transactionHash', (hash) => {

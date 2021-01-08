@@ -4,6 +4,12 @@ export const UNI = {
   symbol: 'UNI',
 };
 
+export const UNI_DSD_USDC = {
+  addr: '0x66e33d2605c5fb25ebb7cd7528e7997b0afa55e8',
+  decimals: 18,
+  symbol: 'UNI',
+};
+
 export const USDC = {
   addr: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
   decimals: 6,
@@ -32,6 +38,17 @@ export const DSD = {
   addr: '0xbd2f0cd039e0bfcf88901c98c0bfac5ab27566e3',
   decimals: 18,
   symbol: 'DSD',
+};
+
+export const ZAI = {
+  addr: '0x9d1233cc46795e94029fda81aaadc1455d510f15',
+  decimals: 18,
+  symbol: 'ZAI',
+};
+
+export const DAI = {
+  addr: '0x6b175474e89094c44da98b954eedeac495271d0f',
+  symbol: 'DAI',
 };
 
 export const ZAP = {

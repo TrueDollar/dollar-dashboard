@@ -74,6 +74,7 @@ function App() {
               <Switch>
                 <Route path="/dao/:override"><Wallet user={user}/></Route>
                 <Route path="/dao/"><Wallet user={user}/></Route>
+                {/*<Route path="/get-uni/"><Wallet user={user}/></Route>*/}
                 <Route path="/epoch/"><EpochDetail user={user}/></Route>
                 <Route path="/coupons/:override"><CouponMarket user={user}/></Route>
                 <Route path="/coupons/"><CouponMarket user={user}/></Route>

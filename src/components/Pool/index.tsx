@@ -12,7 +12,7 @@ import {
   getTokenBalance,
   getPoolFluidUntil, getTokenTotalSupply, loadFluidStatusPool
 } from '../../utils/infura';
-import {TSD, UNI, USDC, ZAP, ESD, DSD} from "../../constants/tokens";
+import {TSD, UNI, USDC, ZAP, ESD, DSD, ZAI} from "../../constants/tokens";
 import {POOL_EXIT_LOCKUP_EPOCHS} from "../../constants/values";
 import { toTokenUnitsBN } from '../../utils/number';
 
@@ -62,9 +62,11 @@ function Pool({ user }: {user: string}) {
   const [zapTSDAllowance, setZapTSDAllowance] = useState(new BigNumber(0));
   const [zapESDAllowance, setZapESDAllowance] = useState(new BigNumber(0));
   const [zapDSDAllowance, setZapDSDAllowance] = useState(new BigNumber(0));
+  const [zapZaiAllowance, setZapZaiAllowance] = useState(new BigNumber(0));
   const [userTSDBalance, setUserTSDBalance] = useState(new BigNumber(0));
   const [userESDBalance, setUserESDBalance] = useState(new BigNumber(0));
   const [userDSDBalance, setUserDSDBalance] = useState(new BigNumber(0));
+  const [userZaiBalance, setUserZaiBalance] = useState(new BigNumber(0));
 
   //Update User balances
   useEffect(() => {
@@ -110,9 +112,11 @@ function Pool({ user }: {user: string}) {
       setZapTSDAllowance(new BigNumber(0));
       setZapESDAllowance(new BigNumber(0));
       setZapDSDAllowance(new BigNumber(0));
+      setZapZaiAllowance(new BigNumber(0));
       setUserTSDBalance(new BigNumber(0));
       setUserESDBalance(new BigNumber(0));
       setUserDSDBalance(new BigNumber(0));
+      setUserZaiBalance(new BigNumber(0));
       return;
     }
     let isCancelled = false;
@@ -145,9 +149,11 @@ function Pool({ user }: {user: string}) {
         zapTSDAllowance,
         zapESDAllowance,
         zapDSDAllowance,
+        zapZaiAllowance,
         userTSDBalanceStr,
         userESDBalanceStr,
         userDSDBalanceStr,
+        userZaiBalanceStr,
       ] = await Promise.all([
         getPoolTotalBonded(poolAddressStr),
         getTokenBalance(TSD.addr, UNI.addr),
@@ -175,9 +181,11 @@ function Pool({ user }: {user: string}) {
         getTokenAllowance(TSD.addr, user, ZAP.addr),
         getTokenAllowance(ESD.addr, user, ZAP.addr),
         getTokenAllowance(DSD.addr, user, ZAP.addr),
+        getTokenAllowance(ZAI.addr, user, ZAP.addr),
         getTokenBalance(TSD.addr, user),
         getTokenBalance(ESD.addr, user),
         getTokenBalance(DSD.addr, user),
+        getTokenBalance(ZAI.addr, user),
       ]);
 
       const poolTotalBonded = toTokenUnitsBN(poolTotalBondedStr, TSD.decimals);
@@ -199,6 +207,7 @@ function Pool({ user }: {user: string}) {
       const userTSDBalance = toTokenUnitsBN(userTSDBalanceStr, TSD.decimals);
       const userESDBalance = toTokenUnitsBN(userESDBalanceStr, ESD.decimals);
       const userDSDBalance = toTokenUnitsBN(userDSDBalanceStr, DSD.decimals);
+      const userZAIBalance = toTokenUnitsBN(userZaiBalanceStr, ZAI.decimals);
 
       if (!isCancelled) {
         setPoolAddress(poolAddressStr);
@@ -226,9 +235,11 @@ function Pool({ user }: {user: string}) {
         setZapTSDAllowance(new BigNumber(zapTSDAllowance));
         setZapESDAllowance(new BigNumber(zapESDAllowance));
         setZapDSDAllowance(new BigNumber(zapDSDAllowance));
+        setZapZaiAllowance(new BigNumber(zapZaiAllowance));
         setUserTSDBalance(new BigNumber(userTSDBalance));
         setUserESDBalance(new BigNumber(userESDBalance));
         setUserDSDBalance(new BigNumber(userDSDBalance));
+        setUserZaiBalance(new BigNumber(userZAIBalance));
       }
     }
     updateUserInfo();
@@ -289,10 +300,12 @@ function Pool({ user }: {user: string}) {
         balanceTSD={userTSDBalance}
         balanceESD={userESDBalance}
         balanceDSD={userDSDBalance}
+        balanceZAI={userZaiBalance}
         zapUSDCAllowance={zapUSDCAllowance}
         zapTSDAllowance={zapTSDAllowance}
         zapESDAllowance={zapESDAllowance}
         zapDSDAllowance={zapDSDAllowance}
+        zapZAIAllowance={zapZaiAllowance}
       />
 
       <WithdrawDeposit
