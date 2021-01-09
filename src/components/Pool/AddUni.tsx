@@ -1,18 +1,15 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {
-  Box, Button, IconCirclePlus, IconArrowUp
+  Box
 } from '@aragon/ui';
 import BigNumber from 'bignumber.js';
-import {OverlayTrigger, Tooltip} from "react-bootstrap";
 import styled from 'styled-components'
 
-import {BalanceBlock, MaxButton} from '../common/index';
-import {approve, approveTSD, approveESD, approvePairDSD, approveDSD, approveZAI} from '../../utils/web3';
-import {buyUniV2, buyUniV2FromProxy, migrateUniV2} from '../../utils/infura';
-import {isPos, toBaseUnitBN} from '../../utils/number';
-import {ZAP, USDC, TSD, ESD, DSD, UNI_DSD_USDC, ZAI} from "../../constants/tokens";
-import {MAX_UINT256} from "../../constants/values";
-import BigNumberInput from "../common/BigNumberInput";
+import {BalanceBlock} from '../common/index';
+import {approve} from '../../utils/web3';
+import {buyUniV2, buyUniV2FromProxy} from '../../utils/infura';
+import {toBaseUnitBN} from '../../utils/number';
+import {ZAP, USDC, TSD, ESD, DSD, ZAI} from "../../constants/tokens";
 import ZapUni from "./ZapUni";
 
 type AddUniProps = {
@@ -44,11 +41,6 @@ function AddUni({
                   balanceZAI,
                   zapZAIAllowance
                 }: AddUniProps) {
-  const [amountTSD, setAmountTSD] = useState(new BigNumber(0));
-  const [amountUSDC, setAmountUSDC] = useState(new BigNumber(0));
-  const [amountESD, setAmountESD] = useState(new BigNumber(0));
-  const [amountDSD, setAmountDSD] = useState(new BigNumber(0));
-  const [amountZAI, setAmountZAI] = useState(new BigNumber(0));
 
   const handleBuyUniFromUSDC = (amount) => {
     buyUniV2(user, toBaseUnitBN(amount, USDC.decimals), USDC.addr)

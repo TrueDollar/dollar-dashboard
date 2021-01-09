@@ -3,13 +3,14 @@ import styled from 'styled-components'
 import {
   Button, IconCirclePlus, IconArrowUp
 } from '@aragon/ui';
+import {OverlayTrigger, Tooltip} from "react-bootstrap";
+import BigNumber from "bignumber.js";
 
 import {BalanceBlock, MaxButton} from "../common";
 import {MAX_UINT256} from "../../constants/values";
 import BigNumberInput from "../common/BigNumberInput";
 import {isPos} from "../../utils/number";
-import {OverlayTrigger, Tooltip} from "react-bootstrap";
-import BigNumber from "bignumber.js";
+
 
 type ZapUniProps = {
   user: string
@@ -37,7 +38,7 @@ const ZapUni = ({balance, code, zapAllowance, user, onApprove, onBuyUni}: ZapUni
           ? <div style={{display: 'flex'}}>
             <div style={{width: '60%', minWidth: '6em'}}>
               <BigNumberInput
-                adornment="TSD"
+                adornment={code}
                 value={amount}
                 setter={onChangeAmount}
               />
