@@ -80,4 +80,7 @@ button:focus{
     .container {
         display: block;
     }
+    .logo {
+        margin-bottom: 20px;
+    }
 }

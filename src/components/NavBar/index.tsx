@@ -36,11 +36,12 @@ function NavBar({
         backgroundColor: 'none',
         textAlign: 'center',
         width: '100%',
-        fontSize: '14px'
+        fontSize: '14px',
+        marginBottom: 20
       }}>
         <div style={{maxWidth: '1100px', marginLeft: 'auto', marginRight: 'auto'}}>
           <div className="container">
-            <div>
+            <div className="logo">
               <LinkBase onClick={() => history.push('/')} style={{marginRight: '16px', height: '40px'}}>
                 <img src={logoUrl} height="40px" alt="True Seigniorage Dollar"/>
               </LinkBase>

@@ -17,8 +17,7 @@ function MainButton({
                     }:MainButtonPropx) {
   return (
     <LinkBase onClick={onClick} style={{ width: '100%' }} href={href}>
-      <Box>
-        <div style={{ padding: 10, fontSize: 18 }}>
+        <div style={{ padding: 10, fontSize: 25, fontWeight: 'bold' }}>
           {title}
           {tag ? <Tag>{tag}</Tag> : <></>}
         </div>
@@ -31,8 +30,6 @@ function MainButton({
           {description}
           {' '}
         </div>
-
-      </Box>
     </LinkBase>
   );
 };

@@ -2,7 +2,8 @@ import React from 'react';
 import BigNumber from "bignumber.js";
 import {Box, Button} from '@aragon/ui';
 import {useHistory} from 'react-router-dom';
-
+import styled from 'styled-components'
+import './style.css';
 type InvestProps = {
   totalSupply: BigNumber,
   totalBonded: BigNumber,
@@ -19,110 +20,121 @@ const Invest = ({totalSupply, totalBonded, TSDLPBonded}: InvestProps) => {
 
   return (
     <>
-      <div style={{paddingLeft: '3%', fontSize: 18, display: 'flex', alignItems: 'center'}}>
+      <div style={{ fontSize: 18, display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
         <div style={{marginRight: '2%', fontSize: 48}}>
-          <i className="fas fa-chart-line"/>
+          <img src='./home/invest.png' />
         </div>
-        <div>
+        <div style={{fontWeight: 'bold', fontSize: 30}}>
           Invest
         </div>
       </div>
-      <div style={{padding: '1%', paddingTop: '2%', paddingBottom: '3%', display: 'flex', flexWrap: 'wrap'}}>
-        <div style={{flexBasis: '30%', marginRight: '3%', marginLeft: '2%'}}>
-          <Box>
-            <div>
-              <div style={{fontSize: 16, padding: 3}}>APR</div>
-              <div style={{fontSize: 16, padding: 3}}>DAO hourly:
-                <div style={{
-                  fontSize: 24,
-                  padding: 3,
-                  fontWeight: 400,
-                  lineHeight: 1.5,
-                  fontFamily: 'aragon-ui-monospace, monospace'
-                }}>
-                  {((dao - 1) * 100).toFixed(2)}%
-                </div>
-              </div>
-              <div style={{fontSize: 16, padding: 3}}>DAO daily:
-                <div style={{
-                  fontSize: 24,
-                  padding: 3,
-                  fontWeight: 400,
-                  lineHeight: 1.5,
-                  fontFamily: 'aragon-ui-monospace, monospace'
-                }}>
-                  {((dao - 1) * 24 * 100).toFixed(2)}%
-                </div>
-              </div>
-              <div style={{fontSize: 16, padding: 3}}>DAO weekly:
-                <div style={{
-                  fontSize: 24,
-                  padding: 3,
-                  fontWeight: 400,
-                  lineHeight: 1.5,
-                  fontFamily: 'aragon-ui-monospace, monospace'
-                }}>
-                  {((dao - 1) * 168 * 100).toFixed(2)}%
-                </div>
+      <Container className="box-invest">
+        <div>
+          <div>
+            <div style={{fontWeight: 'bold', fontSize: 30}}>APR</div>
+            <div className="invest" style={{fontSize: 16, padding: 3}}>
+              <div>DAO hourly:</div>
+              <div style={{
+                flex: 1
+              }}></div>
+              <div style={{
+                fontSize: 24,
+                padding: 3,
+                fontWeight: 400,
+                lineHeight: 1.5,
+                fontFamily: 'aragon-ui-monospace, monospace'
+              }}>
+                {((dao - 1) * 100).toFixed(2)}%
               </div>
             </div>
-          </Box>
+            <div className="invest" style={{fontSize: 16, padding: 3}}>DAO daily:
+              <div style={{
+                fontSize: 24,
+                padding: 3,
+                fontWeight: 400,
+                lineHeight: 1.5,
+                fontFamily: 'aragon-ui-monospace, monospace'
+              }}>
+                {((dao - 1) * 24 * 100).toFixed(2)}%
+              </div>
+            </div>
+            <div className="invest" style={{fontSize: 16, padding: 3}}>DAO weekly:
+              <div style={{
+                fontSize: 24,
+                padding: 3,
+                fontWeight: 400,
+                lineHeight: 1.5,
+                fontFamily: 'aragon-ui-monospace, monospace'
+              }}>
+                {((dao - 1) * 168 * 100).toFixed(2)}%
+              </div>
+            </div>
+          </div>
           <Button
-            className="mt-2"
+            className="mt-2 button-home"
+            icon={<img src="./home/invest-1.png"/>}
             label="Invest in DAO"
             onClick={() => history.push('/dao/')}
           />
         </div>
-        <div style={{flexBasis: '30%'}}>
-          <div style={{flexBasis: '30%', marginLeft: '2%'}}>
-            <Box>
-              <div>
-                <div style={{fontSize: 16, padding: 3}}>APR</div>
-                <div style={{fontSize: 16, padding: 3}}>LP hourly:
-                  <div style={{
-                    fontSize: 24,
-                    padding: 3,
-                    fontWeight: 400,
-                    lineHeight: 1.5,
-                    fontFamily: 'aragon-ui-monospace, monospace'
-                  }}>
-                    {((lpHourly - 1) * 100).toFixed(2)}%
-                  </div>
-                </div>
-                <div style={{fontSize: 16, padding: 3}}>LP daily:
-                  <div style={{
-                    fontSize: 24,
-                    padding: 3,
-                    fontWeight: 400,
-                    lineHeight: 1.5,
-                    fontFamily: 'aragon-ui-monospace, monospace'
-                  }}>
-                    {((lpDaily - 1) * 100).toFixed(2)}%
-                  </div>
-                </div>
-                <div style={{fontSize: 16, padding: 3}}>LP weekly:
-                  <div style={{
-                    fontSize: 24,
-                    padding: 3,
-                    fontWeight: 400,
-                    lineHeight: 1.5,
-                    fontFamily: 'aragon-ui-monospace, monospace'
-                  }}>
-                    {((lpWeekly - 1) * 100).toFixed(2)}%
-                  </div>
+        <div>
+          <div>
+            <div>
+              <div style={{fontWeight: 'bold', fontSize: 30}}>APR</div>
+              <div className="invest" style={{fontSize: 16, padding: 3}}>LP hourly:
+                <div style={{
+                  fontSize: 24,
+                  padding: 3,
+                  fontWeight: 400,
+                  lineHeight: 1.5,
+                  fontFamily: 'aragon-ui-monospace, monospace'
+                }}>
+                  {((lpHourly - 1) * 100).toFixed(2)}%
                 </div>
               </div>
-            </Box>
+              <div className="invest" style={{fontSize: 16, padding: 3}}>LP daily:
+                <div style={{
+                  fontSize: 24,
+                  padding: 3,
+                  fontWeight: 400,
+                  lineHeight: 1.5,
+                  fontFamily: 'aragon-ui-monospace, monospace'
+                }}>
+                  {((lpDaily - 1) * 100).toFixed(2)}%
+                </div>
+              </div>
+              <div className="invest" style={{fontSize: 16, padding: 3}}>LP weekly:
+                <div style={{
+                  fontSize: 24,
+                  padding: 3,
+                  fontWeight: 400,
+                  lineHeight: 1.5,
+                  fontFamily: 'aragon-ui-monospace, monospace'
+                }}>
+                  {((lpWeekly - 1) * 100).toFixed(2)}%
+                </div>
+              </div>
+            </div>
             <Button
-              className="mt-2"
+              className="mt-2 button-home"
+              icon={<img src="./home/invest-1.png"/>}
               label="Invest in LP"
               onClick={() => history.push('/pool/')}
             />
           </div>
         </div>
-      </div>
+      </Container>
     </>
   );
 };
 
+const Container = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0 0 3% 3%;
+  justify-content: space-between;
+  @media (max-width: 522px) {
+    display: block;
+  }
+`
 export default Invest;
