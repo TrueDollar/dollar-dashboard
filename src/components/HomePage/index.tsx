@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom';
-import {Box} from '@aragon/ui';
+import {Box, useTheme} from '@aragon/ui';
 import styled from 'styled-components'
 import './style.css';
 import BigNumber from "bignumber.js";
@@ -13,6 +13,7 @@ import {
   getTotalRedeemable,
   getTotalStaged
 } from "../../utils/infura";
+import {Layout} from '@aragon/ui';
 import {TSD, TSDS, UNI, USDC} from "../../constants/tokens";
 import {toTokenUnitsBN} from "../../utils/number";
 import Trade from "./Trade";
@@ -47,6 +48,7 @@ type HomePageProps = {
 
 function HomePage({user}: HomePageProps) {
   const history = useHistory();
+  const currentTheme = useTheme();
   const [pairBalanceTSD, setPairBalanceTSD] = useState(new BigNumber(0));
   const [pairBalanceUSDC, setPairBalanceUSDC] = useState(new BigNumber(0));
   const [totalSupply, setTotalSupply] = useState(new BigNumber(0));
@@ -126,10 +128,11 @@ function HomePage({user}: HomePageProps) {
       clearInterval(user);
     };
   }, [user]);
-
+  const theme = `${currentTheme._name === 'light' ? '' : '-white'}`
   return (
     <>
       <Container className="home-box">
+        <Layout style={{ minWidth: 'auto' }}>
         <div style={{flexBasis: '30%'}}>
           <div style={{height: '100%'}}>
             <EpochBlock epoch={epochTime}/>
@@ -149,16 +152,21 @@ function HomePage({user}: HomePageProps) {
             />
           </div>
         </div>
+        </Layout>
       </Container>
+
+      <Layout style={{ minWidth: 'auto' }}>
       <Trade
         pairBalanceTSD={pairBalanceTSD}
         pairBalanceUSDC={pairBalanceUSDC}
         uniswapPair={UNI.addr}
+        theme={theme}
       />
       <Invest
         totalSupply={totalSupply}
         totalBonded={totalBonded}
         TSDLPBonded={pairBalanceTSD}
+        theme={theme}
       />
       <Regulation
         totalSupply={totalSupply}
@@ -170,10 +178,11 @@ function HomePage({user}: HomePageProps) {
         poolLiquidity={poolLiquidity}
         poolRewarded={poolTotalRewarded}
         poolClaimable={poolTotalClaimable}
+        theme={theme}
       />
 
       <Container className="box-cupons">
-        <div>
+        <Box>
           <MainButton
             title="Governance"
             description="Vote on upgrades."
@@ -182,7 +191,7 @@ function HomePage({user}: HomePageProps) {
               history.push('/governance/');
             }}
           />
-        </div>
+        </Box>
         {/*<div style={{flexBasis: '30%', marginRight: '3%', marginLeft: '2%'}}>*/}
         {/*  <MainButton*/}
         {/*    title="DAO"*/}
@@ -194,7 +203,7 @@ function HomePage({user}: HomePageProps) {
         {/*  />*/}
         {/*</div>*/}
 
-        <div>
+        <Box>
           <MainButton
             title="Coupons"
             description="Purchase and redeem coupons."
@@ -203,7 +212,7 @@ function HomePage({user}: HomePageProps) {
               history.push('/coupons/');
             }}
           />
-        </div>
+        </Box>
 
         {/*<div style={{flexBasis: '30%'}}>*/}
         {/*  <MainButton*/}
@@ -243,6 +252,7 @@ function HomePage({user}: HomePageProps) {
 
       {/*  */}
       {/*</div>*/}
+      </Layout>
     </>
   );
 }

@@ -16,9 +16,9 @@ const TotalSupply = ({totalSupply}:TotalSupplyProps) => {
       onClick={()=> window.open('https://etherscan.io/token/0x4846239fdf4d4c1aeb26729fa064b0205aca90e1', '_blank')}
       /></div>
       <div style={{
-        fontSize: 24,
-        padding: 3,
-        fontWeight: 400,
+          fontSize: 30,
+          padding: 3,
+          fontWeight: 'bold',
         lineHeight: 1.5,
         fontFamily: 'aragon-ui-monospace, monospace'
       }}>{formatNumber((totalSupply.toNumber()).toFixed(2))}

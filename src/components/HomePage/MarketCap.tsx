@@ -24,9 +24,9 @@ const MarketCap = ({totalSupply, pairBalanceUSDC, pairBalanceTSD}: MarketCapProp
         />
       </div>
       <div style={{
-        fontSize: 24,
-        padding: 3,
-        fontWeight: 400,
+          fontSize: 30,
+          padding: 3,
+          fontWeight: 'bold',
         lineHeight: 1.5,
         fontFamily: 'aragon-ui-monospace, monospace'
       }}>{formatNumber((totalSupply.multipliedBy(price)).toFixed(2))}$

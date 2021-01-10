@@ -8,9 +8,10 @@ type InvestProps = {
   totalSupply: BigNumber,
   totalBonded: BigNumber,
   TSDLPBonded: BigNumber,
+  theme: String,
 };
 
-const Invest = ({totalSupply, totalBonded, TSDLPBonded}: InvestProps) => {
+const Invest = ({totalSupply, totalBonded, TSDLPBonded, theme}: InvestProps) => {
   const history = useHistory();
   const TSDLpBonded = TSDLPBonded.toNumber() * 2;
   const dao = (((((totalSupply.toNumber() * 4) / 100) * 60) / 100 + totalBonded.toNumber()) / totalBonded.toNumber());
@@ -29,14 +30,18 @@ const Invest = ({totalSupply, totalBonded, TSDLPBonded}: InvestProps) => {
         </div>
       </div>
       <Container className="box-invest">
-        <div>
+        <Box>
           <div>
             <div style={{fontWeight: 'bold', fontSize: 30}}>APR</div>
             <div className="invest" style={{fontSize: 16, padding: 3}}>
               <div>DAO hourly:</div>
-              <div style={{
-                flex: 1
-              }}></div>
+              <div style ={{
+                flex: 1,
+                display: 'block',
+                borderBottom: '2px dotted',
+                height: '12px',
+                margin: '0 10px'
+              }} ></div>
               <div style={{
                 fontSize: 24,
                 padding: 3,
@@ -47,7 +52,15 @@ const Invest = ({totalSupply, totalBonded, TSDLPBonded}: InvestProps) => {
                 {((dao - 1) * 100).toFixed(2)}%
               </div>
             </div>
-            <div className="invest" style={{fontSize: 16, padding: 3}}>DAO daily:
+            <div className="invest" style={{fontSize: 16, padding: 3}}>
+              <div>DAO daily:</div>
+              <div style ={{
+                flex: 1,
+                display: 'block',
+                borderBottom: '2px dotted',
+                height: '12px',
+                margin: '0 10px'
+              }} ></div>
               <div style={{
                 fontSize: 24,
                 padding: 3,
@@ -58,7 +71,15 @@ const Invest = ({totalSupply, totalBonded, TSDLPBonded}: InvestProps) => {
                 {((dao - 1) * 24 * 100).toFixed(2)}%
               </div>
             </div>
-            <div className="invest" style={{fontSize: 16, padding: 3}}>DAO weekly:
+            <div className="invest" style={{fontSize: 16, padding: 3}}>
+              <div>DAO weekly:</div>
+              <div style ={{
+                flex: 1,
+                display: 'block',
+                borderBottom: '2px dotted',
+                height: '12px',
+                margin: '0 10px'
+              }} ></div>
               <div style={{
                 fontSize: 24,
                 padding: 3,
@@ -72,16 +93,24 @@ const Invest = ({totalSupply, totalBonded, TSDLPBonded}: InvestProps) => {
           </div>
           <Button
             className="mt-2 button-home"
-            icon={<img src="./home/invest-1.png"/>}
+            icon={<img src={`./home/invest-1${theme}.png`}/>}
             label="Invest in DAO"
             onClick={() => history.push('/dao/')}
           />
-        </div>
-        <div>
+        </Box>
+        <Box>
           <div>
             <div>
               <div style={{fontWeight: 'bold', fontSize: 30}}>APR</div>
-              <div className="invest" style={{fontSize: 16, padding: 3}}>LP hourly:
+              <div className="invest" style={{fontSize: 16, padding: 3}}>
+                <div>LP hourly:</div>
+                <div style ={{
+                  flex: 1,
+                  display: 'block',
+                  borderBottom: '2px dotted',
+                  height: '12px',
+                  margin: '0 10px'
+                }} ></div>
                 <div style={{
                   fontSize: 24,
                   padding: 3,
@@ -92,7 +121,15 @@ const Invest = ({totalSupply, totalBonded, TSDLPBonded}: InvestProps) => {
                   {((lpHourly - 1) * 100).toFixed(2)}%
                 </div>
               </div>
-              <div className="invest" style={{fontSize: 16, padding: 3}}>LP daily:
+              <div className="invest" style={{fontSize: 16, padding: 3}}>
+                <div>LP daily:</div>
+                <div style ={{
+                  flex: 1,
+                  display: 'block',
+                  borderBottom: '2px dotted',
+                  height: '12px',
+                  margin: '0 10px'
+                }} ></div>
                 <div style={{
                   fontSize: 24,
                   padding: 3,
@@ -103,7 +140,15 @@ const Invest = ({totalSupply, totalBonded, TSDLPBonded}: InvestProps) => {
                   {((lpDaily - 1) * 100).toFixed(2)}%
                 </div>
               </div>
-              <div className="invest" style={{fontSize: 16, padding: 3}}>LP weekly:
+              <div className="invest" style={{fontSize: 16, padding: 3}}>
+                <div>LP weekly:</div>
+                <div style ={{
+                  flex: 1,
+                  display: 'block',
+                  borderBottom: '2px dotted',
+                  height: '12px',
+                  margin: '0 10px'
+                }} ></div>
                 <div style={{
                   fontSize: 24,
                   padding: 3,
@@ -117,12 +162,12 @@ const Invest = ({totalSupply, totalBonded, TSDLPBonded}: InvestProps) => {
             </div>
             <Button
               className="mt-2 button-home"
-              icon={<img src="./home/invest-1.png"/>}
+              icon={<img src={`./home/invest-1${theme}.png`}/>}
               label="Invest in LP"
               onClick={() => history.push('/pool/')}
             />
           </div>
-        </div>
+        </Box>
       </Container>
     </>
   );

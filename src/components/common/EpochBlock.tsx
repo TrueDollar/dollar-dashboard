@@ -11,9 +11,9 @@ function EpochBlock({epoch}: EpochBlockProps) {
     <>
       <div style={{fontSize: 16, padding: 3}}>Epoch</div>
       <div style={{
-        fontSize: 24,
+        fontSize: 30,
         padding: 3,
-        fontWeight: 400,
+        fontWeight: 'bold',
         lineHeight: 1.5,
         fontFamily: 'aragon-ui-monospace, monospace'
       }}>{epoch}</div>

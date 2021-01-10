@@ -1,7 +1,7 @@
 import React from 'react';
 import BigNumber from 'bignumber.js';
 import styled from 'styled-components'
-import {Button} from '@aragon/ui';
+import {Button, Box} from '@aragon/ui';
 import './style.css';
 import {BalanceBlock, AddressBlock} from '../common/index';
 import {UNISWAP_INFO, UNISWAP_SUPPLY, UNISWAP_TRADE, DEXTOOL} from "../../constants/contracts";
@@ -10,9 +10,10 @@ type TradeProps = {
   pairBalanceTSD: BigNumber,
   pairBalanceUSDC: BigNumber,
   uniswapPair: string,
+  theme: String,
 };
 
-const Trade = ({pairBalanceTSD, pairBalanceUSDC, uniswapPair}: TradeProps) => {
+const Trade = ({pairBalanceTSD, pairBalanceUSDC, uniswapPair, theme}: TradeProps) => {
   const price = pairBalanceUSDC.dividedBy(pairBalanceTSD);
 
   return (
@@ -26,45 +27,45 @@ const Trade = ({pairBalanceTSD, pairBalanceUSDC, uniswapPair}: TradeProps) => {
         </div>
       </div>
       <Container className="box-trade">
-        <div>
+        <Box>
           <BalanceBlock asset="TSD Price" balance={price} suffix={"USDC"}/>
           <Button
             label="Buy TSD"
             className="button-home"
-            icon={<img src="./home/tsd.png"/>}
+            icon={<img src={`./home/tsd${theme}.png`}/>}
             onClick={() => window.open(UNISWAP_TRADE, "_blank")}
           />
-        </div>
-        <div>
+        </Box>
+        <Box>
           <BalanceBlock asset="TSD Liquidity" balance={pairBalanceTSD} suffix={"TSD"}/>
           <Button
             label="Info"
             className="button-home"
-            icon={<img src="./home/info.png"/>}
+            icon={<img src={`./home/info${theme}.png`}/>}
             onClick={() => window.open(UNISWAP_INFO, "_blank")}
           />
-        </div>
-        <div>
+        </Box>
+        <Box>
           <BalanceBlock asset="USDC Liquidity" balance={pairBalanceUSDC} suffix={"USDC"}/>
           <Button
             className="button-home"
             label="Add Liquidity"
-            icon={<img src="./home/add-liquidity.png"/>}
+            icon={<img src={`./home/add-liquidity${theme}.png`}/>}
             onClick={() => window.open(UNISWAP_SUPPLY, "_blank")}
           />
-        </div>
-        <div>
+        </Box>
+        <Box>
           <AddressBlock label="Uniswap Contract" address={uniswapPair}/>
           <Button
             className="button-home"
             label="Chart"
-            icon={<img src="./home/chart.png"/>}
+            icon={<img src={`./home/chart${theme}.png`}/>}
             onClick={() => window.open(DEXTOOL, "_blank")}
             style={{
               marginTop: 4.58
             }}
           />
-        </div>
+        </Box>
       </Container>
     </>
   );

@@ -2,26 +2,23 @@
     background: url('/home/cover-true-dollar.png') center center no-repeat;
     background-size: cover;
     display: flex;
-    justify-content: space-between;
-    padding: 10% 0% 0% 0% !important;
     margin-bottom: 40px;
+    padding: 20% 0% 0% 0% !important;
 }
-.home-box > div {
+.home-box > div{
+    display: flex;
+    justify-content: space-between;
+    padding: 0% !important;
+}
+.home-box > div > div{
     padding: 0;
     background: rgba(0, 0, 0, 0.16);
-    border: 1px solid #454545;
+    border: 1px solid rgba(0, 0, 0, 0.2);
     border-radius: 10px 10px 0 0;
     color: #fff !important;
     word-break: break-all;
 }
-.home-box > div:first-child {
-    border-radius: 0 10px 0 0;
-}
-.home-box > div:last-child {
-    border-radius: 10px 0 0 0;
-}
-
-.home-box > div > div{
+.home-box > div > div > div{
     padding: 5% 5% 5% 10%
 }
 .box-trade {
@@ -35,6 +32,8 @@
     text-align: center;
     flex-basis: 23%;
     padding: 30px 0;
+    margin-top: 16px;
+    border: none !important;
 }
 .box-invest {
     display: flex;
@@ -46,6 +45,8 @@
     border-radius: 5px;
     flex-basis: 49%;
     padding: 40px;
+    margin-top: 16px;
+    border: none !important;
 }
 .box-regulation {
     display: flex;
@@ -57,6 +58,8 @@
     border-radius: 5px;
     flex-basis: 32%;
     padding: 40px 0;
+    margin-top: 16px;
+    border: none !important;
 }
 .box-cupons {
     display: flex;
@@ -68,6 +71,8 @@
     border-radius: 5px;
     flex-basis: 32%;
     padding: 40px 0;
+    margin-top: 16px;
+    border: none !important;
 }
 .box-regulation > div > div{
     padding: 0 40px;
@@ -84,7 +89,7 @@
     align-items: center;
 }
 @media (max-width: 1025px) {
-    .home-box > div{
+    .home-box > div > div{
         text-align: center;
         word-break: break-all;
     }
@@ -98,6 +103,12 @@
 }
 
 @media (max-width: 568px) {
+    .home-box {
+        padding: 30% 0% 0% 0% !important;
+    }
+    .home-box > div {
+        flex-direction: column;
+    }
     .box-trade {
         justify-content: space-evenly;
     }
@@ -118,7 +129,7 @@
 
 
 @media (max-width: 426px) {
-    .home-box > div {
+    .home-box > div > div {
         background: rgba(0, 0, 0, 0.6);
         border-radius: 10px !important;
         margin: 10px;

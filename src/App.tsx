@@ -70,32 +70,77 @@ function App() {
       >
         <Main assetsUrl={`${process.env.PUBLIC_URL}/aragon-ui/`} theme={theme} layout={false}>
           <NavBar hasWeb3={hasWeb3} user={user} setUser={setUser} />
-          <Layout style={{ minWidth: 'auto' }}>
           {
             hasWeb3 ?
-              <Switch>
-                <Route path="/dao/:override"><Wallet user={user}/></Route>
-                <Route path="/dao/"><Wallet user={user}/></Route>
-                {/*<Route path="/get-uni/"><GetUni user={user}/></Route>*/}
-                <Route path="/epoch/"><EpochDetail user={user}/></Route>
-                <Route path="/coupons/:override"><CouponMarket user={user}/></Route>
-                <Route path="/coupons/"><CouponMarket user={user}/></Route>
-                <Route path="/governance/candidate/:candidate"><Candidate user={user}/></Route>
-                <Route path="/governance/"><Governance user={user}/></Route>
-                <Route path="/trade/"><Trade user={user}/></Route>
-                <Route path="/regulation/"><Regulation user={user}/></Route>
-                <Route path="/pool/:override"><Pool user={user}/></Route>
-                <Route path="/pool/"><Pool user={user}/></Route>
-                <Route path="/about/"><About/></Route>
-                <Route path="/tools/"><Tool/></Route>
-                <Route path="/"><HomePage user={user}/></Route>
-              </Switch>
+                  <Switch>
+                    <Route path="/dao/:override">
+                      <Layout style={{ minWidth: 'auto' }}><Wallet user={user}/>
+                      </Layout>
+                      </Route>
+                    <Route path="/dao/">
+                      <Layout style={{ minWidth: 'auto' }}>
+                        <Wallet user={user}/>
+                      </Layout></Route>
+                    {/*<Route path="/get-uni/"><GetUni user={user}/></Route>*/}
+                    <Route path="/epoch/">
+                      <Layout style={{ minWidth: 'auto' }}>
+                        <EpochDetail user={user}/>
+                      </Layout></Route>
+                    <Route path="/coupons/:override">
+                      <Layout style={{ minWidth: 'auto' }}>
+                        <CouponMarket user={user}/>
+                      </Layout>
+                      </Route>
+                    <Route path="/coupons/">
+                      <Layout style={{ minWidth: 'auto' }}>
+                        <CouponMarket user={user}/>
+                      </Layout>
+                    </Route>
+                    <Route path="/governance/candidate/:candidate">
+                      <Layout style={{ minWidth: 'auto' }}><Candidate user={user}/>
+                      </Layout>
+                    </Route>
+                    <Route path="/governance/">
+                      <Layout style={{ minWidth: 'auto' }}><Governance user={user}/>
+                      </Layout>
+                    </Route>
+                    <Route path="/trade/">
+                      <Layout style={{ minWidth: 'auto' }}><Trade user={user}/>
+                      </Layout>
+                    </Route>
+                    <Route path="/regulation/">
+                      <Layout style={{ minWidth: 'auto' }}>
+                        <Regulation user={user}/>
+                      </Layout>
+                    </Route>
+                    <Route path="/pool/:override">
+                      <Layout style={{ minWidth: 'auto' }}>
+                        <Pool user={user}/>
+                      </Layout>
+                    </Route>
+                    <Route path="/pool/">
+                      <Layout style={{ minWidth: 'auto' }}>
+                        <Pool user={user}/>
+                      </Layout>
+                    </Route>
+                    <Route path="/about/">
+                      <Layout style={{ minWidth: 'auto' }}>
+                        <About/>
+                      </Layout></Route>
+                    <Route path="/tools/">
+                      <Layout style={{ minWidth: 'auto' }}>
+                        <Tool/>
+                      </Layout></Route>
+                    <Route path="/"><HomePage user={user}/></Route>
+                  </Switch>
               :
-              <Switch>
-                <Route path="/"><HomePageNoWeb3/></Route>
-              </Switch>
+
+            <Layout>
+                <Switch>
+                  <Route path="/"><HomePageNoWeb3/></Route>
+                </Switch>
+            </Layout>
           }
-          </Layout>
           <div style={{height: '128px', width: '100%'}}/>
           <Footer hasWeb3={hasWeb3} theme={theme} updateTheme={updateTheme}/>
         </Main>
