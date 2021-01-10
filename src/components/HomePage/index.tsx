@@ -133,17 +133,17 @@ function HomePage({user}: HomePageProps) {
     <>
       <Container className="home-box">
         <Layout style={{ minWidth: 'auto' }}>
-        <div style={{flexBasis: '30%'}}>
+        <div style={{flexBasis: '32%'}}>
           <div style={{height: '100%'}}>
             <EpochBlock epoch={epochTime}/>
           </div>
         </div>
-        <div style={{flexBasis: '30%'}}>
+        <div style={{flexBasis: '32%'}}>
           <div style={{height: '100%'}}>
             <TotalSupply totalSupply={totalSupply}/>
           </div>
         </div>
-        <div style={{flexBasis: '30%'}}>
+        <div style={{flexBasis: '32%'}}>
           <div style={{height: '100%'}}>
             <MarketCap
               totalSupply={totalSupply}

@@ -141,7 +141,7 @@ function App() {
                 </Switch>
             </Layout>
           }
-          <div style={{height: '128px', width: '100%'}}/>
+          <div style={{height: '50px', width: '100%'}}/>
           <Footer hasWeb3={hasWeb3} theme={theme} updateTheme={updateTheme}/>
         </Main>
       </UseWalletProvider>

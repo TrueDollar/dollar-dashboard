@@ -11,7 +11,6 @@ type FooterProps = {
 
 function Footer({updateTheme, theme, hasWeb3}: FooterProps) {
   const currentTheme = useTheme();
-
   return (
     <>
       <div style={{
@@ -27,21 +26,47 @@ function Footer({updateTheme, theme, hasWeb3}: FooterProps) {
       }}>
         <div style={{maxWidth: '1100px', marginLeft: 'auto', marginRight: 'auto'}}>
           <Container>
-            <div className="d-flex justify-content-center">
-              <FooterLink icon={<i className="fab fa-github"/>} href={"https://github.com/TrueDollar"}/>
-              <FooterLink icon={<i className="fab fa-twitter"/>} href={"https://twitter.com/TrueSeigniorage"}/>
-              <FooterLink icon={<i className="fab fa-medium"/>} href={"https://trueseigniorage.medium.com/"}/>
-              <FooterLink icon={<i className="fab fa-telegram"/>} href={"https://t.me/TrueSeigniorageDollar"}/>
-              <FooterLink icon={<i className="fab fa-discord"/>} href={"https://discord.gg/crRpm474gu"}/>
-              <div style={{ marginTop: 5 }}>
-                <Icon src="./images/coingecko.ico"
-                      onClick={() => window.open('https://www.coingecko.com/en/coins/true-seigniorage-dollar', '_blank')}
-                />
-                <Icon src="./images/coinmarketcap.png"
-                      onClick={() => window.open('https://coinmarketcap.com/currencies/true-seigniorage-dollar/', '_blank')}
-                />
-              </div>
-            </div>
+            {theme === 'light' ? (
+                <div className="d-flex justify-content-center">
+                  <FooterLink icon={
+                    <img src={`./icon/${theme}-github.png`} style={{width: 32}} />
+                  } href={"https://github.com/TrueDollar"}/>
+                  <FooterLink icon={
+                    <img src={`./icon/${theme}-twitter.png`} style={{width: 32}} />
+                  } href={"https://twitter.com/TrueSeigniorage"}/>
+                  <FooterLink icon={
+                    <img src={`./icon/${theme}-m.png`} style={{width: 32}} />} href={"https://trueseigniorage.medium.com/"}/>
+                  <FooterLink icon={
+                    <img src={`./icon/${theme}-tele.png`} style={{width: 32}} />} href={"https://t.me/TrueSeigniorageDollar"}/>
+                  <FooterLink icon={
+                    <img src={`./icon/${theme}-discord.png`} style={{width: 32}} />} href={"https://discord.gg/crRpm474gu"}/>
+                  <div style={{ marginTop: 5, display: 'flex', alignItems: 'center' }}>
+                    <Icon src={`./icon/${theme}-coingecko.png`} style={{width: 32}}
+                          onClick={() => window.open('https://www.coingecko.com/en/coins/true-seigniorage-dollar', '_blank')}
+                    />
+                    <Icon src={`./icon/${theme}-coinmarketcap.png`} style={{width: 32}}
+                          onClick={() => window.open('https://coinmarketcap.com/currencies/true-seigniorage-dollar/', '_blank')}
+                    />
+                  </div>
+                </div>
+            ) : (
+                <div className="d-flex justify-content-center">
+                  <FooterLink icon={<i className="fab fa-github"/>} href={"https://github.com/TrueDollar"}/>
+                  <FooterLink icon={<i className="fab fa-twitter"/>} href={"https://twitter.com/TrueSeigniorage"}/>
+                  <FooterLink icon={<i className="fab fa-medium"/>} href={"https://trueseigniorage.medium.com/"}/>
+                  <FooterLink icon={<i className="fab fa-telegram"/>} href={"https://t.me/TrueSeigniorageDollar"}/>
+                  <FooterLink icon={<i className="fab fa-discord"/>} href={"https://discord.gg/crRpm474gu"}/>
+                  <div style={{ marginTop: 5 }}>
+                    <Icon src="./images/coingecko.ico"
+                          onClick={() => window.open('https://www.coingecko.com/en/coins/true-seigniorage-dollar', '_blank')}
+                    />
+                    <Icon src="./images/coinmarketcap.png"
+                          onClick={() => window.open('https://coinmarketcap.com/currencies/true-seigniorage-dollar/', '_blank')}
+                    />
+                  </div>
+                </div>
+            )}
+
             <div>
             </div>
            <ContainerTeam>

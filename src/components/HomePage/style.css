@@ -12,8 +12,8 @@
 }
 .home-box > div > div{
     padding: 0;
-    background: rgba(0, 0, 0, 0.16);
-    border: 1px solid rgba(0, 0, 0, 0.2);
+    background: rgba(0, 0, 0, 0.07);
+    border: 1px solid rgba(0, 0, 0, 0.09);
     border-radius: 10px 10px 0 0;
     color: #fff !important;
     word-break: break-all;
@@ -31,7 +31,7 @@
     border-radius: 5px;
     text-align: center;
     flex-basis: 23%;
-    padding: 30px 0;
+    padding: 10px 0;
     margin-top: 16px;
     border: none !important;
 }
@@ -44,7 +44,7 @@
     box-shadow: 0 10px 10px rgba(0,0,0,0.1);
     border-radius: 5px;
     flex-basis: 49%;
-    padding: 40px;
+    padding: 10px 40px;
     margin-top: 16px;
     border: none !important;
 }
@@ -64,13 +64,13 @@
 .box-cupons {
     display: flex;
     justify-content: space-evenly;
-    padding: 40px 0 !important;
+    padding: 0 0 40px 0 !important;
 }
 .box-cupons > div {
     box-shadow: 0 10px 10px rgba(0,0,0,0.1);
     border-radius: 5px;
     flex-basis: 32%;
-    padding: 40px 0;
+    padding: 0;
     margin-top: 16px;
     border: none !important;
 }

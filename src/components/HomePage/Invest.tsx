@@ -38,7 +38,7 @@ const Invest = ({totalSupply, totalBonded, TSDLPBonded, theme}: InvestProps) => 
               <div style ={{
                 flex: 1,
                 display: 'block',
-                borderBottom: '2px dotted',
+                borderBottom: '1px dotted #888',
                 height: '12px',
                 margin: '0 10px'
               }} ></div>
@@ -57,7 +57,7 @@ const Invest = ({totalSupply, totalBonded, TSDLPBonded, theme}: InvestProps) => 
               <div style ={{
                 flex: 1,
                 display: 'block',
-                borderBottom: '2px dotted',
+                borderBottom: '1px dotted #888',
                 height: '12px',
                 margin: '0 10px'
               }} ></div>
@@ -76,7 +76,7 @@ const Invest = ({totalSupply, totalBonded, TSDLPBonded, theme}: InvestProps) => 
               <div style ={{
                 flex: 1,
                 display: 'block',
-                borderBottom: '2px dotted',
+                borderBottom: '1px dotted #888',
                 height: '12px',
                 margin: '0 10px'
               }} ></div>
@@ -107,7 +107,7 @@ const Invest = ({totalSupply, totalBonded, TSDLPBonded, theme}: InvestProps) => 
                 <div style ={{
                   flex: 1,
                   display: 'block',
-                  borderBottom: '2px dotted',
+                  borderBottom: '1px dotted #888',
                   height: '12px',
                   margin: '0 10px'
                 }} ></div>
@@ -126,7 +126,7 @@ const Invest = ({totalSupply, totalBonded, TSDLPBonded, theme}: InvestProps) => 
                 <div style ={{
                   flex: 1,
                   display: 'block',
-                  borderBottom: '2px dotted',
+                  borderBottom: '1px dotted #888',
                   height: '12px',
                   margin: '0 10px'
                 }} ></div>
@@ -145,7 +145,7 @@ const Invest = ({totalSupply, totalBonded, TSDLPBonded, theme}: InvestProps) => 
                 <div style ={{
                   flex: 1,
                   display: 'block',
-                  borderBottom: '2px dotted',
+                  borderBottom: '1px dotted #888',
                   height: '12px',
                   margin: '0 10px'
                 }} ></div>
