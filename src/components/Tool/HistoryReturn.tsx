@@ -6,17 +6,19 @@ type HistoryReturnProps = {
   totalSupply: BigNumber,
   totalBonded: BigNumber,
   TSDLPBonded: BigNumber,
+  expRate: BigNumber,
 };
 
-const HistoryReturn = ({totalSupply, totalBonded, TSDLPBonded}: HistoryReturnProps) => {
+const HistoryReturn = ({totalSupply, totalBonded, TSDLPBonded,expRate}: HistoryReturnProps) => {
   const TSDLpBonded = TSDLPBonded.toNumber()*2;
-  const dao = (((((totalSupply.toNumber()*4)/100)*60)/100 + totalBonded.toNumber()) / totalBonded.toNumber());
-  const lpHourly = ((((totalSupply.toNumber()*4)/100)*40)/100 + TSDLpBonded) / TSDLpBonded;
-  const lpDaily = (((((totalSupply.toNumber()*4)/100)*40)/100)*24 + TSDLpBonded) / TSDLpBonded;
+  const expRateCal = expRate.toNumber() <= 0 ? new BigNumber(0.04) : expRate;
+  const dao = ((((totalSupply.toNumber()*expRateCal.toNumber())*60)/100 + totalBonded.toNumber()) / totalBonded.toNumber());
+  const lpHourly = (((totalSupply.toNumber()*expRateCal.toNumber())*40)/100 + TSDLpBonded) / TSDLpBonded;
+  const lpDaily = ((((totalSupply.toNumber()*expRateCal.toNumber())*40)/100)*24 + TSDLpBonded) / TSDLpBonded;
 
   return (
     <div className="mt-4">
-      <Title>Yield</Title>
+      <Title>{expRate.toNumber() > 0 ? 'Yield' : 'Yield (History)'}</Title>
       <Container>
         <div style={{flexBasis: '48%', maxWidth: 300}}>
           <ContainerItem>
@@ -25,8 +27,20 @@ const HistoryReturn = ({totalSupply, totalBonded, TSDLPBonded}: HistoryReturnPro
               <p>DAO daily:</p>
             </div>
             <div className="text-right">
-              <p>{((dao - 1)*100).toFixed(2)}%</p>
-              <p>{((dao - 1)*24*100).toFixed(2)}%</p>
+              <p>
+                {
+                  expRate.toNumber() > 0
+                  ? <>{((dao - 1)*100).toFixed(2)}%</>
+                    : <>0({((dao - 1)*100).toFixed(2)}%)</>
+                }
+                </p>
+              <p>
+                {
+                  expRate.toNumber() > 0
+                    ? <>{((dao - 1)*24*100).toFixed(2)}%</>
+                    : <>0({((dao - 1)*24*100).toFixed(2)}%)</>
+                }
+              </p>
             </div>
           </ContainerItem>
         </div>
@@ -37,8 +51,20 @@ const HistoryReturn = ({totalSupply, totalBonded, TSDLPBonded}: HistoryReturnPro
               <p>LP daily:</p>
             </div>
             <div className="text-right">
-              <p>{((lpHourly - 1)*100).toFixed(2)}%</p>
-              <p>{((lpDaily - 1)*100).toFixed(2)}%</p>
+              <p>
+                {
+                  expRate.toNumber() > 0
+                    ? <>{((lpHourly - 1)*100).toFixed(2)}%</>
+                    : <>0({((lpHourly - 1)*100).toFixed(2)}%)</>
+                }
+                </p>
+              <p>
+                {
+                  expRate.toNumber() > 0
+                    ? <>{((lpDaily - 1)*100).toFixed(2)}%</>
+                    : <>0({((lpDaily - 1)*100).toFixed(2)}%)</>
+                }
+              </p>
             </div>
           </ContainerItem>
         </div>

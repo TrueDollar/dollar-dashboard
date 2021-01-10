@@ -6,17 +6,19 @@ import styled from 'styled-components'
 type InvestProps = {
   totalSupply: BigNumber,
   totalBonded: BigNumber,
+  expRate: BigNumber
 };
 
-const Invest = ({totalSupply, totalBonded}: InvestProps) => {
-  const dao = (((((totalSupply.toNumber() * 4) / 100) * 60) / 100 + totalBonded.toNumber()) / totalBonded.toNumber());
+const Invest = ({totalSupply, totalBonded, expRate}: InvestProps) => {
+  const expRateCal = expRate.toNumber() <= 0 ? new BigNumber(0.04) : expRate;
+  const dao = ((((totalSupply.toNumber() * expRateCal.toNumber()) * 60) / 100 + totalBonded.toNumber()) / totalBonded.toNumber());
 
   return (
     <Container>
       <ContainerItem style={{flexBasis: '30%', marginRight: '2%'}}>
         <Box>
           <div>
-            <div style={{fontSize: 16, padding: 3}}>APR</div>
+            <div style={{fontSize: 16, padding: 3}}>{expRate.toNumber() > 0 ? 'APR' : 'APR (History)'}</div>
             <div style={{fontSize: 16, padding: 3}}>DAO hourly:
               <div style={{
                 fontSize: 24,
@@ -25,7 +27,11 @@ const Invest = ({totalSupply, totalBonded}: InvestProps) => {
                 lineHeight: 1.5,
                 fontFamily: 'aragon-ui-monospace, monospace'
               }}>
-                {((dao - 1) * 100).toFixed(2)}%
+                {
+                  expRate.toNumber() > 0
+                    ? <>{((dao - 1)*100).toFixed(2)}%</>
+                    : <>0({((dao - 1)*100).toFixed(2)}%)</>
+                }
               </div>
             </div>
             <div style={{fontSize: 16, padding: 3}}>DAO daily:
@@ -36,7 +42,11 @@ const Invest = ({totalSupply, totalBonded}: InvestProps) => {
                 lineHeight: 1.5,
                 fontFamily: 'aragon-ui-monospace, monospace'
               }}>
-                {((dao - 1) * 24 * 100).toFixed(2)}%
+                {
+                  expRate.toNumber() > 0
+                    ? <>{((dao - 1)*24*100).toFixed(2)}%</>
+                    : <>0({((dao - 1)*24*100).toFixed(2)}%)</>
+                }
               </div>
             </div>
             <div style={{fontSize: 16, padding: 3}}>DAO weekly:
@@ -47,7 +57,11 @@ const Invest = ({totalSupply, totalBonded}: InvestProps) => {
                 lineHeight: 1.5,
                 fontFamily: 'aragon-ui-monospace, monospace'
               }}>
-                {((dao - 1) * 168 * 100).toFixed(2)}%
+                {
+                  expRate.toNumber() > 0
+                    ? <>{((dao - 1)*168*100).toFixed(2)}%</>
+                    : <>0({((dao - 1)*168*100).toFixed(2)}%)</>
+                }
               </div>
             </div>
           </div>

@@ -10,9 +10,9 @@ import {
   getPoolStatusOf, getPoolTotalBonded,
   getTokenAllowance,
   getTokenBalance,
-  getPoolFluidUntil, getTokenTotalSupply, loadFluidStatusPool
+  getPoolFluidUntil, getTokenTotalSupply, loadFluidStatusPool, getPrice0CumulativeLast, getReserves, getEpoch
 } from '../../utils/infura';
-import {TSD, UNI, USDC, ZAP, ESD, DSD, ZAI, USDT} from "../../constants/tokens";
+import {TSD, UNI, USDC, ZAP, ESD, DSD, ZAI, USDT, TSDS} from "../../constants/tokens";
 import {POOL_EXIT_LOCKUP_EPOCHS} from "../../constants/values";
 import { toTokenUnitsBN } from '../../utils/number';
 
@@ -27,13 +27,14 @@ import AddUni from "./AddUni";
 import {getLegacyPoolAddress, getPoolAddress} from "../../utils/pool";
 import {DollarPool4} from "../../constants/contracts";
 import Invest from "./Invest";
+import {calculateTwap, getPriceAndBlockTimestamp} from "../../utils/calculation";
 
 function Pool({ user }: {user: string}) {
   const { override } = useParams();
   if (override) {
     user = override;
   }
-
+  const [epoch, setEpoch] = useState(0);
   const [poolAddress, setPoolAddress] = useState("");
   const [poolTotalBonded, setPoolTotalBonded] = useState(new BigNumber(0));
   const [pairBalanceTSD, setPairBalanceTSD] = useState(new BigNumber(0));
@@ -69,22 +70,50 @@ function Pool({ user }: {user: string}) {
   const [userDSDBalance, setUserDSDBalance] = useState(new BigNumber(0));
   const [userZaiBalance, setUserZaiBalance] = useState(new BigNumber(0));
   const [userUSDTBalance, setUserUSDTBalance] = useState(new BigNumber(0));
+  const [twap, setTwap] = useState(new BigNumber(0))
 
   //Update User balances
   useEffect(() => {
     let isCancelledApr = false;
     async function updateAPR() {
       const [
+        epochStr,
+
         totalSupplyStr,
         totalBondedStr,
+
+        price0Str,
+        reserves,
+        pairInfo
       ] = await Promise.all([
+        getEpoch(TSDS.addr),
         getTokenTotalSupply(TSD.addr),
         getTokenBalance(TSD.addr, UNI.addr),
+        getPrice0CumulativeLast(),
+        getReserves(),
+        getPriceAndBlockTimestamp()
       ]);
 
       if (!isCancelledApr) {
+        const {_blockTimestampLast} = reserves;
+
+        setEpoch(parseInt(epochStr, 10));
+
         setTotalSupply(toTokenUnitsBN(totalSupplyStr, TSD.decimals));
         setPairBalanceTSD(toTokenUnitsBN(totalBondedStr, TSD.decimals));
+
+        if (pairInfo?.payload.length > 0) {
+          const {price0CumulativeLast, reserves} = pairInfo.payload[pairInfo.payload.length - 1];
+
+          const oldPrice = new BigNumber(price0CumulativeLast);
+          const oldTimestamp = new BigNumber(reserves?._blockTimestampLast);
+          const price0 = new BigNumber(price0Str);
+          const timestamp = new BigNumber(_blockTimestampLast);
+
+          const twap = await calculateTwap(oldPrice, oldTimestamp, price0, timestamp, 12)
+
+          setTwap(new BigNumber(twap))
+        }
       }
     }
 
@@ -158,6 +187,7 @@ function Pool({ user }: {user: string}) {
         userDSDBalanceStr,
         userZaiBalanceStr,
         userUSDTBalanceStr,
+
       ] = await Promise.all([
         getPoolTotalBonded(poolAddressStr),
         getTokenBalance(TSD.addr, UNI.addr),
@@ -192,6 +222,10 @@ function Pool({ user }: {user: string}) {
         getTokenBalance(DSD.addr, user),
         getTokenBalance(ZAI.addr, user),
         getTokenBalance(USDT.addr, user),
+
+        getPrice0CumulativeLast(),
+        getReserves(),
+        getPriceAndBlockTimestamp()
       ]);
 
       const poolTotalBonded = toTokenUnitsBN(poolTotalBondedStr, TSD.decimals);
@@ -266,6 +300,12 @@ function Pool({ user }: {user: string}) {
   const isRewardedNegative = legacyUserRewardedBalance.isGreaterThan(new BigNumber("1000000000000000000"));
   const hasLegacyBalance = legacyUserStagedBalance.isGreaterThan(0) || legacyUserClaimableBalance.isGreaterThan(0) || legacyUserBondedBalance.isGreaterThan(0);
 
+  let expRate = twap.minus(1).div(10);
+
+  if (expRate.toNumber() <= 0) {
+    expRate = new BigNumber(epoch < 240 ? 0.04 : 0);
+  }
+
   return (
     <>
       <IconHeader icon={<i className="fas fa-parachute-box"/>} text="LP Reward Pool"/>
@@ -273,6 +313,7 @@ function Pool({ user }: {user: string}) {
       <Invest
         totalSupply={totalSupply}
         TSDLPBonded={pairBalanceTSD}
+        expRate={expRate}
       />
 
       {/*{hasLegacyBalance ?*/}

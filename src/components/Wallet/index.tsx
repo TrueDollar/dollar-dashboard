@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import BigNumber from 'bignumber.js';
 import {
   getBalanceBonded,
-  getBalanceOfStaged, getFluidUntil,
+  getBalanceOfStaged, getEpoch, getFluidUntil, getPrice0CumulativeLast, getReserves,
   getStatusOf, getTokenAllowance,
   getTokenBalance, getTokenTotalSupply, getTotalBonded, loadFluidStatusDao,
 } from '../../utils/infura';
@@ -19,13 +19,14 @@ import IconHeader from "../common/IconHeader";
 import {getPoolAddress} from "../../utils/pool";
 import {DollarPool4} from "../../constants/contracts";
 import Invest from "./Invest";
+import {calculateTwap, getPriceAndBlockTimestamp} from "../../utils/calculation";
 
 function Wallet({ user }: {user: string}) {
   const { override } = useParams();
   if (override) {
     user = override;
   }
-
+  const [epoch, setEpoch] = useState(0);
   const [userTSDBalance, setUserTSDBalance] = useState(new BigNumber(0));
   const [userTSDAllowance, setUserTSDAllowance] = useState(new BigNumber(0));
   const [userTSDSBalance, setUserTSDSBalance] = useState(new BigNumber(0));
@@ -40,22 +41,50 @@ function Wallet({ user }: {user: string}) {
   const [fluidStatus, setFluidStatus] = useState({
     lastUnbond: undefined, lastBond: undefined, fluidEpoch: undefined
   });
+  const [twap, setTwap] = useState(new BigNumber(0))
 
   //Update User balances
   useEffect(() => {
     let isCancelledApr = false;
     async function updateAPR() {
       const [
+        epochStr,
+
         totalSupplyStr,
         totalBondedStr,
+
+        price0Str,
+        reserves,
+        pairInfo
       ] = await Promise.all([
+        getEpoch(TSDS.addr),
         getTokenTotalSupply(TSD.addr),
         getTotalBonded(TSDS.addr),
+        getPrice0CumulativeLast(),
+        getReserves(),
+        getPriceAndBlockTimestamp()
       ]);
 
       if (!isCancelledApr) {
+        const {_blockTimestampLast} = reserves;
+
+        setEpoch(parseInt(epochStr, 10));
+
         setTotalSupply(toTokenUnitsBN(totalSupplyStr, TSD.decimals));
         setTotalBonded(toTokenUnitsBN(totalBondedStr, TSD.decimals));
+
+        if (pairInfo?.payload.length > 0) {
+          const {price0CumulativeLast, reserves} = pairInfo.payload[pairInfo.payload.length - 1];
+
+          const oldPrice = new BigNumber(price0CumulativeLast);
+          const oldTimestamp = new BigNumber(reserves?._blockTimestampLast);
+          const price0 = new BigNumber(price0Str);
+          const timestamp = new BigNumber(_blockTimestampLast);
+
+          const twap = await calculateTwap(oldPrice, oldTimestamp, price0, timestamp, 12)
+
+          setTwap(new BigNumber(twap))
+        }
       }
     }
 
@@ -140,6 +169,12 @@ function Wallet({ user }: {user: string}) {
     };
   }, [user]);
 
+  let expRate = twap.minus(1).div(10);
+
+  if (expRate.toNumber() <= 0) {
+    expRate = new BigNumber(epoch < 240 ? 0.04 : 0);
+  }
+
   return (
     <>
       <IconHeader icon={<i className="fas fa-dot-circle"/>} text="DAO"/>
@@ -147,6 +182,7 @@ function Wallet({ user }: {user: string}) {
       <Invest
         totalSupply={totalSupply}
         totalBonded={totalBonded}
+        expRate={expRate}
       />
 
       <AccountPageHeader

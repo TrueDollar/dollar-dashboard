@@ -6,20 +6,22 @@ import styled from 'styled-components'
 type InvestProps = {
   totalSupply: BigNumber,
   TSDLPBonded: BigNumber,
+  expRate: BigNumber
 };
 
-const Invest = ({totalSupply, TSDLPBonded}: InvestProps) => {
+const Invest = ({totalSupply, TSDLPBonded, expRate}: InvestProps) => {
   const TSDLpBonded = TSDLPBonded.toNumber() * 2;
-  const lpHourly = ((((totalSupply.toNumber() * 4) / 100) * 40) / 100 + TSDLpBonded) / TSDLpBonded;
-  const lpDaily = (((((totalSupply.toNumber() * 4) / 100) * 40) / 100) * 24 + TSDLpBonded) / TSDLpBonded;
-  const lpWeekly = (((((totalSupply.toNumber() * 4) / 100) * 40) / 100) * 168 + TSDLpBonded) / TSDLpBonded;
+  const expRateCal = expRate.toNumber() <= 0 ? new BigNumber(0.04) : expRate;
+  const lpHourly = (((totalSupply.toNumber() * expRateCal.toNumber()) * 40) / 100 + TSDLpBonded) / TSDLpBonded;
+  const lpDaily = ((((totalSupply.toNumber() * expRateCal.toNumber()) * 40) / 100) * 24 + TSDLpBonded) / TSDLpBonded;
+  const lpWeekly = ((((totalSupply.toNumber() * expRateCal.toNumber()) * 40) / 100) * 168 + TSDLpBonded) / TSDLpBonded;
 
   return (
     <Container>
       <ContainerItem style={{flexBasis: '30%', flexGrow: 1, marginRight: '2%'}}>
         <Box>
           <div>
-            <div style={{fontSize: 16, padding: 3}}>APR</div>
+            <div style={{fontSize: 16, padding: 3}}>{expRate.toNumber() > 0 ? 'APR' : 'APR (History)'}</div>
             <div style={{fontSize: 16, padding: 3}}>LP hourly:
               <div style={{
                 fontSize: 24,
@@ -28,7 +30,11 @@ const Invest = ({totalSupply, TSDLPBonded}: InvestProps) => {
                 lineHeight: 1.5,
                 fontFamily: 'aragon-ui-monospace, monospace'
               }}>
-                {((lpHourly - 1) * 100).toFixed(2)}%
+                {
+                  expRate.toNumber() > 0
+                    ? <>{((lpHourly - 1)*100).toFixed(2)}%</>
+                    : <>0({((lpHourly - 1)*100).toFixed(2)}%)</>
+                }
               </div>
             </div>
             <div style={{fontSize: 16, padding: 3}}>LP daily:
@@ -39,7 +45,11 @@ const Invest = ({totalSupply, TSDLPBonded}: InvestProps) => {
                 lineHeight: 1.5,
                 fontFamily: 'aragon-ui-monospace, monospace'
               }}>
-                {((lpDaily - 1) * 100).toFixed(2)}%
+                {
+                  expRate.toNumber() > 0
+                    ? <>{((lpDaily - 1)*100).toFixed(2)}%</>
+                    : <>0({((lpDaily - 1)*100).toFixed(2)}%)</>
+                }
               </div>
             </div>
             <div style={{fontSize: 16, padding: 3}}>LP weekly:
@@ -50,7 +60,11 @@ const Invest = ({totalSupply, TSDLPBonded}: InvestProps) => {
                 lineHeight: 1.5,
                 fontFamily: 'aragon-ui-monospace, monospace'
               }}>
-                {((lpWeekly - 1) * 100).toFixed(2)}%
+                {
+                  expRate.toNumber() > 0
+                    ? <>{((lpWeekly - 1)*100).toFixed(2)}%</>
+                    : <>0({((lpWeekly - 1)*100).toFixed(2)}%)</>
+                }
               </div>
             </div>
           </div>

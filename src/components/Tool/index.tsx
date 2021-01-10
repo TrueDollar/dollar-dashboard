@@ -17,6 +17,7 @@ import {toTokenUnitsBN} from "../../utils/number";
 import TokenDistribution from "./TokenDistribution";
 import HistoryReturn from "./HistoryReturn";
 import {getPoolAddress} from "../../utils/pool";
+import {calculateTwap, getPriceAndBlockTimestamp} from "../../utils/calculation";
 
 function Tool() {
   const [epoch, setEpoch] = useState(0);
@@ -35,8 +36,7 @@ function Tool() {
 
   const [pairBalanceTSD, setPairBalanceTSD] = useState(new BigNumber(0));
   const [pairBalanceUSDC, setPairBalanceUSDC] = useState(new BigNumber(0));
-  const [price0, setPrice0] = useState(new BigNumber(0));
-  const [blockTimestampLast, setBlockTimestampLast] = useState(0);
+  const [twap, setTwap] = useState(new BigNumber(0))
 
   const price = pairBalanceUSDC.dividedBy(pairBalanceTSD);
 
@@ -62,7 +62,8 @@ function Tool() {
         totalDebtStr,
         totalCouponsStr,
         price0Str,
-        reserves
+        reserves,
+        pairInfo
       ] = await Promise.all([
         getEpoch(TSDS.addr),
 
@@ -81,6 +82,7 @@ function Tool() {
         getTotalCoupons(TSDS.addr),
         getPrice0CumulativeLast(),
         getReserves(),
+        getPriceAndBlockTimestamp()
       ]);
 
       if (!isCancelled) {
@@ -100,8 +102,19 @@ function Tool() {
         setPoolTotalStaged(toTokenUnitsBN(poolTotalStagedStr, TSD.decimals));
         setTotalDebt(toTokenUnitsBN(totalDebtStr, TSD.decimals));
         setTotalCoupons(toTokenUnitsBN(totalCouponsStr, TSD.decimals));
-        setPrice0(toTokenUnitsBN(price0Str, USDC.decimals));
-        setBlockTimestampLast(_blockTimestampLast);
+
+        if (pairInfo?.payload.length > 0) {
+          const {price0CumulativeLast, reserves} = pairInfo.payload[pairInfo.payload.length - 1];
+
+          const oldPrice = new BigNumber(price0CumulativeLast);
+          const oldTimestamp = new BigNumber(reserves?._blockTimestampLast);
+          const price0 = new BigNumber(price0Str);
+          const timestamp = new BigNumber(_blockTimestampLast);
+
+          const twap = await calculateTwap(oldPrice, oldTimestamp, price0, timestamp, 12)
+
+          setTwap(new BigNumber(twap))
+        }
       }
     }
 
@@ -115,9 +128,15 @@ function Tool() {
     };
   }, []);
 
-  const increaseBy = (totalSupply.toNumber() * 4) / 100;
-  const daoBonding = (((totalSupply.toNumber() * 4) / 100) * 60) / 100;
-  const lpBonding = (((totalSupply.toNumber() * 4) / 100) * 40) / 100;
+  let expRate = twap.minus(1).div(10);
+
+  if (expRate.toNumber() <= 0) {
+    expRate = new BigNumber(epoch < 240 ? 0.04 : 0);
+  }
+
+  const increaseBy = totalSupply.toNumber() * expRate.toNumber();
+  const daoBonding = (totalSupply.toNumber() * expRate.toNumber()) * 0.6;
+  const lpBonding = (totalSupply.toNumber() * expRate.toNumber()) * 0.6;
 
   return <Container>
     <Header>
@@ -133,7 +152,7 @@ function Tool() {
       </div>
       <div>
         <Title>TWAP Price</Title>
-        <p>N/A (Bootstrapping price - $1.44)</p>
+        <p>{twap.toNumber().toFixed(2)} USDC</p>
       </div>
       <div>
         <Title>Epoch</Title>
@@ -173,6 +192,7 @@ function Tool() {
       totalSupply={totalSupply}
       totalBonded={totalBonded}
       TSDLPBonded={pairBalanceTSD}
+      expRate={expRate}
     />
   </Container>
 }

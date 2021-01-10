@@ -5,8 +5,9 @@ import styled from 'styled-components'
 import './style.css';
 import BigNumber from "bignumber.js";
 import {
+  getEpoch,
   getPoolTotalClaimable,
-  getPoolTotalRewarded,
+  getPoolTotalRewarded, getPrice0CumulativeLast, getReserves,
   getTokenBalance,
   getTokenTotalSupply,
   getTotalBonded,
@@ -24,6 +25,7 @@ import TotalSupply from "./TotalSupply";
 import MarketCap from "./MarketCap";
 import Invest from "./Invest";
 import EpochBlock from "../common/EpochBlock";
+import {calculateTwap, getPriceAndBlockTimestamp} from "../../utils/calculation";
 
 function epochformatted() {
   const epochStart = 1609473600;
@@ -49,6 +51,7 @@ type HomePageProps = {
 function HomePage({user}: HomePageProps) {
   const history = useHistory();
   const currentTheme = useTheme();
+  const [epoch, setEpoch] = useState(0);
   const [pairBalanceTSD, setPairBalanceTSD] = useState(new BigNumber(0));
   const [pairBalanceUSDC, setPairBalanceUSDC] = useState(new BigNumber(0));
   const [totalSupply, setTotalSupply] = useState(new BigNumber(0));
@@ -59,6 +62,7 @@ function HomePage({user}: HomePageProps) {
   const [poolTotalRewarded, setPoolTotalRewarded] = useState(new BigNumber(0));
   const [poolTotalClaimable, setPoolTotalClaimable] = useState(new BigNumber(0));
   const [epochTime, setEpochTime] = useState("0-00:00:00");
+  const [twap, setTwap] = useState(new BigNumber(0))
 
   useEffect(() => {
     let isCancelled = false;
@@ -68,6 +72,8 @@ function HomePage({user}: HomePageProps) {
       const legacyPoolAddress = getLegacyPoolAddress(poolAddress);
 
       const [
+        epochStr,
+
         pairBalanceTSDStr,
         pairBalanceUSDCStr,
         totalSupplyStr,
@@ -77,7 +83,12 @@ function HomePage({user}: HomePageProps) {
         poolLiquidityStr,
         poolTotalRewardedStr,
         poolTotalClaimableStr,
+        price0Str,
+        reserves,
+        pairInfo
       ] = await Promise.all([
+        getEpoch(TSDS.addr),
+
         getTokenBalance(TSD.addr, UNI.addr),
         getTokenBalance(USDC.addr, UNI.addr),
 
@@ -90,12 +101,16 @@ function HomePage({user}: HomePageProps) {
         getPoolTotalRewarded(poolAddress),
         getPoolTotalClaimable(poolAddress),
 
-        getPoolTotalRewarded(legacyPoolAddress),
-        getPoolTotalClaimable(legacyPoolAddress),
-
+        getPrice0CumulativeLast(),
+        getReserves(),
+        getPriceAndBlockTimestamp()
       ]);
 
       if (!isCancelled) {
+        const {_blockTimestampLast} = reserves;
+
+        setEpoch(parseInt(epochStr, 10));
+
         setPairBalanceTSD(toTokenUnitsBN(pairBalanceTSDStr, TSD.decimals));
         setPairBalanceUSDC(toTokenUnitsBN(pairBalanceUSDCStr, USDC.decimals));
 
@@ -107,6 +122,19 @@ function HomePage({user}: HomePageProps) {
         setPoolLiquidity(toTokenUnitsBN(poolLiquidityStr, TSD.decimals));
         setPoolTotalRewarded(toTokenUnitsBN(poolTotalRewardedStr, TSD.decimals));
         setPoolTotalClaimable(toTokenUnitsBN(poolTotalClaimableStr, TSD.decimals));
+
+        if (pairInfo?.payload.length > 0) {
+          const {price0CumulativeLast, reserves} = pairInfo.payload[pairInfo.payload.length - 1];
+
+          const oldPrice = new BigNumber(price0CumulativeLast);
+          const oldTimestamp = new BigNumber(reserves?._blockTimestampLast);
+          const price0 = new BigNumber(price0Str);
+          const timestamp = new BigNumber(_blockTimestampLast);
+
+          const twap = await calculateTwap(oldPrice, oldTimestamp, price0, timestamp, 12)
+
+          setTwap(new BigNumber(twap))
+        }
 
       }
     }
@@ -129,6 +157,13 @@ function HomePage({user}: HomePageProps) {
     };
   }, [user]);
   const theme = `${currentTheme._name === 'light' ? '' : '-white'}`
+
+  let expRate = twap.minus(1).div(10);
+
+  if (expRate.toNumber() <= 0) {
+    expRate = new BigNumber(epoch < 240 ? 0.04 : 0);
+  }
+
   return (
     <>
       <Container className="home-box">
@@ -140,7 +175,10 @@ function HomePage({user}: HomePageProps) {
         </div>
         <div style={{flexBasis: '32%'}}>
           <div style={{height: '100%'}}>
-            <TotalSupply totalSupply={totalSupply}/>
+            <TotalSupply
+              expRate={expRate}
+              totalSupply={totalSupply}
+            />
           </div>
         </div>
         <div style={{flexBasis: '32%'}}>
@@ -163,6 +201,7 @@ function HomePage({user}: HomePageProps) {
         theme={theme}
       />
       <Invest
+        expRate={expRate}
         totalSupply={totalSupply}
         totalBonded={totalBonded}
         TSDLPBonded={pairBalanceTSD}

@@ -9,15 +9,17 @@ type InvestProps = {
   totalBonded: BigNumber,
   TSDLPBonded: BigNumber,
   theme: String,
+  expRate: BigNumber
 };
 
-const Invest = ({totalSupply, totalBonded, TSDLPBonded, theme}: InvestProps) => {
+const Invest = ({totalSupply, totalBonded, TSDLPBonded, theme, expRate}: InvestProps) => {
   const history = useHistory();
   const TSDLpBonded = TSDLPBonded.toNumber() * 2;
-  const dao = (((((totalSupply.toNumber() * 4) / 100) * 60) / 100 + totalBonded.toNumber()) / totalBonded.toNumber());
-  const lpHourly = ((((totalSupply.toNumber() * 4) / 100) * 40) / 100 + TSDLpBonded) / TSDLpBonded;
-  const lpDaily = (((((totalSupply.toNumber() * 4) / 100) * 40) / 100) * 24 + TSDLpBonded) / TSDLpBonded;
-  const lpWeekly = (((((totalSupply.toNumber() * 4) / 100) * 40) / 100) * 168 + TSDLpBonded) / TSDLpBonded;
+  const expRateCal = expRate.toNumber() <= 0 ? new BigNumber(0.04) : expRate;
+  const dao = ((((totalSupply.toNumber() * expRateCal.toNumber()) * 60) / 100 + totalBonded.toNumber()) / totalBonded.toNumber());
+  const lpHourly = (((totalSupply.toNumber() * expRateCal.toNumber()) * 40) / 100 + TSDLpBonded) / TSDLpBonded;
+  const lpDaily = ((((totalSupply.toNumber() * expRateCal.toNumber()) * 40) / 100) * 24 + TSDLpBonded) / TSDLpBonded;
+  const lpWeekly = ((((totalSupply.toNumber() * expRateCal.toNumber()) * 40) / 100) * 168 + TSDLpBonded) / TSDLpBonded;
 
   return (
     <>
@@ -32,7 +34,7 @@ const Invest = ({totalSupply, totalBonded, TSDLPBonded, theme}: InvestProps) => 
       <Container className="box-invest">
         <Box>
           <div>
-            <div style={{fontWeight: 'bold', fontSize: 30}}>APR</div>
+            <div style={{fontWeight: 'bold', fontSize: 30}}>{expRate.toNumber() > 0 ? 'APR' : 'APR (History)'}</div>
             <div className="invest" style={{fontSize: 16, padding: 3}}>
               <div>DAO hourly:</div>
               <div style ={{
@@ -49,7 +51,11 @@ const Invest = ({totalSupply, totalBonded, TSDLPBonded, theme}: InvestProps) => 
                 lineHeight: 1.5,
                 fontFamily: 'aragon-ui-monospace, monospace'
               }}>
-                {((dao - 1) * 100).toFixed(2)}%
+                {
+                  expRate.toNumber() > 0
+                    ? <>{((dao - 1)*100).toFixed(2)}%</>
+                    : <>0({((dao - 1)*100).toFixed(2)}%)</>
+                }
               </div>
             </div>
             <div className="invest" style={{fontSize: 16, padding: 3}}>
@@ -68,7 +74,11 @@ const Invest = ({totalSupply, totalBonded, TSDLPBonded, theme}: InvestProps) => 
                 lineHeight: 1.5,
                 fontFamily: 'aragon-ui-monospace, monospace'
               }}>
-                {((dao - 1) * 24 * 100).toFixed(2)}%
+                {
+                  expRate.toNumber() > 0
+                    ? <>{((dao - 1)*24*100).toFixed(2)}%</>
+                    : <>0({((dao - 1)*24*100).toFixed(2)}%)</>
+                }
               </div>
             </div>
             <div className="invest" style={{fontSize: 16, padding: 3}}>
@@ -87,21 +97,27 @@ const Invest = ({totalSupply, totalBonded, TSDLPBonded, theme}: InvestProps) => 
                 lineHeight: 1.5,
                 fontFamily: 'aragon-ui-monospace, monospace'
               }}>
-                {((dao - 1) * 168 * 100).toFixed(2)}%
+                {
+                  expRate.toNumber() > 0
+                    ? <>{((dao - 1)*168*100).toFixed(2)}%</>
+                    : <>0({((dao - 1)*168*100).toFixed(2)}%)</>
+                }
               </div>
             </div>
           </div>
-          <Button
-            className="mt-2 button-home"
-            icon={<img src={`./home/invest-1${theme}.png`}/>}
-            label="Invest in DAO"
-            onClick={() => history.push('/dao/')}
-          />
+          <ContainerButton>
+            <Button
+              className="mt-2 button-home"
+              icon={<img src={`./home/invest-1${theme}.png`}/>}
+              label="Invest in DAO"
+              onClick={() => history.push('/dao/')}
+            />
+          </ContainerButton>
         </Box>
         <Box>
           <div>
             <div>
-              <div style={{fontWeight: 'bold', fontSize: 30}}>APR</div>
+              <div style={{fontWeight: 'bold', fontSize: 30}}>{expRate.toNumber() > 0 ? 'APR' : 'APR (History)'}</div>
               <div className="invest" style={{fontSize: 16, padding: 3}}>
                 <div>LP hourly:</div>
                 <div style ={{
@@ -118,7 +134,11 @@ const Invest = ({totalSupply, totalBonded, TSDLPBonded, theme}: InvestProps) => 
                   lineHeight: 1.5,
                   fontFamily: 'aragon-ui-monospace, monospace'
                 }}>
-                  {((lpHourly - 1) * 100).toFixed(2)}%
+                  {
+                    expRate.toNumber() > 0
+                      ? <>{((lpHourly - 1)*100).toFixed(2)}%</>
+                      : <>0({((lpHourly - 1)*100).toFixed(2)}%)</>
+                  }
                 </div>
               </div>
               <div className="invest" style={{fontSize: 16, padding: 3}}>
@@ -137,7 +157,11 @@ const Invest = ({totalSupply, totalBonded, TSDLPBonded, theme}: InvestProps) => 
                   lineHeight: 1.5,
                   fontFamily: 'aragon-ui-monospace, monospace'
                 }}>
-                  {((lpDaily - 1) * 100).toFixed(2)}%
+                  {
+                    expRate.toNumber() > 0
+                      ? <>{((lpDaily - 1)*100).toFixed(2)}%</>
+                      : <>0({((lpDaily - 1)*100).toFixed(2)}%)</>
+                  }
                 </div>
               </div>
               <div className="invest" style={{fontSize: 16, padding: 3}}>
@@ -156,16 +180,22 @@ const Invest = ({totalSupply, totalBonded, TSDLPBonded, theme}: InvestProps) => 
                   lineHeight: 1.5,
                   fontFamily: 'aragon-ui-monospace, monospace'
                 }}>
-                  {((lpWeekly - 1) * 100).toFixed(2)}%
+                  {
+                    expRate.toNumber() > 0
+                      ? <>{((lpWeekly - 1)*100).toFixed(2)}%</>
+                      : <>0({((lpWeekly - 1)*100).toFixed(2)}%)</>
+                  }
                 </div>
               </div>
             </div>
-            <Button
-              className="mt-2 button-home"
-              icon={<img src={`./home/invest-1${theme}.png`}/>}
-              label="Invest in LP"
-              onClick={() => history.push('/pool/')}
-            />
+            <ContainerButton>
+              <Button
+                className="mt-2 button-home"
+                icon={<img src={`./home/invest-1${theme}.png`}/>}
+                label="Invest in LP"
+                onClick={() => history.push('/pool/')}
+              />
+            </ContainerButton>
           </div>
         </Box>
       </Container>
@@ -182,4 +212,11 @@ const Container = styled.div`
     display: block;
   }
 `
+const ContainerButton = styled.div`
+  @media (max-width: 522px) {
+    display: flex;
+    justify-content: center;
+  }
+`
+
 export default Invest;

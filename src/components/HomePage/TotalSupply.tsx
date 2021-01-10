@@ -6,10 +6,10 @@ import {formatNumber} from "../../utils/number";
 
 type TotalSupplyProps = {
   totalSupply: BigNumber,
+  expRate: BigNumber
 };
 
-const TotalSupply = ({totalSupply}:TotalSupplyProps) => {
-
+const TotalSupply = ({totalSupply, expRate}:TotalSupplyProps) => {
   return (
     <div>
       <div style={{fontSize: 16, padding: 3}}>Total Supply <Icon src="./images/etherscan.png"
@@ -23,7 +23,13 @@ const TotalSupply = ({totalSupply}:TotalSupplyProps) => {
         fontFamily: 'aragon-ui-monospace, monospace'
       }}>{formatNumber((totalSupply.toNumber()).toFixed(2))}
       </div>
-      <div style={{fontSize: 15, padding: 3}}>Status: <strong>EXPANSION (+{((totalSupply.toNumber()*4)/100).toFixed()} next epoch)</strong></div>
+      <div style={{fontSize: 15, padding: 3}}>Status: <strong>
+        {
+          expRate.toNumber() > 0
+          ? <>EXPANSION (+{((totalSupply.toNumber()*4)/100).toFixed()} next epoch)</>
+            : '(Debt Phase)'
+        }
+        </strong></div>
     </div>
   );
 };
