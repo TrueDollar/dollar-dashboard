@@ -71,7 +71,7 @@ function AddUni({
   }
 
   return (
-    <Box heading="Invest in LP Pool of TSD with your USDC/TSD/ESD/DSD/ZAI">
+    <Box heading="Invest in LP Pool of TSD with your USDC/TSD/ESD/DSD/ZAI/USDT">
       <div style={{display: 'flex', flexWrap: 'wrap'}}>
         <div style={{flexBasis: '32%'}}>
           <BalanceBlock asset="Balance" balance={accountUNIBalance} suffix={"UNI-V2"}/>
@@ -133,7 +133,7 @@ function AddUni({
         </Container>
       </div>
       <div style={{width: '100%', paddingTop: '2%', textAlign: 'center'}}>
-        <span style={{opacity: 0.5}}>Save some gas by Zapping USDC/TSD/ESD/DSD/ZAI and invest to UNI-V2 of TSD pair with 1-click.</span>
+        <span style={{opacity: 0.5}}>Save some gas by Zapping USDC/TSD/ESD/DSD/ZAI/USDT and invest to UNI-V2 of TSD pair with 1-click.</span>
       </div>
     </Box>
   );
