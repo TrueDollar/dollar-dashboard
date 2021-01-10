@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import NextEpoch from "./NextEpoch";
 import {
   getEpoch,
-  getPoolTotalBonded, getPoolTotalStaged, getTokenBalance,
+  getPoolTotalBonded, getPoolTotalStaged, getPrice0CumulativeLast, getReserves, getTokenBalance,
   getTokenTotalSupply,
   getTotalBonded, getTotalCoupons, getTotalDebt,
   getTotalRedeemable,
@@ -35,6 +35,8 @@ function Tool() {
 
   const [pairBalanceTSD, setPairBalanceTSD] = useState(new BigNumber(0));
   const [pairBalanceUSDC, setPairBalanceUSDC] = useState(new BigNumber(0));
+  const [price0, setPrice0] = useState(new BigNumber(0));
+  const [blockTimestampLast, setBlockTimestampLast] = useState(0);
 
   const price = pairBalanceUSDC.dividedBy(pairBalanceTSD);
 
@@ -58,7 +60,9 @@ function Tool() {
         poolTotalStagedStr,
         totalRedeemableStr,
         totalDebtStr,
-        totalCouponsStr
+        totalCouponsStr,
+        price0Str,
+        reserves
       ] = await Promise.all([
         getEpoch(TSDS.addr),
 
@@ -75,9 +79,13 @@ function Tool() {
         getTotalRedeemable(TSDS.addr),
         getTotalDebt(TSDS.addr),
         getTotalCoupons(TSDS.addr),
+        getPrice0CumulativeLast(),
+        getReserves(),
       ]);
 
       if (!isCancelled) {
+        const {_blockTimestampLast} = reserves;
+
         setEpoch(parseInt(epochStr, 10));
 
         setPairBalanceTSD(toTokenUnitsBN(pairBalanceTSDStr, TSD.decimals));
@@ -92,7 +100,8 @@ function Tool() {
         setPoolTotalStaged(toTokenUnitsBN(poolTotalStagedStr, TSD.decimals));
         setTotalDebt(toTokenUnitsBN(totalDebtStr, TSD.decimals));
         setTotalCoupons(toTokenUnitsBN(totalCouponsStr, TSD.decimals));
-
+        setPrice0(toTokenUnitsBN(price0Str, USDC.decimals));
+        setBlockTimestampLast(_blockTimestampLast);
       }
     }
 

@@ -13,6 +13,7 @@ const daoAbi = require('../constants/abi/Implementation.json');
 const daoESDAbi = require('../constants/abi/ImplementationESD.json');
 const daoDSDAbi = require('../constants/abi/ImplementationDSD.json');
 const daoZAIAbi = require('../constants/abi/ImplementationZai.json');
+const daoUSDTAbi = require('../constants/abi/ImplementationUSDT.json');
 const uniswapv2DSDAbi = require('../constants/abi/UniswapV2PairUSDC-TSD.json');
 const poolAbi = require('../constants/abi/Pool.json');
 
@@ -106,6 +107,17 @@ export const approveDSD = async (tokenAddr, spender, amt = UINT256_MAX) => {
 export const approveZAI = async (tokenAddr, spender, amt = UINT256_MAX) => {
   const account = await checkConnectedAndGetAddress();
   const oToken = new window.web3.eth.Contract(daoZAIAbi, tokenAddr);
+  await oToken.methods
+    .approve(spender, amt)
+    .send({ from: account })
+    .on('transactionHash', (hash) => {
+      notify.hash(hash);
+    });
+};
+
+export const approveUSDT = async (tokenAddr, spender, amt = UINT256_MAX) => {
+  const account = await checkConnectedAndGetAddress();
+  const oToken = new window.web3.eth.Contract(daoUSDTAbi, tokenAddr);
   await oToken.methods
     .approve(spender, amt)
     .send({ from: account })
