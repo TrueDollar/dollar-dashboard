@@ -6,10 +6,10 @@ import BigNumber from 'bignumber.js';
 import styled from 'styled-components'
 
 import {BalanceBlock} from '../common/index';
-import {approve} from '../../utils/web3';
+import {approve, approveTSD, approveDSD, approveESD, approveZAI, approveUSDT} from '../../utils/web3';
 import {buyUniV2, buyUniV2FromProxy} from '../../utils/infura';
 import {toBaseUnitBN} from '../../utils/number';
-import {ZAP, USDC, TSD, ESD, DSD, ZAI} from "../../constants/tokens";
+import {ZAP, USDC, TSD, ESD, DSD, ZAI, USDT} from "../../constants/tokens";
 import ZapUni from "./ZapUni";
 
 type AddUniProps = {
@@ -20,11 +20,13 @@ type AddUniProps = {
   zapESDAllowance: BigNumber,
   zapDSDAllowance: BigNumber,
   zapZAIAllowance: BigNumber,
+  zapUSDTAllowance: BigNumber,
   accountUNIBalance: BigNumber,
   balanceTSD: BigNumber,
   balanceESD: BigNumber,
   balanceDSD: BigNumber,
   balanceZAI: BigNumber,
+  balanceUSDT: BigNumber,
 };
 
 function AddUni({
@@ -39,7 +41,9 @@ function AddUni({
                   zapDSDAllowance,
                   balanceDSD,
                   balanceZAI,
-                  zapZAIAllowance
+                  zapZAIAllowance,
+                  balanceUSDT,
+                  zapUSDTAllowance
                 }: AddUniProps) {
 
   const handleBuyUniFromUSDC = (amount) => {
@@ -60,6 +64,10 @@ function AddUni({
 
   const handleBuyUniFromZAI = (amount) => {
     buyUniV2FromProxy(user, toBaseUnitBN(amount, ZAI.decimals), ZAI.addr, true)
+  }
+
+  const handleBuyUniFromUSDT = (amount) => {
+    buyUniV2FromProxy(user, toBaseUnitBN(amount, USDT.decimals), USDT.addr)
   }
 
   return (
@@ -84,7 +92,7 @@ function AddUni({
             zapAllowance={zapTSDAllowance}
             balance={balanceTSD}
             onBuyUni={handleBuyUniFromTSD}
-            onApprove={() => approve(TSD.addr, ZAP.addr)}
+            onApprove={() => approveTSD(TSD.addr, ZAP.addr)}
           />
 
           <ZapUni
@@ -93,7 +101,7 @@ function AddUni({
             zapAllowance={zapESDAllowance}
             balance={balanceESD}
             onBuyUni={handleBuyUniFromESD}
-            onApprove={() => approve(ESD.addr, ZAP.addr)}
+            onApprove={() => approveESD(ESD.addr, ZAP.addr)}
           />
 
           <ZapUni
@@ -102,7 +110,7 @@ function AddUni({
             zapAllowance={zapDSDAllowance}
             balance={balanceDSD}
             onBuyUni={handleBuyUniFromDSD}
-            onApprove={() => approve(DSD.addr, ZAP.addr)}
+            onApprove={() => approveDSD(DSD.addr, ZAP.addr)}
           />
 
           <ZapUni
@@ -111,7 +119,16 @@ function AddUni({
             zapAllowance={zapZAIAllowance}
             balance={balanceZAI}
             onBuyUni={handleBuyUniFromZAI}
-            onApprove={() => approve(ZAI.addr, ZAP.addr)}
+            onApprove={() => approveZAI(ZAI.addr, ZAP.addr)}
+          />
+
+          <ZapUni
+            user={user}
+            code="USDT"
+            zapAllowance={zapUSDTAllowance}
+            balance={balanceUSDT}
+            onBuyUni={handleBuyUniFromUSDT}
+            onApprove={() => approveUSDT(USDT.addr, ZAP.addr)}
           />
         </Container>
       </div>
