@@ -2,7 +2,7 @@ import React from 'react';
 import BigNumber from 'bignumber.js';
 import styled from 'styled-components'
 import {Button} from '@aragon/ui';
-
+import './style.css';
 import {BalanceBlock, AddressBlock} from '../common/index';
 import {UNISWAP_INFO, UNISWAP_SUPPLY, UNISWAP_TRADE, DEXTOOL} from "../../constants/contracts";
 
@@ -17,20 +17,21 @@ const Trade = ({pairBalanceTSD, pairBalanceUSDC, uniswapPair}: TradeProps) => {
 
   return (
     <>
-      <div style={{paddingLeft: '3%', fontSize: 18, display: 'flex', alignItems: 'center'}}>
+      <div style={{ fontSize: 18, display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
         <div style={{marginRight: '2%', fontSize: 48}}>
-          <i className="fas fa-exchange-alt"/>
+          <img src='./home/trade.png' />
         </div>
-        <div>
+        <div style={{fontWeight: 'bold', fontSize: 30}}>
           Trade
         </div>
       </div>
-      <Container>
+      <Container className="box-trade">
         <div>
           <BalanceBlock asset="TSD Price" balance={price} suffix={"USDC"}/>
           <Button
             label="Buy TSD"
-            icon={<i className="fas fa-exchange-alt"/>}
+            className="button-home"
+            icon={<img src="./home/tsd.png"/>}
             onClick={() => window.open(UNISWAP_TRADE, "_blank")}
           />
         </div>
@@ -38,23 +39,26 @@ const Trade = ({pairBalanceTSD, pairBalanceUSDC, uniswapPair}: TradeProps) => {
           <BalanceBlock asset="TSD Liquidity" balance={pairBalanceTSD} suffix={"TSD"}/>
           <Button
             label="Info"
-            icon={<i className="fas fa-chart-area"/>}
+            className="button-home"
+            icon={<img src="./home/info.png"/>}
             onClick={() => window.open(UNISWAP_INFO, "_blank")}
           />
         </div>
         <div>
           <BalanceBlock asset="USDC Liquidity" balance={pairBalanceUSDC} suffix={"USDC"}/>
           <Button
+            className="button-home"
             label="Add Liquidity"
-            icon={<i className="fas fa-water"/>}
+            icon={<img src="./home/add-liquidity.png"/>}
             onClick={() => window.open(UNISWAP_SUPPLY, "_blank")}
           />
         </div>
         <div>
           <AddressBlock label="Uniswap Contract" address={uniswapPair}/>
           <Button
+            className="button-home"
             label="Chart"
-            icon={<i className="fas fa-chart-bar"/>}
+            icon={<img src="./home/chart.png"/>}
             onClick={() => window.open(DEXTOOL, "_blank")}
             style={{
               marginTop: 4.58

@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {useHistory} from 'react-router-dom';
 import {Box} from '@aragon/ui';
 import styled from 'styled-components'
+import './style.css';
 import BigNumber from "bignumber.js";
 import {
   getPoolTotalClaimable,
@@ -128,25 +129,25 @@ function HomePage({user}: HomePageProps) {
 
   return (
     <>
-      <Container>
-        <div style={{flexBasis: '30%', padding: '2%'}}>
-          <Box style={{height: '100%'}}>
+      <Container className="home-box">
+        <div style={{flexBasis: '30%'}}>
+          <div style={{height: '100%'}}>
             <EpochBlock epoch={epochTime}/>
-          </Box>
+          </div>
         </div>
-        <div style={{flexBasis: '30%', padding: '2%'}}>
-          <Box style={{height: '100%'}}>
+        <div style={{flexBasis: '30%'}}>
+          <div style={{height: '100%'}}>
             <TotalSupply totalSupply={totalSupply}/>
-          </Box>
+          </div>
         </div>
-        <div style={{flexBasis: '30%', padding: '2%'}}>
-          <Box style={{height: '100%'}}>
+        <div style={{flexBasis: '30%'}}>
+          <div style={{height: '100%'}}>
             <MarketCap
               totalSupply={totalSupply}
               pairBalanceUSDC={pairBalanceUSDC}
               pairBalanceTSD={pairBalanceTSD}
             />
-          </Box>
+          </div>
         </div>
       </Container>
       <Trade
@@ -170,12 +171,13 @@ function HomePage({user}: HomePageProps) {
         poolRewarded={poolTotalRewarded}
         poolClaimable={poolTotalClaimable}
       />
-      <div style={{padding: '1%', display: 'flex', flexWrap: 'wrap', alignItems: 'center'}}>
-        <div style={{flexBasis: '30%', marginRight: '3%', marginLeft: '2%'}}>
+
+      <Container className="box-cupons">
+        <div>
           <MainButton
             title="Governance"
             description="Vote on upgrades."
-            icon={<i className="fas fa-poll"/>}
+            icon={<img src="./home/governance.png" />}
             onClick={() => {
               history.push('/governance/');
             }}
@@ -192,11 +194,11 @@ function HomePage({user}: HomePageProps) {
         {/*  />*/}
         {/*</div>*/}
 
-        <div style={{flexBasis: '30%', marginLeft: '3%', marginRight: '2%'}}>
+        <div>
           <MainButton
             title="Coupons"
             description="Purchase and redeem coupons."
-            icon={<i className="fas fa-ticket-alt"/>}
+            icon={<img src="./home/coupons.png" />}
             onClick={() => {
               history.push('/coupons/');
             }}
@@ -224,7 +226,7 @@ function HomePage({user}: HomePageProps) {
         {/*    }}*/}
         {/*  />*/}
         {/*</div>*/}
-      </div>
+      </Container>
       {/*<div style={{padding: '1%', display: 'flex', flexWrap: 'wrap', alignItems: 'center'}}>*/}
 
 
