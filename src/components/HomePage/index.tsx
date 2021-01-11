@@ -5,12 +5,13 @@ import styled from 'styled-components'
 import './style.css';
 import BigNumber from "bignumber.js";
 import {
+  getCouponPremium,
   getEpoch,
   getPoolTotalClaimable,
   getPoolTotalRewarded, getPrice0CumulativeLast, getReserves,
   getTokenBalance,
   getTokenTotalSupply,
-  getTotalBonded,
+  getTotalBonded, getTotalCoupons, getTotalDebt,
   getTotalRedeemable,
   getTotalStaged
 } from "../../utils/infura";
@@ -48,6 +49,8 @@ type HomePageProps = {
   user: string
 };
 
+const ONE_COUPON = new BigNumber(10).pow(18);
+
 function HomePage({user}: HomePageProps) {
   const history = useHistory();
   const currentTheme = useTheme();
@@ -63,6 +66,9 @@ function HomePage({user}: HomePageProps) {
   const [poolTotalClaimable, setPoolTotalClaimable] = useState(new BigNumber(0));
   const [epochTime, setEpochTime] = useState("0-00:00:00");
   const [twap, setTwap] = useState(new BigNumber(0))
+  const [totalDebt, setTotalDebt] = useState(new BigNumber(0));
+  const [totalCoupons, setTotalCoupons] = useState(new BigNumber(0));
+  const [couponPremium, setCouponPremium] = useState(new BigNumber(0));
 
   useEffect(() => {
     let isCancelled = false;
@@ -83,9 +89,13 @@ function HomePage({user}: HomePageProps) {
         poolLiquidityStr,
         poolTotalRewardedStr,
         poolTotalClaimableStr,
+
         price0Str,
         reserves,
-        pairInfo
+        pairInfo,
+
+        totalDebtStr,
+        totalCouponsStr,
       ] = await Promise.all([
         getEpoch(TSDS.addr),
 
@@ -103,7 +113,10 @@ function HomePage({user}: HomePageProps) {
 
         getPrice0CumulativeLast(),
         getReserves(),
-        getPriceAndBlockTimestamp()
+        getPriceAndBlockTimestamp(),
+
+        getTotalDebt(TSDS.addr),
+        getTotalCoupons(TSDS.addr),
       ]);
 
       if (!isCancelled) {
@@ -122,6 +135,15 @@ function HomePage({user}: HomePageProps) {
         setPoolLiquidity(toTokenUnitsBN(poolLiquidityStr, TSD.decimals));
         setPoolTotalRewarded(toTokenUnitsBN(poolTotalRewardedStr, TSD.decimals));
         setPoolTotalClaimable(toTokenUnitsBN(poolTotalClaimableStr, TSD.decimals));
+        setTotalDebt(toTokenUnitsBN(totalDebtStr, TSD.decimals));
+        setTotalCoupons(toTokenUnitsBN(totalCouponsStr, TSD.decimals));
+
+        if (totalDebt.isGreaterThan(new BigNumber(1))) {
+          const couponPremiumStr = await getCouponPremium(TSDS.addr, ONE_COUPON)
+          setCouponPremium(toTokenUnitsBN(couponPremiumStr, TSD.decimals));
+        } else {
+          setCouponPremium(new BigNumber(0));
+        }
 
         if (pairInfo?.payload.length > 0) {
           const {price0CumulativeLast, reserves} = pairInfo.payload[pairInfo.payload.length - 1];
@@ -205,6 +227,7 @@ function HomePage({user}: HomePageProps) {
         totalSupply={totalSupply}
         totalBonded={totalBonded}
         TSDLPBonded={pairBalanceTSD}
+
         theme={theme}
       />
       <Regulation

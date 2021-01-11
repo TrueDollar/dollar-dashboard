@@ -152,7 +152,7 @@ function Tool() {
       </div>
       <div>
         <Title>TWAP Price</Title>
-        <p>{epoch < 240 ? 'N/A (Bootstrapping price - $1.44)' : <>{twap.toNumber().toFixed(2)} USDC</>}</p>
+        <p>{epoch < 240 ? 'N/A (Bootstrapping price - $1.44)' : <>${twap.toNumber().toFixed(2)} USDC</>}</p>
       </div>
       <div>
         <Title>Epoch</Title>
