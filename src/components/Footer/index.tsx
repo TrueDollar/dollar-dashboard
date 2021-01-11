@@ -1,5 +1,5 @@
 import React from 'react';
-import { LinkBase, useTheme } from '@aragon/ui';
+import {LinkBase, useTheme} from '@aragon/ui';
 import ChangeModeButton from "./SwitchTheme";
 import styled from 'styled-components'
 
@@ -13,80 +13,57 @@ function Footer({updateTheme, theme, hasWeb3}: FooterProps) {
   const currentTheme = useTheme();
   return (
     <>
-      <div style={{
-        borderTop: '1px solid ' + currentTheme.border,
-        backgroundColor: currentTheme.surface,
-        textAlign: 'center',
-        position: 'fixed',
-        left: '0',
-        bottom: '0',
-        height: 'auto',
-        width: '100%',
-        fontSize: '14px'
+      <FooterContainer style={{
+        backgroundColor: currentTheme.surface
       }}>
-        <div style={{maxWidth: '1100px', marginLeft: 'auto', marginRight: 'auto'}}>
+        <div style={{maxWidth: '1520px', marginLeft: 'auto', marginRight: 'auto', height: '100%'}}>
           <Container>
-            {theme === 'light' ? (
-                <div className="d-flex justify-content-center">
-                  <FooterLink icon={
-                    <img src={`./icon/${theme}-github.png`} style={{width: 32}} />
-                  } href={"https://github.com/TrueDollar"}/>
-                  <FooterLink icon={
-                    <img src={`./icon/${theme}-twitter.png`} style={{width: 32}} />
-                  } href={"https://twitter.com/TrueSeigniorage"}/>
-                  <FooterLink icon={
-                    <img src={`./icon/${theme}-m.png`} style={{width: 32}} />} href={"https://trueseigniorage.medium.com/"}/>
-                  <FooterLink icon={
-                    <img src={`./icon/${theme}-tele.png`} style={{width: 32}} />} href={"https://t.me/TrueSeigniorageDollar"}/>
-                  <FooterLink icon={
-                    <img src={`./icon/${theme}-discord.png`} style={{width: 32}} />} href={"https://discord.gg/crRpm474gu"}/>
-                  <div style={{ marginTop: 5, display: 'flex', alignItems: 'center' }}>
-                    <Icon src={`./icon/${theme}-coingecko.png`} style={{width: 32}}
-                          onClick={() => window.open('https://www.coingecko.com/en/coins/true-seigniorage-dollar', '_blank')}
-                    />
-                    <Icon src={`./icon/${theme}-coinmarketcap.png`} style={{width: 32}}
-                          onClick={() => window.open('https://coinmarketcap.com/currencies/true-seigniorage-dollar/', '_blank')}
-                    />
-                  </div>
-                </div>
-            ) : (
-                <div className="d-flex justify-content-center">
-                  <FooterLink icon={<i className="fab fa-github"/>} href={"https://github.com/TrueDollar"}/>
-                  <FooterLink icon={<i className="fab fa-twitter"/>} href={"https://twitter.com/TrueSeigniorage"}/>
-                  <FooterLink icon={<i className="fab fa-medium"/>} href={"https://trueseigniorage.medium.com/"}/>
-                  <FooterLink icon={<i className="fab fa-telegram"/>} href={"https://t.me/TrueSeigniorageDollar"}/>
-                  <FooterLink icon={<i className="fab fa-discord"/>} href={"https://discord.gg/crRpm474gu"}/>
-                  <div style={{ marginTop: 5 }}>
-                    <Icon src="./images/coingecko.ico"
-                          onClick={() => window.open('https://www.coingecko.com/en/coins/true-seigniorage-dollar', '_blank')}
-                    />
-                    <Icon src="./images/coinmarketcap.png"
-                          onClick={() => window.open('https://coinmarketcap.com/currencies/true-seigniorage-dollar/', '_blank')}
-                    />
-                  </div>
-                </div>
-            )}
-
-            <div>
+            <div className="d-flex justify-content-center">
+              <FooterLink icon={
+                <Icon src={`./icon/${theme}-github.png`}/>
+              } href={"https://github.com/TrueDollar"}/>
+              <FooterLink icon={
+                <Icon src={`./icon/${theme}-twitter.png`}/>
+              } href={"https://twitter.com/TrueSeigniorage"}/>
+              <FooterLink icon={
+                <Icon src={`./icon/${theme}-m.png`}/>} href={"https://trueseigniorage.medium.com/"}/>
+              <FooterLink icon={
+                <Icon src={`./icon/${theme}-tele.png`}/>} href={"https://t.me/TrueSeigniorageDollar"}/>
+              <FooterLink icon={<Icon src={`./icon/${theme}-discord.png`}/>} href={"https://discord.gg/crRpm474gu"}/>
+              <FooterLink icon={<Icon src={`./icon/${theme}-coinmarketcap.png`}/>}
+                          href={"https://coinmarketcap.com/currencies/true-seigniorage-dollar/"}/>
+              <FooterLink icon={<Icon src={`./icon/coingecko.png`}/>}
+                          href={"https://www.coingecko.com/en/coins/true-seigniorage-dollar"}/>
             </div>
-           <ContainerTeam>
-             <div style={{ marginRight: 5 }}>
-               Made with <span role="img" aria-labelledby="heartbreak">💔️</span> by TSD team!
-             </div>
-             <ChangeModeButton hasWeb3={hasWeb3} theme={theme} updateTheme={updateTheme} />
-           </ContainerTeam>
+            <ChangeModeButton hasWeb3={hasWeb3} theme={theme} updateTheme={updateTheme}/>
+            <ContainerTeam>
+              Made with <span className="mx-2" role="img" aria-labelledby="heartbreak">💔️</span> by TSD team!
+            </ContainerTeam>
           </Container>
         </div>
-      </div>
+      </FooterContainer>
     </>
   );
 }
+
+const FooterContainer = styled.div`
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  height: 90px;
+  width: 100%;
+  padding: 0 20px;
+  @media (max-width: 522px) {
+    display: block;
+  }
+`
 
 const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 10px 0;
+  height: 100%;
 
   @media (max-width: 522px) {
     display: block;
@@ -96,6 +73,7 @@ const Container = styled.div`
 const ContainerTeam = styled.div`
   display: flex;
   align-items: center;
+  font-size: 20px;
 
   @media (max-width: 522px) {
     justify-content: center;
@@ -103,12 +81,8 @@ const ContainerTeam = styled.div`
 `
 
 const Icon = styled.img`
-  margin: 0 5px;
-  border: 1px solid #ffffff;
-  border-radius: 10px;
-  background-color: #ffffff;
-  width: 30px;
-  cursor: pointer;
+  width: 32px;
+  height: 32px;
 `
 
 type FooterLinkProp = {
@@ -117,11 +91,11 @@ type FooterLinkProp = {
 }
 
 function FooterLink({
-  icon, href,
-}:FooterLinkProp) {
+                      icon, href,
+                    }: FooterLinkProp) {
   return (
-    <LinkBase href={href} style={{marginLeft: '4px', marginRight: '4px'}}>
-      <span style={{ fontSize: 32 }}>{icon}</span>
+    <LinkBase href={href} style={{marginRight: '20px'}}>
+      {icon}
     </LinkBase>
   );
 }

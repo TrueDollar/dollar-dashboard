@@ -1,5 +1,6 @@
 import React from 'react';
-import { Button, IconStarFilled, IconStar } from '@aragon/ui';
+import { Form } from 'react-bootstrap';
+import './style.scss';
 
 type switchThemeProps = {
   hasWeb3: boolean,
@@ -14,14 +15,24 @@ function SwitchMode({ hasWeb3, theme, updateTheme }: switchThemeProps) {
   };
 
   return (
-    <Button
-      icon={theme === 'dark' ? <IconStar /> : <IconStarFilled />}
-      onClick={handleChangeTheme}
+    <>
+    <Form.Switch
+      className="custom-switch"
+      type="switch"
+      id={`custom-switch`}
       label=""
+      checked={theme === 'dark'}
       disabled={!hasWeb3}
+      onChange={handleChangeTheme}
     />
+    {/*<Button*/}
+    {/*  icon={theme === 'dark' ? <IconStar /> : <IconStarFilled />}*/}
+    {/*  onClick={handleChangeTheme}*/}
+    {/*  label=""*/}
+    {/*  disabled={!hasWeb3}*/}
+    {/*/*/}
+    </>
   );
 }
-
 
 export default SwitchMode;

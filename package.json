@@ -12,6 +12,7 @@
     "bignumber.js": "^9.0.0",
     "bootstrap": "^4.5.3",
     "moment": "^2.25.3",
+    "node-sass": "^4.0.0",
     "react": "^16.12.0",
     "react-bootstrap": "^1.4.0",
     "react-dom": "^16.12.0",
