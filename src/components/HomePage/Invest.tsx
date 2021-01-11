@@ -285,8 +285,8 @@ const Container = styled.div`
   flex-wrap: wrap;
   padding: 0 0 3% 3%;
   justify-content: space-between;
-  @media (max-width: 522px) {
-    display: block;
+  @media (max-width: 1200px) {
+    justify-content: center;
   }
 `
 const ContainerButton = styled.div`
