@@ -13,6 +13,7 @@ import {TSD, TSDS} from "../../constants/tokens";
 import {MAX_UINT256} from "../../constants/values";
 import {getCouponPremium} from "../../utils/infura";
 import BigNumberInput from "../common/BigNumberInput";
+import {UNISWAP_TRADE} from "../../constants/contracts";
 
 type PurchaseCouponsProps = {
   user: string,
@@ -92,6 +93,11 @@ function PurchaseCoupons({
           {/* User balance */}
           <div style={{flexBasis: '30%'}}>
             <BalanceBlock asset={`Døllar Balance`} balance={balance}/>
+            <Button
+              label="Buy TSD"
+              icon={<i className="fas fa-exchange-alt"/>}
+              onClick={() => window.open(UNISWAP_TRADE, "_blank")}
+            />
           </div>
           <div style={{flexBasis: '40%'}}/>
           {/* Approve DAO to spend Døllar */}

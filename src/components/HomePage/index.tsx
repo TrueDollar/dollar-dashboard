@@ -227,7 +227,9 @@ function HomePage({user}: HomePageProps) {
         totalSupply={totalSupply}
         totalBonded={totalBonded}
         TSDLPBonded={pairBalanceTSD}
-
+        totalDebt={totalDebt}
+        totalCoupons={totalCoupons}
+        couponPremium={couponPremium}
         theme={theme}
       />
       <Regulation

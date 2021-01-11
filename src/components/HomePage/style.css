@@ -43,8 +43,8 @@
 .box-invest > div {
     box-shadow: 0 10px 10px rgba(0,0,0,0.1);
     border-radius: 5px;
-    flex-basis: 49%;
-    padding: 10px 40px;
+    flex-basis: 32%;
+    padding: 10px;
     margin-top: 16px;
     border: none !important;
 }

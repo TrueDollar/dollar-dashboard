@@ -4,18 +4,19 @@ import {Box, Button} from '@aragon/ui';
 import {useHistory} from 'react-router-dom';
 import styled from 'styled-components'
 import './style.css';
+
 type InvestProps = {
   totalSupply: BigNumber,
   totalBonded: BigNumber,
   TSDLPBonded: BigNumber,
   theme: String,
   expRate: BigNumber,
-  // totalDebt: BigNumber,
-  // totalCoupons: BigNumber,
-  // couponPremium: BigNumber,
+  totalDebt: BigNumber,
+  totalCoupons: BigNumber,
+  couponPremium: BigNumber,
 };
 
-const Invest = ({totalSupply, totalBonded, TSDLPBonded, theme, expRate}: InvestProps) => {
+const Invest = ({totalSupply, totalBonded, TSDLPBonded, theme, expRate, totalDebt, totalCoupons, couponPremium}: InvestProps) => {
   const history = useHistory();
   const TSDLpBonded = TSDLPBonded.toNumber() * 2;
   const expRateCal = expRate.toNumber() <= 0 ? new BigNumber(0.04) : expRate;
@@ -57,7 +58,7 @@ const Invest = ({totalSupply, totalBonded, TSDLPBonded, theme, expRate}: InvestP
                 {
                   expRate.toNumber() > 0
                     ? <>{((dao - 1)*100).toFixed(2)}%</>
-                    : <>0({((dao - 1)*100).toFixed(2)}%)</>
+                    : <>0%({((dao - 1)*100).toFixed(2)}%)</>
                 }
               </div>
             </div>
@@ -80,7 +81,7 @@ const Invest = ({totalSupply, totalBonded, TSDLPBonded, theme, expRate}: InvestP
                 {
                   expRate.toNumber() > 0
                     ? <>{((dao - 1)*24*100).toFixed(2)}%</>
-                    : <>0({((dao - 1)*24*100).toFixed(2)}%)</>
+                    : <>0%({((dao - 1)*24*100).toFixed(2)}%)</>
                 }
               </div>
             </div>
@@ -103,7 +104,7 @@ const Invest = ({totalSupply, totalBonded, TSDLPBonded, theme, expRate}: InvestP
                 {
                   expRate.toNumber() > 0
                     ? <>{((dao - 1)*168*100).toFixed(2)}%</>
-                    : <>0({((dao - 1)*168*100).toFixed(2)}%)</>
+                    : <>0%({((dao - 1)*168*100).toFixed(2)}%)</>
                 }
               </div>
             </div>
@@ -140,7 +141,7 @@ const Invest = ({totalSupply, totalBonded, TSDLPBonded, theme, expRate}: InvestP
                   {
                     expRate.toNumber() > 0
                       ? <>{((lpHourly - 1)*100).toFixed(2)}%</>
-                      : <>0({((lpHourly - 1)*100).toFixed(2)}%)</>
+                      : <>0%({((lpHourly - 1)*100).toFixed(2)}%)</>
                   }
                 </div>
               </div>
@@ -163,7 +164,7 @@ const Invest = ({totalSupply, totalBonded, TSDLPBonded, theme, expRate}: InvestP
                   {
                     expRate.toNumber() > 0
                       ? <>{((lpDaily - 1)*100).toFixed(2)}%</>
-                      : <>0({((lpDaily - 1)*100).toFixed(2)}%)</>
+                      : <>0%({((lpDaily - 1)*100).toFixed(2)}%)</>
                   }
                 </div>
               </div>
@@ -186,7 +187,7 @@ const Invest = ({totalSupply, totalBonded, TSDLPBonded, theme, expRate}: InvestP
                   {
                     expRate.toNumber() > 0
                       ? <>{((lpWeekly - 1)*100).toFixed(2)}%</>
-                      : <>0({((lpWeekly - 1)*100).toFixed(2)}%)</>
+                      : <>0%({((lpWeekly - 1)*100).toFixed(2)}%)</>
                   }
                 </div>
               </div>
@@ -201,82 +202,78 @@ const Invest = ({totalSupply, totalBonded, TSDLPBonded, theme, expRate}: InvestP
             </ContainerButton>
           </div>
         </Box>
-        {/*<Box>*/}
-        {/*  <div>*/}
-        {/*    <div>*/}
-        {/*      <div style={{fontWeight: 'bold', fontSize: 30}}>Coupon</div>*/}
-        {/*      <div className="invest" style={{fontSize: 16, padding: 3}}>*/}
-        {/*        <div>LP hourly:</div>*/}
-        {/*        <div style ={{*/}
-        {/*          flex: 1,*/}
-        {/*          display: 'block',*/}
-        {/*          borderBottom: '1px dotted #888',*/}
-        {/*          height: '12px',*/}
-        {/*          margin: '0 10px'*/}
-        {/*        }} ></div>*/}
-        {/*        <div style={{*/}
-        {/*          fontSize: 24,*/}
-        {/*          padding: 3,*/}
-        {/*          fontWeight: 400,*/}
-        {/*          lineHeight: 1.5,*/}
-        {/*          fontFamily: 'aragon-ui-monospace, monospace'*/}
-        {/*        }}>*/}
-        {/*          {*/}
-        {/*            expRate.toNumber() > 0*/}
-        {/*              ? <>{((lpHourly - 1)*100).toFixed(2)}%</>*/}
-        {/*              : <>0({((lpHourly - 1)*100).toFixed(2)}%)</>*/}
-        {/*          }*/}
-        {/*        </div>*/}
-        {/*      </div>*/}
-        {/*      <div className="invest" style={{fontSize: 16, padding: 3}}>*/}
-        {/*        <div>LP daily:</div>*/}
-        {/*        <div style ={{*/}
-        {/*          flex: 1,*/}
-        {/*          display: 'block',*/}
-        {/*          borderBottom: '1px dotted #888',*/}
-        {/*          height: '12px',*/}
-        {/*          margin: '0 10px'*/}
-        {/*        }} ></div>*/}
-        {/*        <div style={{*/}
-        {/*          fontSize: 24,*/}
-        {/*          padding: 3,*/}
-        {/*          fontWeight: 400,*/}
-        {/*          lineHeight: 1.5,*/}
-        {/*          fontFamily: 'aragon-ui-monospace, monospace'*/}
-        {/*        }}>*/}
-        {/*          {*/}
-        {/*            expRate.toNumber() > 0*/}
-        {/*              ? <>{((lpDaily - 1)*100).toFixed(2)}%</>*/}
-        {/*              : <>0({((lpDaily - 1)*100).toFixed(2)}%)</>*/}
-        {/*          }*/}
-        {/*        </div>*/}
-        {/*      </div>*/}
-        {/*      <div className="invest" style={{fontSize: 16, padding: 3}}>*/}
-        {/*        <div>LP weekly:</div>*/}
-        {/*        <div style ={{*/}
-        {/*          flex: 1,*/}
-        {/*          display: 'block',*/}
-        {/*          borderBottom: '1px dotted #888',*/}
-        {/*          height: '12px',*/}
-        {/*          margin: '0 10px'*/}
-        {/*        }} ></div>*/}
-        {/*        <div style={{*/}
-        {/*          fontSize: 24,*/}
-        {/*          padding: 3,*/}
-        {/*          fontWeight: 400,*/}
-        {/*          lineHeight: 1.5,*/}
-        {/*          fontFamily: 'aragon-ui-monospace, monospace'*/}
-        {/*        }}>*/}
-        {/*          {*/}
-        {/*            expRate.toNumber() > 0*/}
-        {/*              ? <>{((lpWeekly - 1)*100).toFixed(2)}%</>*/}
-        {/*              : <>0({((lpWeekly - 1)*100).toFixed(2)}%)</>*/}
-        {/*          }*/}
-        {/*        </div>*/}
-        {/*      </div>*/}
-        {/*    </div>*/}
-        {/*  </div>*/}
-        {/*</Box>*/}
+        <Box>
+          <div>
+            <div>
+              <div style={{fontWeight: 'bold', fontSize: 30}}>Coupon</div>
+              <div className="invest" style={{fontSize: 16, padding: 3}}>
+                <div>Coupons:</div>
+                <div style ={{
+                  flex: 1,
+                  display: 'block',
+                  borderBottom: '1px dotted #888',
+                  height: '12px',
+                  margin: '0 10px'
+                }} ></div>
+                <div style={{
+                  fontSize: 24,
+                  padding: 3,
+                  fontWeight: 400,
+                  lineHeight: 1.5,
+                  fontFamily: 'aragon-ui-monospace, monospace'
+                }}>
+                  {totalCoupons.toNumber().toFixed(2)}
+                </div>
+              </div>
+              <div className="invest" style={{fontSize: 16, padding: 3}}>
+                <div>Debt:</div>
+                <div style ={{
+                  flex: 1,
+                  display: 'block',
+                  borderBottom: '1px dotted #888',
+                  height: '12px',
+                  margin: '0 10px'
+                }} ></div>
+                <div style={{
+                  fontSize: 24,
+                  padding: 3,
+                  fontWeight: 400,
+                  lineHeight: 1.5,
+                  fontFamily: 'aragon-ui-monospace, monospace'
+                }}>
+                  {totalDebt.toNumber().toFixed(2)}
+                </div>
+              </div>
+              <div className="invest" style={{fontSize: 16, padding: 3}}>
+                <div>Premium:</div>
+                <div style ={{
+                  flex: 1,
+                  display: 'block',
+                  borderBottom: '1px dotted #888',
+                  height: '12px',
+                  margin: '0 10px'
+                }} ></div>
+                <div style={{
+                  fontSize: 24,
+                  padding: 3,
+                  fontWeight: 400,
+                  lineHeight: 1.5,
+                  fontFamily: 'aragon-ui-monospace, monospace'
+                }}>
+                  {couponPremium.toNumber().toFixed(2)}
+                </div>
+              </div>
+            </div>
+          </div>
+          <ContainerButton>
+            <Button
+              className="mt-2 button-home"
+              icon={<img src={`./home/invest-1${theme}.png`}/>}
+              label="Invest in Coupon"
+              onClick={() => history.push('/coupons/')}
+            />
+          </ContainerButton>
+        </Box>
       </Container>
     </>
   );
