@@ -46,6 +46,11 @@ function PurchaseCoupons({
           {/* User balance */}
           <div style={{flexBasis: '30%'}}>
             <BalanceBlock asset={`Balance`} balance={balance} suffix={" TSD"}/>
+            <Button
+              label="Buy TSD"
+              icon={<i className="fas fa-exchange-alt"/>}
+              onClick={() => window.open(UNISWAP_TRADE, "_blank")}
+            />
           </div>
           <div style={{flexBasis: '38%'}}/>
           {/* Purchase coupons */}
