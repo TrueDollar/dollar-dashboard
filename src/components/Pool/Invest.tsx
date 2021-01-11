@@ -33,7 +33,7 @@ const Invest = ({totalSupply, TSDLPBonded, expRate}: InvestProps) => {
                 {
                   expRate.toNumber() > 0
                     ? <>{((lpHourly - 1)*100).toFixed(2)}%</>
-                    : <>0({((lpHourly - 1)*100).toFixed(2)}%)</>
+                    : <>0%({((lpHourly - 1)*100).toFixed(2)}%)</>
                 }
               </div>
             </div>
@@ -48,7 +48,7 @@ const Invest = ({totalSupply, TSDLPBonded, expRate}: InvestProps) => {
                 {
                   expRate.toNumber() > 0
                     ? <>{((lpDaily - 1)*100).toFixed(2)}%</>
-                    : <>0({((lpDaily - 1)*100).toFixed(2)}%)</>
+                    : <>0%({((lpDaily - 1)*100).toFixed(2)}%)</>
                 }
               </div>
             </div>
@@ -63,7 +63,7 @@ const Invest = ({totalSupply, TSDLPBonded, expRate}: InvestProps) => {
                 {
                   expRate.toNumber() > 0
                     ? <>{((lpWeekly - 1)*100).toFixed(2)}%</>
-                    : <>0({((lpWeekly - 1)*100).toFixed(2)}%)</>
+                    : <>0%({((lpWeekly - 1)*100).toFixed(2)}%)</>
                 }
               </div>
             </div>

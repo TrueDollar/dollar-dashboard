@@ -30,7 +30,7 @@ const Invest = ({totalSupply, totalBonded, expRate}: InvestProps) => {
                 {
                   expRate.toNumber() > 0
                     ? <>{((dao - 1)*100).toFixed(2)}%</>
-                    : <>0({((dao - 1)*100).toFixed(2)}%)</>
+                    : <>0%({((dao - 1)*100).toFixed(2)}%)</>
                 }
               </div>
             </div>
@@ -45,7 +45,7 @@ const Invest = ({totalSupply, totalBonded, expRate}: InvestProps) => {
                 {
                   expRate.toNumber() > 0
                     ? <>{((dao - 1)*24*100).toFixed(2)}%</>
-                    : <>0({((dao - 1)*24*100).toFixed(2)}%)</>
+                    : <>0%({((dao - 1)*24*100).toFixed(2)}%)</>
                 }
               </div>
             </div>
@@ -60,7 +60,7 @@ const Invest = ({totalSupply, totalBonded, expRate}: InvestProps) => {
                 {
                   expRate.toNumber() > 0
                     ? <>{((dao - 1)*168*100).toFixed(2)}%</>
-                    : <>0({((dao - 1)*168*100).toFixed(2)}%)</>
+                    : <>0%({((dao - 1)*168*100).toFixed(2)}%)</>
                 }
               </div>
             </div>
