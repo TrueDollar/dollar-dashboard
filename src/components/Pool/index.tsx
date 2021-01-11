@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Header } from '@aragon/ui';
 import BigNumber from 'bignumber.js';
 
 import {
@@ -12,7 +11,7 @@ import {
   getTokenBalance,
   getPoolFluidUntil, getTokenTotalSupply, loadFluidStatusPool, getPrice0CumulativeLast, getReserves, getEpoch
 } from '../../utils/infura';
-import {TSD, UNI, USDC, ZAP, ESD, DSD, ZAI, USDT, TSDS} from "../../constants/tokens";
+import {TSD, UNI, USDC, ZAP, ESD, DSD, ZAI, USDT} from "../../constants/tokens";
 import {POOL_EXIT_LOCKUP_EPOCHS} from "../../constants/values";
 import { toTokenUnitsBN } from '../../utils/number';
 
@@ -22,7 +21,6 @@ import PoolPageHeader from "./Header";
 import Claim from "./Claim";
 import Provide from "./Provide";
 import IconHeader from "../common/IconHeader";
-import Migrate from "./Migrate";
 import AddUni from "./AddUni";
 import {getLegacyPoolAddress, getPoolAddress} from "../../utils/pool";
 import {DollarPool4} from "../../constants/contracts";
@@ -34,7 +32,6 @@ function Pool({ user }: {user: string}) {
   if (override) {
     user = override;
   }
-  const [epoch, setEpoch] = useState(0);
   const [poolAddress, setPoolAddress] = useState("");
   const [poolTotalBonded, setPoolTotalBonded] = useState(new BigNumber(0));
   const [pairBalanceTSD, setPairBalanceTSD] = useState(new BigNumber(0));
@@ -75,32 +72,21 @@ function Pool({ user }: {user: string}) {
   //Update User balances
   useEffect(() => {
     let isCancelledApr = false;
-    async function updateAPR() {
+    let isCancelledTwap = false;
+
+    async function updateTwap() {
       const [
-        epochStr,
-
-        totalSupplyStr,
-        totalBondedStr,
-
         price0Str,
         reserves,
-        pairInfo
+        pairInfo,
       ] = await Promise.all([
-        getEpoch(TSDS.addr),
-        getTokenTotalSupply(TSD.addr),
-        getTokenBalance(TSD.addr, UNI.addr),
         getPrice0CumulativeLast(),
         getReserves(),
-        getPriceAndBlockTimestamp()
+        getPriceAndBlockTimestamp(),
       ]);
 
-      if (!isCancelledApr) {
+      if (!isCancelledTwap) {
         const {_blockTimestampLast} = reserves;
-
-        setEpoch(parseInt(epochStr, 10));
-
-        setTotalSupply(toTokenUnitsBN(totalSupplyStr, TSD.decimals));
-        setPairBalanceTSD(toTokenUnitsBN(totalBondedStr, TSD.decimals));
 
         if (pairInfo?.payload.length > 0) {
           const {price0CumulativeLast, reserves} = pairInfo.payload[pairInfo.payload.length - 1];
@@ -114,6 +100,21 @@ function Pool({ user }: {user: string}) {
 
           setTwap(new BigNumber(twap))
         }
+      }
+    }
+
+    async function updateAPR() {
+      const [
+        totalSupplyStr,
+        totalBondedStr,
+      ] = await Promise.all([
+        getTokenTotalSupply(TSD.addr),
+        getTokenBalance(TSD.addr, UNI.addr),
+      ]);
+
+      if (!isCancelledApr) {
+        setTotalSupply(toTokenUnitsBN(totalSupplyStr, TSD.decimals));
+        setPairBalanceTSD(toTokenUnitsBN(totalBondedStr, TSD.decimals));
       }
     }
 
@@ -222,10 +223,6 @@ function Pool({ user }: {user: string}) {
         getTokenBalance(DSD.addr, user),
         getTokenBalance(ZAI.addr, user),
         getTokenBalance(USDT.addr, user),
-
-        getPrice0CumulativeLast(),
-        getReserves(),
-        getPriceAndBlockTimestamp()
       ]);
 
       const poolTotalBonded = toTokenUnitsBN(poolTotalBondedStr, TSD.decimals);
@@ -286,14 +283,18 @@ function Pool({ user }: {user: string}) {
       }
     }
     updateUserInfo();
+    updateTwap();
     const id = setInterval(updateUserInfo, 15000);
     const apr = setInterval(updateAPR, 15000);
+    const twap = setInterval(updateTwap, 300000);
 
     // eslint-disable-next-line consistent-return
     return () => {
       isCancelled = true;
+      isCancelledTwap = true;
       clearInterval(id);
-      clearInterval(apr)
+      clearInterval(apr);
+      clearInterval(twap);
     };
   }, [user]);
   // Check for error in .call()
@@ -303,7 +304,7 @@ function Pool({ user }: {user: string}) {
   let expRate = twap.minus(1).div(10);
 
   if (expRate.toNumber() <= 0) {
-    expRate = new BigNumber(epoch < 240 ? 0.04 : 0);
+    expRate = new BigNumber(0);
   }
 
   return (

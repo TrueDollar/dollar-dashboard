@@ -54,7 +54,6 @@ const ONE_COUPON = new BigNumber(10).pow(18);
 function HomePage({user}: HomePageProps) {
   const history = useHistory();
   const currentTheme = useTheme();
-  const [epoch, setEpoch] = useState(0);
   const [pairBalanceTSD, setPairBalanceTSD] = useState(new BigNumber(0));
   const [pairBalanceUSDC, setPairBalanceUSDC] = useState(new BigNumber(0));
   const [totalSupply, setTotalSupply] = useState(new BigNumber(0));
@@ -72,14 +71,42 @@ function HomePage({user}: HomePageProps) {
 
   useEffect(() => {
     let isCancelled = false;
+    let isCancelledTwap = false;
+
+    async function updateTwap() {
+      const [
+        price0Str,
+        reserves,
+        pairInfo,
+      ] = await Promise.all([
+        getPrice0CumulativeLast(),
+        getReserves(),
+        getPriceAndBlockTimestamp(),
+      ]);
+
+      if (!isCancelledTwap) {
+        const {_blockTimestampLast} = reserves;
+
+        if (pairInfo?.payload.length > 0) {
+          const {price0CumulativeLast, reserves} = pairInfo.payload[pairInfo.payload.length - 1];
+
+          const oldPrice = new BigNumber(price0CumulativeLast);
+          const oldTimestamp = new BigNumber(reserves?._blockTimestampLast);
+          const price0 = new BigNumber(price0Str);
+          const timestamp = new BigNumber(_blockTimestampLast);
+
+          const twap = await calculateTwap(oldPrice, oldTimestamp, price0, timestamp, 12)
+
+          setTwap(new BigNumber(twap))
+        }
+      }
+    }
 
     async function updateUserInfo() {
       const poolAddress = await getPoolAddress();
       const legacyPoolAddress = getLegacyPoolAddress(poolAddress);
 
       const [
-        epochStr,
-
         pairBalanceTSDStr,
         pairBalanceUSDCStr,
         totalSupplyStr,
@@ -90,15 +117,9 @@ function HomePage({user}: HomePageProps) {
         poolTotalRewardedStr,
         poolTotalClaimableStr,
 
-        price0Str,
-        reserves,
-        pairInfo,
-
         totalDebtStr,
         totalCouponsStr,
       ] = await Promise.all([
-        getEpoch(TSDS.addr),
-
         getTokenBalance(TSD.addr, UNI.addr),
         getTokenBalance(USDC.addr, UNI.addr),
 
@@ -111,19 +132,11 @@ function HomePage({user}: HomePageProps) {
         getPoolTotalRewarded(poolAddress),
         getPoolTotalClaimable(poolAddress),
 
-        getPrice0CumulativeLast(),
-        getReserves(),
-        getPriceAndBlockTimestamp(),
-
         getTotalDebt(TSDS.addr),
         getTotalCoupons(TSDS.addr),
       ]);
 
       if (!isCancelled) {
-        const {_blockTimestampLast} = reserves;
-
-        setEpoch(parseInt(epochStr, 10));
-
         setPairBalanceTSD(toTokenUnitsBN(pairBalanceTSDStr, TSD.decimals));
         setPairBalanceUSDC(toTokenUnitsBN(pairBalanceUSDCStr, USDC.decimals));
 
@@ -138,24 +151,11 @@ function HomePage({user}: HomePageProps) {
         setTotalDebt(toTokenUnitsBN(totalDebtStr, TSD.decimals));
         setTotalCoupons(toTokenUnitsBN(totalCouponsStr, TSD.decimals));
 
-        if (totalDebt.isGreaterThan(new BigNumber(1))) {
+        if (new BigNumber(totalDebtStr).isGreaterThan(new BigNumber(1))) {
           const couponPremiumStr = await getCouponPremium(TSDS.addr, ONE_COUPON)
           setCouponPremium(toTokenUnitsBN(couponPremiumStr, TSD.decimals));
         } else {
           setCouponPremium(new BigNumber(0));
-        }
-
-        if (pairInfo?.payload.length > 0) {
-          const {price0CumulativeLast, reserves} = pairInfo.payload[pairInfo.payload.length - 1];
-
-          const oldPrice = new BigNumber(price0CumulativeLast);
-          const oldTimestamp = new BigNumber(reserves?._blockTimestampLast);
-          const price0 = new BigNumber(price0Str);
-          const timestamp = new BigNumber(_blockTimestampLast);
-
-          const twap = await calculateTwap(oldPrice, oldTimestamp, price0, timestamp, 12)
-
-          setTwap(new BigNumber(twap))
         }
 
       }
@@ -168,14 +168,18 @@ function HomePage({user}: HomePageProps) {
     }
 
     updateUserInfo();
+    updateTwap();
     const time = setInterval(updateTime, 1000);
     const user = setInterval(updateUserInfo, 15000);
+    const twap = setInterval(updateTwap, 300000);
 
     // eslint-disable-next-line consistent-return
     return () => {
       isCancelled = true;
+      isCancelledTwap = true;
       clearInterval(time);
       clearInterval(user);
+      clearInterval(twap);
     };
   }, [user]);
   const theme = `${currentTheme._name === 'light' ? '' : '-white'}`
@@ -183,139 +187,139 @@ function HomePage({user}: HomePageProps) {
   let expRate = twap.minus(1).div(10);
 
   if (expRate.toNumber() <= 0) {
-    expRate = new BigNumber(epoch < 240 ? 0.04 : 0);
+    expRate = new BigNumber(0);
   }
 
   return (
     <>
       <Container className="home-box">
-        <Layout style={{ minWidth: 'auto' }}>
-        <div style={{flexBasis: '32%'}}>
-          <div style={{height: '100%'}}>
-            <EpochBlock epoch={epochTime}/>
+        <Layout style={{minWidth: 'auto'}}>
+          <div style={{flexBasis: '32%'}}>
+            <div style={{height: '100%'}}>
+              <EpochBlock epoch={epochTime}/>
+            </div>
           </div>
-        </div>
-        <div style={{flexBasis: '32%'}}>
-          <div style={{height: '100%'}}>
-            <TotalSupply
-              expRate={expRate}
-              totalSupply={totalSupply}
-            />
+          <div style={{flexBasis: '32%'}}>
+            <div style={{height: '100%'}}>
+              <TotalSupply
+                expRate={expRate}
+                totalSupply={totalSupply}
+              />
+            </div>
           </div>
-        </div>
-        <div style={{flexBasis: '32%'}}>
-          <div style={{height: '100%'}}>
-            <MarketCap
-              totalSupply={totalSupply}
-              pairBalanceUSDC={pairBalanceUSDC}
-              pairBalanceTSD={pairBalanceTSD}
-            />
+          <div style={{flexBasis: '32%'}}>
+            <div style={{height: '100%'}}>
+              <MarketCap
+                totalSupply={totalSupply}
+                pairBalanceUSDC={pairBalanceUSDC}
+                pairBalanceTSD={pairBalanceTSD}
+              />
+            </div>
           </div>
-        </div>
         </Layout>
       </Container>
 
-      <Layout style={{ minWidth: 'auto' }}>
-      <Trade
-        pairBalanceTSD={pairBalanceTSD}
-        pairBalanceUSDC={pairBalanceUSDC}
-        uniswapPair={UNI.addr}
-        theme={theme}
-      />
-      <Invest
-        expRate={expRate}
-        totalSupply={totalSupply}
-        totalBonded={totalBonded}
-        TSDLPBonded={pairBalanceTSD}
-        totalDebt={totalDebt}
-        totalCoupons={totalCoupons}
-        couponPremium={couponPremium}
-        theme={theme}
-      />
-      <Regulation
-        totalSupply={totalSupply}
+      <Layout style={{minWidth: 'auto'}}>
+        <Trade
+          pairBalanceTSD={pairBalanceTSD}
+          pairBalanceUSDC={pairBalanceUSDC}
+          uniswapPair={UNI.addr}
+          theme={theme}
+        />
+        <Invest
+          expRate={expRate}
+          totalSupply={totalSupply}
+          totalBonded={totalBonded}
+          TSDLPBonded={pairBalanceTSD}
+          totalDebt={totalDebt}
+          totalCoupons={totalCoupons}
+          couponPremium={couponPremium}
+          theme={theme}
+        />
+        <Regulation
+          totalSupply={totalSupply}
 
-        totalBonded={totalBonded}
-        totalStaged={totalStaged}
-        totalRedeemable={totalRedeemable}
+          totalBonded={totalBonded}
+          totalStaged={totalStaged}
+          totalRedeemable={totalRedeemable}
 
-        poolLiquidity={poolLiquidity}
-        poolRewarded={poolTotalRewarded}
-        poolClaimable={poolTotalClaimable}
-        theme={theme}
-      />
+          poolLiquidity={poolLiquidity}
+          poolRewarded={poolTotalRewarded}
+          poolClaimable={poolTotalClaimable}
+          theme={theme}
+        />
 
-      <Container className="box-cupons">
-        <Box>
-          <MainButton
-            title="Governance"
-            description="Vote on upgrades."
-            icon={<img src="./home/governance.png" />}
-            onClick={() => {
-              history.push('/governance/');
-            }}
-          />
-        </Box>
-        {/*<div style={{flexBasis: '30%', marginRight: '3%', marginLeft: '2%'}}>*/}
-        {/*  <MainButton*/}
-        {/*    title="DAO"*/}
-        {/*    description="Earn rewards for governing"*/}
-        {/*    icon={<i className="fas fa-dot-circle"/>}*/}
-        {/*    onClick={() => {*/}
-        {/*      history.push('/dao/');*/}
-        {/*    }}*/}
-        {/*  />*/}
+        <Container className="box-cupons">
+          <Box>
+            <MainButton
+              title="Governance"
+              description="Vote on upgrades."
+              icon={<img src="./home/governance.png"/>}
+              onClick={() => {
+                history.push('/governance/');
+              }}
+            />
+          </Box>
+          {/*<div style={{flexBasis: '30%', marginRight: '3%', marginLeft: '2%'}}>*/}
+          {/*  <MainButton*/}
+          {/*    title="DAO"*/}
+          {/*    description="Earn rewards for governing"*/}
+          {/*    icon={<i className="fas fa-dot-circle"/>}*/}
+          {/*    onClick={() => {*/}
+          {/*      history.push('/dao/');*/}
+          {/*    }}*/}
+          {/*  />*/}
+          {/*</div>*/}
+
+          <Box>
+            <MainButton
+              title="Coupons"
+              description="Purchase and redeem coupons."
+              icon={<img src="./home/coupons.png"/>}
+              onClick={() => {
+                history.push('/coupons/');
+              }}
+            />
+          </Box>
+
+          {/*<div style={{flexBasis: '30%'}}>*/}
+          {/*  <MainButton*/}
+          {/*    title="LP Rewards"*/}
+          {/*    description="Earn rewards for providing liquidity."*/}
+          {/*    icon={<i className="fas fa-parachute-box"/>}*/}
+          {/*    onClick={() => {*/}
+          {/*      history.push('/pool/');*/}
+          {/*    }}*/}
+          {/*  />*/}
+          {/*</div>*/}
+
+          {/*<div style={{flexBasis: '30%', marginLeft: '3%', marginRight: '2%'}}>*/}
+          {/*  <MainButton*/}
+          {/*    title="Regulation"*/}
+          {/*    description="Network supply regulation statistics."*/}
+          {/*    icon={<i className="fas fa-chart-area"/>}*/}
+          {/*    onClick={() => {*/}
+          {/*      history.push('/regulation/');*/}
+          {/*    }}*/}
+          {/*  />*/}
+          {/*</div>*/}
+        </Container>
+        {/*<div style={{padding: '1%', display: 'flex', flexWrap: 'wrap', alignItems: 'center'}}>*/}
+
+
+        {/*  <div style={{flexBasis: '30%'}}>*/}
+        {/*    <MainButton*/}
+        {/*      title="Trade"*/}
+        {/*      description="Trade døllar tokens."*/}
+        {/*      icon={<i className="fas fa-exchange-alt"/>}*/}
+        {/*      onClick={() => {*/}
+        {/*        history.push('/trade/');*/}
+        {/*      }}*/}
+        {/*    />*/}
+        {/*  </div>*/}
+
+        {/*  */}
         {/*</div>*/}
-
-        <Box>
-          <MainButton
-            title="Coupons"
-            description="Purchase and redeem coupons."
-            icon={<img src="./home/coupons.png" />}
-            onClick={() => {
-              history.push('/coupons/');
-            }}
-          />
-        </Box>
-
-        {/*<div style={{flexBasis: '30%'}}>*/}
-        {/*  <MainButton*/}
-        {/*    title="LP Rewards"*/}
-        {/*    description="Earn rewards for providing liquidity."*/}
-        {/*    icon={<i className="fas fa-parachute-box"/>}*/}
-        {/*    onClick={() => {*/}
-        {/*      history.push('/pool/');*/}
-        {/*    }}*/}
-        {/*  />*/}
-        {/*</div>*/}
-
-        {/*<div style={{flexBasis: '30%', marginLeft: '3%', marginRight: '2%'}}>*/}
-        {/*  <MainButton*/}
-        {/*    title="Regulation"*/}
-        {/*    description="Network supply regulation statistics."*/}
-        {/*    icon={<i className="fas fa-chart-area"/>}*/}
-        {/*    onClick={() => {*/}
-        {/*      history.push('/regulation/');*/}
-        {/*    }}*/}
-        {/*  />*/}
-        {/*</div>*/}
-      </Container>
-      {/*<div style={{padding: '1%', display: 'flex', flexWrap: 'wrap', alignItems: 'center'}}>*/}
-
-
-      {/*  <div style={{flexBasis: '30%'}}>*/}
-      {/*    <MainButton*/}
-      {/*      title="Trade"*/}
-      {/*      description="Trade døllar tokens."*/}
-      {/*      icon={<i className="fas fa-exchange-alt"/>}*/}
-      {/*      onClick={() => {*/}
-      {/*        history.push('/trade/');*/}
-      {/*      }}*/}
-      {/*    />*/}
-      {/*  </div>*/}
-
-      {/*  */}
-      {/*</div>*/}
       </Layout>
     </>
   );

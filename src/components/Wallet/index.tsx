@@ -26,7 +26,6 @@ function Wallet({ user }: {user: string}) {
   if (override) {
     user = override;
   }
-  const [epoch, setEpoch] = useState(0);
   const [userTSDBalance, setUserTSDBalance] = useState(new BigNumber(0));
   const [userTSDAllowance, setUserTSDAllowance] = useState(new BigNumber(0));
   const [userTSDSBalance, setUserTSDSBalance] = useState(new BigNumber(0));
@@ -46,32 +45,21 @@ function Wallet({ user }: {user: string}) {
   //Update User balances
   useEffect(() => {
     let isCancelledApr = false;
-    async function updateAPR() {
+    let isCancelledTwap = false;
+
+    async function updateTwap() {
       const [
-        epochStr,
-
-        totalSupplyStr,
-        totalBondedStr,
-
         price0Str,
         reserves,
-        pairInfo
+        pairInfo,
       ] = await Promise.all([
-        getEpoch(TSDS.addr),
-        getTokenTotalSupply(TSD.addr),
-        getTotalBonded(TSDS.addr),
         getPrice0CumulativeLast(),
         getReserves(),
-        getPriceAndBlockTimestamp()
+        getPriceAndBlockTimestamp(),
       ]);
 
-      if (!isCancelledApr) {
+      if (!isCancelledTwap) {
         const {_blockTimestampLast} = reserves;
-
-        setEpoch(parseInt(epochStr, 10));
-
-        setTotalSupply(toTokenUnitsBN(totalSupplyStr, TSD.decimals));
-        setTotalBonded(toTokenUnitsBN(totalBondedStr, TSD.decimals));
 
         if (pairInfo?.payload.length > 0) {
           const {price0CumulativeLast, reserves} = pairInfo.payload[pairInfo.payload.length - 1];
@@ -85,6 +73,20 @@ function Wallet({ user }: {user: string}) {
 
           setTwap(new BigNumber(twap))
         }
+      }
+    }
+    async function updateAPR() {
+      const [
+        totalSupplyStr,
+        totalBondedStr,
+      ] = await Promise.all([
+        getTokenTotalSupply(TSD.addr),
+        getTotalBonded(TSDS.addr),
+      ]);
+
+      if (!isCancelledApr) {
+        setTotalSupply(toTokenUnitsBN(totalSupplyStr, TSD.decimals));
+        setTotalBonded(toTokenUnitsBN(totalBondedStr, TSD.decimals));
       }
     }
 
@@ -157,22 +159,26 @@ function Wallet({ user }: {user: string}) {
       }
     }
     updateUserInfo();
+    updateTwap();
     const updateUser = setInterval(updateUserInfo, 15000);
     const apr = setInterval(updateAPR, 15000);
+    const twap = setInterval(updateTwap, 300000);
 
     // eslint-disable-next-line consistent-return
     return () => {
       isCancelledUser = true;
       isCancelledApr = true;
+      isCancelledTwap = true;
       clearInterval(updateUser);
       clearInterval(apr);
+      clearInterval(twap);
     };
   }, [user]);
 
   let expRate = twap.minus(1).div(10);
 
   if (expRate.toNumber() <= 0) {
-    expRate = new BigNumber(epoch < 240 ? 0.04 : 0);
+    expRate = new BigNumber(0);
   }
 
   return (

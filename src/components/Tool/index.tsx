@@ -42,7 +42,36 @@ function Tool() {
 
   useEffect(() => {
     let isCancelled = false;
+    let isCancelledTwap = false;
 
+    async function updateTwap() {
+      const [
+        price0Str,
+        reserves,
+        pairInfo,
+      ] = await Promise.all([
+        getPrice0CumulativeLast(),
+        getReserves(),
+        getPriceAndBlockTimestamp(),
+      ]);
+
+      if (!isCancelledTwap) {
+        const {_blockTimestampLast} = reserves;
+
+        if (pairInfo?.payload.length > 0) {
+          const {price0CumulativeLast, reserves} = pairInfo.payload[pairInfo.payload.length - 1];
+
+          const oldPrice = new BigNumber(price0CumulativeLast);
+          const oldTimestamp = new BigNumber(reserves?._blockTimestampLast);
+          const price0 = new BigNumber(price0Str);
+          const timestamp = new BigNumber(_blockTimestampLast);
+
+          const twap = await calculateTwap(oldPrice, oldTimestamp, price0, timestamp, 12)
+
+          setTwap(new BigNumber(twap))
+        }
+      }
+    }
     async function getTool() {
       const poolAddressStr = await getPoolAddress();
 
@@ -61,9 +90,6 @@ function Tool() {
         totalRedeemableStr,
         totalDebtStr,
         totalCouponsStr,
-        price0Str,
-        reserves,
-        pairInfo
       ] = await Promise.all([
         getEpoch(TSDS.addr),
 
@@ -80,14 +106,9 @@ function Tool() {
         getTotalRedeemable(TSDS.addr),
         getTotalDebt(TSDS.addr),
         getTotalCoupons(TSDS.addr),
-        getPrice0CumulativeLast(),
-        getReserves(),
-        getPriceAndBlockTimestamp()
       ]);
 
       if (!isCancelled) {
-        const {_blockTimestampLast} = reserves;
-
         setEpoch(parseInt(epochStr, 10));
 
         setPairBalanceTSD(toTokenUnitsBN(pairBalanceTSDStr, TSD.decimals));
@@ -102,36 +123,27 @@ function Tool() {
         setPoolTotalStaged(toTokenUnitsBN(poolTotalStagedStr, TSD.decimals));
         setTotalDebt(toTokenUnitsBN(totalDebtStr, TSD.decimals));
         setTotalCoupons(toTokenUnitsBN(totalCouponsStr, TSD.decimals));
-
-        if (pairInfo?.payload.length > 0) {
-          const {price0CumulativeLast, reserves} = pairInfo.payload[pairInfo.payload.length - 1];
-
-          const oldPrice = new BigNumber(price0CumulativeLast);
-          const oldTimestamp = new BigNumber(reserves?._blockTimestampLast);
-          const price0 = new BigNumber(price0Str);
-          const timestamp = new BigNumber(_blockTimestampLast);
-
-          const twap = await calculateTwap(oldPrice, oldTimestamp, price0, timestamp, 12)
-
-          setTwap(new BigNumber(twap))
-        }
       }
     }
 
     getTool();
+    updateTwap();
     const id = setInterval(getTool, 15000);
+    const twap = setInterval(updateTwap, 300000);
 
     // eslint-disable-next-line consistent-return
     return () => {
       isCancelled = true;
+      isCancelledTwap = true;
       clearInterval(id);
+      clearInterval(twap);
     };
   }, []);
 
   let expRate = twap.minus(1).div(10);
 
   if (expRate.toNumber() <= 0) {
-    expRate = new BigNumber(epoch < 240 ? 0.04 : 0);
+    expRate = new BigNumber(0);
   }
 
   const increaseBy = totalSupply.toNumber() * expRate.toNumber();

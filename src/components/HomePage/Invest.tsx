@@ -4,6 +4,7 @@ import {Box, Button} from '@aragon/ui';
 import {useHistory} from 'react-router-dom';
 import styled from 'styled-components'
 import './style.css';
+import {ownership} from "../../utils/number";
 
 type InvestProps = {
   totalSupply: BigNumber,
@@ -49,7 +50,7 @@ const Invest = ({totalSupply, totalBonded, TSDLPBonded, theme, expRate, totalDeb
                 margin: '0 10px'
               }} ></div>
               <div style={{
-                fontSize: 24,
+                fontSize: 20,
                 padding: 3,
                 fontWeight: 400,
                 lineHeight: 1.5,
@@ -72,7 +73,7 @@ const Invest = ({totalSupply, totalBonded, TSDLPBonded, theme, expRate, totalDeb
                 margin: '0 10px'
               }} ></div>
               <div style={{
-                fontSize: 24,
+                fontSize: 20,
                 padding: 3,
                 fontWeight: 400,
                 lineHeight: 1.5,
@@ -95,7 +96,7 @@ const Invest = ({totalSupply, totalBonded, TSDLPBonded, theme, expRate, totalDeb
                 margin: '0 10px'
               }} ></div>
               <div style={{
-                fontSize: 24,
+                fontSize: 20,
                 padding: 3,
                 fontWeight: 400,
                 lineHeight: 1.5,
@@ -132,7 +133,7 @@ const Invest = ({totalSupply, totalBonded, TSDLPBonded, theme, expRate, totalDeb
                   margin: '0 10px'
                 }} ></div>
                 <div style={{
-                  fontSize: 24,
+                  fontSize: 20,
                   padding: 3,
                   fontWeight: 400,
                   lineHeight: 1.5,
@@ -155,7 +156,7 @@ const Invest = ({totalSupply, totalBonded, TSDLPBonded, theme, expRate, totalDeb
                   margin: '0 10px'
                 }} ></div>
                 <div style={{
-                  fontSize: 24,
+                  fontSize: 20,
                   padding: 3,
                   fontWeight: 400,
                   lineHeight: 1.5,
@@ -178,7 +179,7 @@ const Invest = ({totalSupply, totalBonded, TSDLPBonded, theme, expRate, totalDeb
                   margin: '0 10px'
                 }} ></div>
                 <div style={{
-                  fontSize: 24,
+                  fontSize: 20,
                   padding: 3,
                   fontWeight: 400,
                   lineHeight: 1.5,
@@ -216,7 +217,7 @@ const Invest = ({totalSupply, totalBonded, TSDLPBonded, theme, expRate, totalDeb
                   margin: '0 10px'
                 }} ></div>
                 <div style={{
-                  fontSize: 24,
+                  fontSize: 20,
                   padding: 3,
                   fontWeight: 400,
                   lineHeight: 1.5,
@@ -235,13 +236,13 @@ const Invest = ({totalSupply, totalBonded, TSDLPBonded, theme, expRate, totalDeb
                   margin: '0 10px'
                 }} ></div>
                 <div style={{
-                  fontSize: 24,
+                  fontSize: 20,
                   padding: 3,
                   fontWeight: 400,
                   lineHeight: 1.5,
                   fontFamily: 'aragon-ui-monospace, monospace'
                 }}>
-                  {totalDebt.toNumber().toFixed(2)}
+                  {totalDebt.toNumber().toFixed(2)}({ownership(totalDebt, totalSupply).toNumber().toFixed(2)}%)
                 </div>
               </div>
               <div className="invest" style={{fontSize: 16, padding: 3}}>
@@ -254,13 +255,13 @@ const Invest = ({totalSupply, totalBonded, TSDLPBonded, theme, expRate, totalDeb
                   margin: '0 10px'
                 }} ></div>
                 <div style={{
-                  fontSize: 24,
+                  fontSize: 20,
                   padding: 3,
                   fontWeight: 400,
                   lineHeight: 1.5,
                   fontFamily: 'aragon-ui-monospace, monospace'
                 }}>
-                  {couponPremium.toNumber().toFixed(2)}
+                  {couponPremium.multipliedBy(100).toNumber().toFixed(2)}%
                 </div>
               </div>
             </div>
