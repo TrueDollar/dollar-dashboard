@@ -6,7 +6,7 @@ import './style.css';
 import BigNumber from "bignumber.js";
 import {
   getCouponPremium,
-  getEpoch,
+  getEpoch, getEpochTime,
   getPoolTotalClaimable,
   getPoolTotalRewarded, getPrice0CumulativeLast, getReserves,
   getTokenBalance,
@@ -43,7 +43,7 @@ function epochformatted() {
   epochRemainder -= epochHour * hour;
   const epochMinute = Math.floor(epochRemainder / minute);
   epochRemainder -= epochMinute * minute;
-  return `${epoch}-0${epochHour}:${epochMinute > 9 ? epochMinute : "0" + epochMinute.toString()}:${epochRemainder > 9 ? epochRemainder : "0" + epochRemainder.toString()}`;
+  return `0${epochHour}:${epochMinute > 9 ? epochMinute : "0" + epochMinute.toString()}:${epochRemainder > 9 ? epochRemainder : "0" + epochRemainder.toString()}`;
 }
 
 type HomePageProps = {
@@ -57,6 +57,8 @@ const ONE_COUPON = new BigNumber(10).pow(18);
 function HomePage({user, showAnnouncement, onCloseAnnouncement}: HomePageProps) {
   const history = useHistory();
   const currentTheme = useTheme();
+  const [epoch, setEpoch] = useState(0);
+  const [epochAvailable, setEpochAvailable] = useState(0);
   const [pairBalanceTSD, setPairBalanceTSD] = useState(new BigNumber(0));
   const [pairBalanceUSDC, setPairBalanceUSDC] = useState(new BigNumber(0));
   const [totalSupply, setTotalSupply] = useState(new BigNumber(0));
@@ -110,6 +112,9 @@ function HomePage({user, showAnnouncement, onCloseAnnouncement}: HomePageProps) 
       const legacyPoolAddress = getLegacyPoolAddress(poolAddress);
 
       const [
+        epochStr,
+        epochTimeStr,
+
         pairBalanceTSDStr,
         pairBalanceUSDCStr,
         totalSupplyStr,
@@ -123,6 +128,9 @@ function HomePage({user, showAnnouncement, onCloseAnnouncement}: HomePageProps) 
         totalDebtStr,
         totalCouponsStr,
       ] = await Promise.all([
+        getEpoch(TSDS.addr),
+        getEpochTime(TSDS.addr),
+
         getTokenBalance(TSD.addr, UNI.addr),
         getTokenBalance(USDC.addr, UNI.addr),
 
@@ -140,6 +148,9 @@ function HomePage({user, showAnnouncement, onCloseAnnouncement}: HomePageProps) 
       ]);
 
       if (!isCancelled) {
+        setEpoch(parseInt(epochStr, 10));
+        setEpochAvailable(parseInt(epochTimeStr, 10));
+
         setPairBalanceTSD(toTokenUnitsBN(pairBalanceTSDStr, TSD.decimals));
         setPairBalanceUSDC(toTokenUnitsBN(pairBalanceUSDCStr, USDC.decimals));
 
@@ -200,7 +211,11 @@ function HomePage({user, showAnnouncement, onCloseAnnouncement}: HomePageProps) 
         <Layout style={{minWidth: 'auto'}}>
           <div style={{flexBasis: '32%'}}>
             <div style={{height: '100%'}}>
-              <EpochBlock epoch={epochTime}/>
+              <EpochBlock
+                epoch={epochTime}
+                epochCurrent={epoch}
+                epochAvailable={epochAvailable}
+              />
             </div>
           </div>
           <div style={{flexBasis: '32%'}}>

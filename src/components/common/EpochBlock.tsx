@@ -2,10 +2,12 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 type EpochBlockProps = {
-  epoch: string
+  epoch: string,
+  epochCurrent: number,
+  epochAvailable: number,
 }
 
-function EpochBlock({epoch}: EpochBlockProps) {
+function EpochBlock({epoch,epochCurrent,epochAvailable}: EpochBlockProps) {
   const history = useHistory();
   return (
     <>
@@ -16,11 +18,11 @@ function EpochBlock({epoch}: EpochBlockProps) {
         fontWeight: 'bold',
         lineHeight: 1.5,
         fontFamily: 'aragon-ui-monospace, monospace'
-      }}>{epoch}</div>
+      }}>{epochCurrent}-{epoch}</div>
       <div
         style={{fontSize: 16, padding: 3, cursor: 'pointer'}}
         onClick={() => history.push('/epoch/')}
-      >Advance -&gt;</div>
+      >Advance -&gt; {epochAvailable}</div>
     </>
   );
 }
