@@ -59,7 +59,7 @@ function Tool() {
         const {_blockTimestampLast} = reserves;
 
         if (pairInfo?.payload.length > 0) {
-          const {price0CumulativeLast, reserves} = pairInfo.payload[pairInfo.payload.length - 1];
+          const {price0CumulativeLast, reserves} = pairInfo.payload[0];
 
           const oldPrice = new BigNumber(price0CumulativeLast);
           const oldTimestamp = new BigNumber(reserves?._blockTimestampLast);
@@ -164,11 +164,11 @@ function Tool() {
         <NextEpoch/>
         <ContainerInfoPrice>
           <Title>Spot Price</Title>
-          <Value>${price.toNumber().toFixed(2)} USDC</Value>
+          <Value>${price.toNumber().toFixed(4)} USDC</Value>
         </ContainerInfoPrice>
         <ContainerInfoPrice>
           <Title>TWAP Price</Title>
-          <Value>{epoch < 240 ? 'N/A (Bootstrapping price - $1.44)' : <>${twap.toNumber().toFixed(2)} USDC</>}</Value>
+          <Value>{twap.toNumber().toFixed(4)} USDC}</Value>
         </ContainerInfoPrice>
         <ContainerInfoPrice>
           <Title>Epoch</Title>

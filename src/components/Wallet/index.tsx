@@ -62,7 +62,7 @@ function Wallet({ user }: {user: string}) {
         const {_blockTimestampLast} = reserves;
 
         if (pairInfo?.payload.length > 0) {
-          const {price0CumulativeLast, reserves} = pairInfo.payload[pairInfo.payload.length - 1];
+          const {price0CumulativeLast, reserves} = pairInfo.payload[0];
 
           const oldPrice = new BigNumber(price0CumulativeLast);
           const oldTimestamp = new BigNumber(reserves?._blockTimestampLast);
