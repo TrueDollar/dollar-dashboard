@@ -168,7 +168,7 @@ function Tool() {
         </ContainerInfoPrice>
         <ContainerInfoPrice>
           <Title>TWAP Price</Title>
-          <Value>{twap.toNumber().toFixed(4)} USDC}</Value>
+          <Value>{twap.toNumber().toFixed(4)} USDC</Value>
         </ContainerInfoPrice>
         <ContainerInfoPrice>
           <Title>Epoch</Title>
