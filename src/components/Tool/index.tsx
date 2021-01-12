@@ -160,11 +160,11 @@ function Tool() {
       <NextEpoch/>
       <div>
         <Title>Spot Price</Title>
-        <p>${price.toNumber().toFixed(2)} USDC</p>
+        <p>${price.toNumber().toFixed(4)} USDC</p>
       </div>
       <div>
         <Title>TWAP Price</Title>
-        <p>{epoch < 240 ? 'N/A (Bootstrapping price - $1.44)' : <>${twap.toNumber().toFixed(2)} USDC</>}</p>
+        <p>{epoch < 240 ? 'N/A (Bootstrapping price - $1.44)' : <>${twap.toNumber().toFixed(4)} USDC</>}</p>
       </div>
       <div>
         <Title>Epoch</Title>
