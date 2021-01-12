@@ -41,15 +41,20 @@ const NextEpoch = props => {
   }, []);
 
   return (
-    <div>
+    <div className="text-center">
       <Title>Next Epoch</Title>
-      <p>{epochTime}</p>
+      <Value>{epochTime}</Value>
     </div>
   );
 };
 
 const Title = styled.h2`
-  font-weight: bold;
+  margin-bottom: 10px;
+  font-size: 19px;
+`
+
+const Value = styled.h2`
+  font-size: 19px;
 `
 
 export default NextEpoch;

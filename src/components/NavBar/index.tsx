@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import React, {useEffect, useState} from 'react';
+import {useHistory} from 'react-router-dom';
+import styled from 'styled-components'
 
-import { LinkBase, useTheme } from '@aragon/ui';
+import {LinkBase, useTheme} from '@aragon/ui';
 import ConnectButton from './ConnectButton';
 
 import Menu from "./Menu";
@@ -10,12 +11,13 @@ import './style.css'
 type NavbarProps = {
   hasWeb3: boolean,
   user: string,
-  setUser: Function
+  setUser: Function,
+  theme: string
 }
 
 function NavBar({
-  hasWeb3, user, setUser,
-}:NavbarProps) {
+                  hasWeb3, user, setUser, theme
+                }: NavbarProps) {
   const history = useHistory();
   const currentTheme = useTheme();
 
@@ -31,35 +33,46 @@ function NavBar({
 
   return (
     <>
-      <div style={{
-        borderTop: '1px solid ' + currentTheme.border,
-        backgroundColor: 'none',
-        textAlign: 'center',
-        width: '100%',
-        fontSize: '14px',
-        marginBottom: 20
-      }}>
-        <div style={{maxWidth: '1100px', marginLeft: 'auto', marginRight: 'auto'}}>
-          <div className="container">
+      <Header theme={theme}>
+        <div style={{maxWidth: '1520px', marginLeft: 'auto', marginRight: 'auto', height: '100%'}}>
+          <Container>
             <div className="logo">
               <LinkBase onClick={() => history.push('/')} style={{marginRight: '16px', height: '40px'}}>
                 <img src={logoUrl} height="40px" alt="True Seigniorage Dollar"/>
               </LinkBase>
             </div>
-            <div className="menu">
+            <div className="menu text-center">
               <Menu history={history} page={page}/>
             </div>
             <div>
-              <ConnectButton hasWeb3={hasWeb3} user={user} setUser={setUser} />
+              <ConnectButton hasWeb3={hasWeb3} user={user} setUser={setUser}/>
             </div>
-          </div>
-          <div className="menu-mobile">
+          </Container>
+          <div className="menu-mobile text-center">
             <Menu history={history} page={page}/>
           </div>
         </div>
-      </div>
+      </Header>
     </>
   );
 }
+
+const Header = styled.div`
+  height: 90px;
+  box-shadow: 0px 3px 6px #00000029;
+  // background-color: ${({theme}) => theme === 'light' ? '#FFFFFF' : '#151515'};
+  @media (max-width: 768px) {
+    height: auto;
+    padding: 20px 0;
+  }
+`
+
+const Container = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  padding: 0 20px;
+`
 
 export default NavBar;

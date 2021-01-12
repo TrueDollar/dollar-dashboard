@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from 'react';
-
+import styled from 'styled-components'
 import {HashRouter as Router, Switch, Route} from 'react-router-dom';
-import {Main, Layout} from '@aragon/ui';
+import {Main, Layout, LayoutProvider} from '@aragon/ui';
 import {UseWalletProvider} from 'use-wallet';
 import {updateModalMode} from './utils/web3';
+
 import {storePreference, getPreference} from './utils/storage';
 import NavBar from './components/NavBar';
 import HomePage from './components/HomePage';
@@ -19,7 +20,6 @@ import Pool from "./components/Pool";
 import HomePageNoWeb3 from "./components/HomePageNoWeb3";
 import About from "./components/About";
 import Tool from "./components/Tool";
-// import GetUni from "./components/GetUni";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -60,93 +60,99 @@ function App() {
       <UseWalletProvider
         chainId={1}
         connectors={{
-          walletconnect: { rpcUrl: 'https://mainnet.eth.aragon.network/' },
+          walletconnect: {rpcUrl: 'https://mainnet.eth.aragon.network/'},
           walletlink: {
             url: 'https://mainnet.eth.aragon.network/',
-            appName:'Coinbase Wallet',
+            appName: 'Coinbase Wallet',
             appLogoUrl: ''
           }
         }}
       >
-        <Main assetsUrl={`${process.env.PUBLIC_URL}/aragon-ui/`} theme={theme} layout={false}>
-          <NavBar hasWeb3={hasWeb3} user={user} setUser={setUser} />
-          {
-            hasWeb3 ?
-                  <Switch>
-                    <Route path="/dao/:override">
-                      <Layout style={{ minWidth: 'auto' }}><Wallet user={user}/>
-                      </Layout>
-                      </Route>
-                    <Route path="/dao/">
-                      <Layout style={{ minWidth: 'auto' }}>
-                        <Wallet user={user}/>
-                      </Layout></Route>
-                    {/*<Route path="/get-uni/"><GetUni user={user}/></Route>*/}
-                    <Route path="/epoch/">
-                      <Layout style={{ minWidth: 'auto' }}>
-                        <EpochDetail user={user}/>
-                      </Layout></Route>
-                    <Route path="/coupons/:override">
-                      <Layout style={{ minWidth: 'auto' }}>
-                        <CouponMarket user={user}/>
-                      </Layout>
-                      </Route>
-                    <Route path="/coupons/">
-                      <Layout style={{ minWidth: 'auto' }}>
-                        <CouponMarket user={user}/>
-                      </Layout>
-                    </Route>
-                    <Route path="/governance/candidate/:candidate">
-                      <Layout style={{ minWidth: 'auto' }}><Candidate user={user}/>
-                      </Layout>
-                    </Route>
-                    <Route path="/governance/">
-                      <Layout style={{ minWidth: 'auto' }}><Governance user={user}/>
-                      </Layout>
-                    </Route>
-                    <Route path="/trade/">
-                      <Layout style={{ minWidth: 'auto' }}><Trade user={user}/>
-                      </Layout>
-                    </Route>
-                    <Route path="/regulation/">
-                      <Layout style={{ minWidth: 'auto' }}>
-                        <Regulation user={user}/>
-                      </Layout>
-                    </Route>
-                    <Route path="/pool/:override">
-                      <Layout style={{ minWidth: 'auto' }}>
-                        <Pool user={user}/>
-                      </Layout>
-                    </Route>
-                    <Route path="/pool/">
-                      <Layout style={{ minWidth: 'auto' }}>
-                        <Pool user={user}/>
-                      </Layout>
-                    </Route>
-                    <Route path="/about/">
-                      <Layout style={{ minWidth: 'auto' }}>
-                        <About/>
-                      </Layout></Route>
-                    <Route path="/tools/">
-                      <Layout style={{ minWidth: 'auto' }}>
-                        <Tool/>
-                      </Layout></Route>
-                    <Route path="/"><HomePage user={user}/></Route>
-                  </Switch>
-              :
-
-            <Layout>
+        {/*<Container theme={theme}>*/}
+          <Main assetsUrl={`${process.env.PUBLIC_URL}/aragon-ui/`} theme={theme} layout={false}>
+            <NavBar hasWeb3={hasWeb3} user={user} setUser={setUser} theme={theme}/>
+            {
+              hasWeb3 ?
                 <Switch>
-                  <Route path="/"><HomePageNoWeb3/></Route>
+                  <Route path="/dao/:override">
+                    <Layout style={{minWidth: 'auto'}}><Wallet user={user}/>
+                    </Layout>
+                  </Route>
+                  <Route path="/dao/">
+                    <Layout style={{minWidth: 'auto'}}>
+                      <Wallet user={user}/>
+                    </Layout></Route>
+                  {/*<Route path="/get-uni/"><GetUni user={user}/></Route>*/}
+                  <Route path="/epoch/">
+                    <Layout style={{minWidth: 'auto'}}>
+                      <EpochDetail user={user}/>
+                    </Layout></Route>
+                  <Route path="/coupons/:override">
+                    <Layout style={{minWidth: 'auto'}}>
+                      <CouponMarket user={user}/>
+                    </Layout>
+                  </Route>
+                  <Route path="/coupons/">
+                    <Layout style={{minWidth: 'auto'}}>
+                      <CouponMarket user={user}/>
+                    </Layout>
+                  </Route>
+                  <Route path="/governance/candidate/:candidate">
+                    <Layout style={{minWidth: 'auto'}}><Candidate user={user}/>
+                    </Layout>
+                  </Route>
+                  <Route path="/governance/">
+                    <Layout style={{minWidth: 'auto'}}><Governance user={user}/>
+                    </Layout>
+                  </Route>
+                  <Route path="/trade/">
+                    <Layout style={{minWidth: 'auto'}}><Trade user={user}/>
+                    </Layout>
+                  </Route>
+                  <Route path="/regulation/">
+                    <Layout style={{minWidth: 'auto'}}>
+                      <Regulation user={user}/>
+                    </Layout>
+                  </Route>
+                  <Route path="/pool/:override">
+                    <Layout style={{minWidth: 'auto'}}>
+                      <Pool user={user}/>
+                    </Layout>
+                  </Route>
+                  <Route path="/pool/">
+                    <Layout style={{minWidth: 'auto'}}>
+                      <Pool user={user}/>
+                    </Layout>
+                  </Route>
+                  <Route path="/about/">
+                    <Layout style={{minWidth: 'auto'}}>
+                      <About/>
+                    </Layout></Route>
+                  <Route path="/tools/">
+                    <Layout style={{minWidth: 'auto'}}>
+                      <Tool/>
+                    </Layout></Route>
+                  <Route path="/"><HomePage user={user}/></Route>
                 </Switch>
-            </Layout>
-          }
-          <div style={{height: '50px', width: '100%'}}/>
-          <Footer hasWeb3={hasWeb3} theme={theme} updateTheme={updateTheme}/>
-        </Main>
+                :
+
+                <Layout>
+                  <Switch>
+                    <Route path="/"><HomePageNoWeb3/></Route>
+                  </Switch>
+                </Layout>
+            }
+            <div style={{height: '100px', width: '100%'}}/>
+            <Footer hasWeb3={hasWeb3} theme={theme} updateTheme={updateTheme}/>
+          </Main>
+          {/*</Container>*/}
       </UseWalletProvider>
     </Router>
   );
 }
+
+const Container = styled.div`
+  background: ${({theme}) => theme === 'light' ? 'transparent linear-gradient(120deg, #FFFFFF 0%, #D9D9D9 47%, #FFFFFF 100%) 0% 0% no-repeat padding-box;' : 'transparent linear-gradient(120deg, #171717 0%, #434343 47%, #171717 100%) 0% 0% no-repeat padding-box;'};
+`
 
 export default App;

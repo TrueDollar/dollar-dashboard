@@ -72,6 +72,7 @@ function Tool() {
         }
       }
     }
+
     async function getTool() {
       const poolAddressStr = await getPoolAddress();
 
@@ -152,44 +153,54 @@ function Tool() {
 
   return <Container>
     <Header>
-      Next Epoch:
-      <p>$TSD Supply will increase by {increaseBy.toFixed(2)} TSD </p>
-      <p>{daoBonding.toFixed(2)} TSD for DAO Bonding and {lpBonding.toFixed(2)} TSD for LP Bonding</p>
+      <Value>
+        Next Epoch:
+      </Value>
+      <Value>$TSD Supply will increase by {increaseBy.toFixed(2)} TSD </Value>
+      <Value>{daoBonding.toFixed(2)} TSD for DAO Bonding and {lpBonding.toFixed(2)} TSD for LP Bonding</Value>
     </Header>
-    <ContainerItem>
-      <NextEpoch/>
-      <div>
-        <Title>Spot Price</Title>
-        <p>${price.toNumber().toFixed(2)} USDC</p>
-      </div>
-      <div>
-        <Title>TWAP Price</Title>
-        <p>{epoch < 240 ? 'N/A (Bootstrapping price - $1.44)' : <>${twap.toNumber().toFixed(2)} USDC</>}</p>
-      </div>
-      <div>
-        <Title>Epoch</Title>
-        <p>{epoch}</p>
-      </div>
-    </ContainerItem>
-    <ContainerItem>
-      <div style={{flexBasis: '48%', maxWidth: 300}}>
-        <Title>Token Supply</Title>
-        <ContainerFlex>
+    <Box>
+      <InfoPrice>
+        <NextEpoch/>
+        <ContainerInfoPrice>
+          <Title>Spot Price</Title>
+          <Value>${price.toNumber().toFixed(2)} USDC</Value>
+        </ContainerInfoPrice>
+        <ContainerInfoPrice>
+          <Title>TWAP Price</Title>
+          <Value>{epoch < 240 ? 'N/A (Bootstrapping price - $1.44)' : <>${twap.toNumber().toFixed(2)} USDC</>}</Value>
+        </ContainerInfoPrice>
+        <ContainerInfoPrice>
+          <Title>Epoch</Title>
+          <Value>{epoch}</Value>
+        </ContainerInfoPrice>
+      </InfoPrice>
+      <InfoToken>
+        <TokenSupply>
+          <Title><strong>Token Supply</strong></Title>
           <div>
-            <p>Total Token:</p>
-            <p>Coupons:</p>
-            <p>Total Supply:</p>
-            <p>Debt:</p>
+            <ContainerFlex>
+              <p>Total Token:</p>
+              <Space/>
+              <Value>{(totalSupply.toNumber() - totalCoupons.toNumber()).toFixed(2)}</Value>
+            </ContainerFlex>
+            <ContainerFlex>
+              <p>Coupons:</p>
+              <Space/>
+              <Value>{totalCoupons.toNumber().toFixed(2)}</Value>
+            </ContainerFlex>
+            <ContainerFlex>
+              <p>Total Supply:</p>
+              <Space/>
+              <Value>{totalSupply.toNumber().toFixed(2)}</Value>
+            </ContainerFlex>
+            <ContainerFlex>
+              <p>Debt:</p>
+              <Space/>
+              <Value>{totalDebt.toNumber().toFixed(2)}</Value>
+            </ContainerFlex>
           </div>
-          <div className="text-right">
-            <p>{(totalSupply.toNumber() - totalCoupons.toNumber()).toFixed(2)}</p>
-            <p>{totalCoupons.toNumber().toFixed(2)}</p>
-            <p>{totalSupply.toNumber().toFixed(2)}</p>
-            <p>{totalDebt.toNumber().toFixed(2)}</p>
-          </div>
-        </ContainerFlex>
-      </div>
-      <div style={{flexBasis: '48%', maxWidth: 300}}>
+        </TokenSupply>
         <TokenDistribution
           totalRedeemable={totalRedeemable}
           totalStaged={totalStaged}
@@ -198,34 +209,75 @@ function Tool() {
           poolTotalStaged={poolTotalStaged}
           poolTotalBonded={poolTotalBonded}
         />
-      </div>
-    </ContainerItem>
-    <HistoryReturn
-      totalSupply={totalSupply}
-      totalBonded={totalBonded}
-      TSDLPBonded={pairBalanceTSD}
-      expRate={expRate}
-    />
+      </InfoToken>
+      <HistoryReturn
+        totalSupply={totalSupply}
+        totalBonded={totalBonded}
+        TSDLPBonded={pairBalanceTSD}
+        expRate={expRate}
+      />
+    </Box>
   </Container>
 }
 
 const Header = styled.div`
   text-align: center;
+  margin-bottom: 50px;
+  @media (max-width: 522px) {
+    margin-bottom: 0px;
+  }
 `
 
 const Container = styled.div`
-  padding: 1% 15px 1% 15px;
-  max-width: 800px;
+  max-width: 1520px;
   margin: 20px auto 0 auto;
 `
 
-const ContainerItem = styled.div`
+const Box = styled.div`
+  box-shadow: 0px 10px 20px #00000029;
+  border-radius: 10px;
+`
+
+const InfoPrice = styled.div`
+  display: grid;
+  padding: 30px 50px;
+  grid-template-columns: auto auto auto auto;
+  border-bottom: 1px solid #707070;
+  @media (max-width: 522px) {
+    grid-template-columns: auto auto;
+    padding: 20px;
+  }
+`
+
+const ContainerInfoPrice = styled.div`
+  text-align: center;
+`
+
+const Space = styled.div`
+  flex: 1;
+  border-bottom: 1px dotted rgb(136, 136, 136);
+  margin-left: 10px;
+  margin-right: 5px;
+`
+
+const InfoToken = styled.div`
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-  margin-top: 20px;
+  border-bottom: 1px solid #707070;
   @media (max-width: 522px) {
     display: block;
+    padding: 20px 10px;
+  }
+`
+
+const TokenSupply = styled.div`
+  flex-basis: 50%;
+  padding: 30px 50px;
+  border-right: 1px solid #707070;
+  @media (max-width: 522px) {
+    border-right: none;
+    padding: 0;
   }
 `
 
@@ -233,10 +285,17 @@ const ContainerFlex = styled.div`
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
+  align-items: baseline;
+  margin-bottom: 10px;
 `
 
 const Title = styled.h2`
-  font-weight: bold;
+  font-size: 19px;
+  margin-bottom: 10px;
+`
+
+const Value = styled.h2`
+  font-size: 19px;
 `
 
 export default Tool;

@@ -11,11 +11,15 @@ type FooterProps = {
 
 function Footer({updateTheme, theme, hasWeb3}: FooterProps) {
   const currentTheme = useTheme();
+
   return (
     <>
-      <FooterContainer style={{
-        backgroundColor: currentTheme.surface
-      }}>
+      <FooterContainer
+        style={{
+          borderTop: '1px solid ' + currentTheme.border,
+          backgroundColor: currentTheme.surface,
+      }}
+      >
         <div style={{maxWidth: '1520px', marginLeft: 'auto', marginRight: 'auto', height: '100%'}}>
           <Container>
             <div className="d-flex justify-content-center">
@@ -35,9 +39,17 @@ function Footer({updateTheme, theme, hasWeb3}: FooterProps) {
               <FooterLink icon={<Icon src={`./icon/coingecko.png`}/>}
                           href={"https://www.coingecko.com/en/coins/true-seigniorage-dollar"}/>
             </div>
-            <ChangeModeButton hasWeb3={hasWeb3} theme={theme} updateTheme={updateTheme}/>
+            <ButtonDesktop>
+              <ChangeModeButton hasWeb3={hasWeb3} theme={theme} updateTheme={updateTheme}/>
+            </ButtonDesktop>
             <ContainerTeam>
-              Made with <span className="mx-2" role="img" aria-labelledby="heartbreak">💔️</span> by TSD team!
+              <ButtonMobile>
+                <ChangeModeButton hasWeb3={hasWeb3} theme={theme} updateTheme={updateTheme}/>
+              </ButtonMobile>
+              <div>
+                Made with <span className="mx-2" role="img" aria-labelledby="heartbreak"><img
+                src="./icon/heart.png"/>️</span> by TSD team!
+              </div>
             </ContainerTeam>
           </Container>
         </div>
@@ -53,8 +65,23 @@ const FooterContainer = styled.div`
   height: 90px;
   width: 100%;
   padding: 0 20px;
-  @media (max-width: 522px) {
+  @media (max-width: 768px) {
     display: block;
+    height: auto;
+  }
+`
+
+const ButtonDesktop = styled.div`
+  @media (max-width: 768px) {
+    display: none;
+  }
+`
+
+const ButtonMobile = styled.div`
+        display: none;
+  @media (max-width: 768px) {
+    display: block;
+    margin-right: 10px;
   }
 `
 
@@ -65,7 +92,7 @@ const Container = styled.div`
   padding: 10px 0;
   height: 100%;
 
-  @media (max-width: 522px) {
+  @media (max-width: 768px) {
     display: block;
   }
 `
@@ -75,7 +102,8 @@ const ContainerTeam = styled.div`
   align-items: center;
   font-size: 20px;
 
-  @media (max-width: 522px) {
+  @media (max-width: 768px) {
+    margin-top: 10px;
     justify-content: center;
   }
 `
