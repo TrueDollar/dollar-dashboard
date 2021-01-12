@@ -27,6 +27,7 @@ import MarketCap from "./MarketCap";
 import Invest from "./Invest";
 import EpochBlock from "../common/EpochBlock";
 import {calculateTwap, getPriceAndBlockTimestamp} from "../../utils/calculation";
+import ModalAnnouncement from "./ModalAnnouncement";
 
 function epochformatted() {
   const epochStart = 1609473600;
@@ -46,12 +47,14 @@ function epochformatted() {
 }
 
 type HomePageProps = {
-  user: string
+  user: string,
+  showAnnouncement: boolean,
+  onCloseAnnouncement: Function,
 };
 
 const ONE_COUPON = new BigNumber(10).pow(18);
 
-function HomePage({user}: HomePageProps) {
+function HomePage({user, showAnnouncement, onCloseAnnouncement}: HomePageProps) {
   const history = useHistory();
   const currentTheme = useTheme();
   const [pairBalanceTSD, setPairBalanceTSD] = useState(new BigNumber(0));
@@ -192,6 +195,7 @@ function HomePage({user}: HomePageProps) {
 
   return (
     <>
+      <ModalAnnouncement show={showAnnouncement} onClose={onCloseAnnouncement}/>
       <Container className="home-box">
         <Layout style={{minWidth: 'auto'}}>
           <div style={{flexBasis: '32%'}}>
