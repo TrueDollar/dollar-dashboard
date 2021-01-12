@@ -63,6 +63,7 @@ const Container = styled.div`
 const ContainerFlex = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: baseline;
   flex-wrap: wrap;
   margin-bottom: 10px;
 `
