@@ -100,7 +100,7 @@ function HomePage({user, showAnnouncement, onCloseAnnouncement}: HomePageProps) 
           const price0 = new BigNumber(price0Str);
           const timestamp = new BigNumber(_blockTimestampLast);
 
-          const twap = await calculateTwap(oldPrice, oldTimestamp, price0, timestamp, 12)
+          const twap = await calculateTwap(oldPrice, oldTimestamp, price0, timestamp, 12, pairInfo.payload)
 
           setTwap(new BigNumber(twap))
         }
